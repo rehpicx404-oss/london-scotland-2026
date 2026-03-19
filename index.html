@@ -758,6 +758,102 @@
   ::-webkit-scrollbar-track { background: transparent; }
   ::-webkit-scrollbar-thumb { background: var(--paper-edge); border-radius: 4px; }
 
+
+  /* ====== A++ PREMIUM POLISH ====== */
+
+  /* Motion: open card dims siblings */
+  .day-page.open ~ .day-page:not(.open),
+  .day-page:not(.open):has(~ .day-page.open) { opacity: 0.7; transition: opacity 0.4s ease; }
+  .day-page:not(.open) { transition: opacity 0.3s ease; }
+
+  /* Luxurious chevron rotation */
+  .chevron { transition: transform 0.5s cubic-bezier(0.4, 0, 0.15, 1) !important; }
+
+  /* Sliding underline on links */
+  a { text-decoration: none; background-image: linear-gradient(var(--teal), var(--teal));
+      background-size: 0% 1px; background-position: left bottom;
+      background-repeat: no-repeat; transition: background-size 0.3s ease; }
+  a:hover, a:active { background-size: 100% 1px; }
+
+  /* Monospace for flight codes and booking refs */
+  .flight-code, .booking-conf, .flight-num { font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace !important; letter-spacing: 1px; }
+
+  /* Pulsing live dot next to track links */
+  a[href*="flightradar"], a[href*="flightaware"] { position: relative; padding-left: 0.9em; }
+  a[href*="flightradar"]::before, a[href*="flightaware"]::before {
+    content: ''; position: absolute; left: 0; top: 50%; transform: translateY(-50%);
+    width: 6px; height: 6px; border-radius: 50%; background: #4CAF50;
+    box-shadow: 0 0 4px #4CAF50; animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+  /* Embossed countdown blocks */
+  .cd-block { box-shadow: inset 0 1px 3px rgba(0,0,0,0.15), 0 1px 0 rgba(255,255,255,0.05) !important; }
+
+  /* Consistent card styling across ALL types */
+  .day-page, .area-card, .booking-card, .resto-card, .stay-card, .sg-card {
+    border-radius: 4px !important;
+    border: 1px solid var(--paper-edge) !important;
+  }
+
+  /* Consistent press state for ALL tappable cards */
+  .day-page:active, .area-card:active, .booking-card:active,
+  .resto-card:active, .stay-card:active, .sg-card:active {
+    transform: scale(0.98); box-shadow: 0 0 2px rgba(0,0,0,0.06) !important;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  /* Tabular figures for prices */
+  .resto-price, .stay-price, .currency-price, .cd-num { font-feature-settings: 'tnum'; }
+
+  /* Cover: double border like passport */
+  .cover::before { border: 1.5px double rgba(255,255,255,0.12) !important; border-radius: 2px !important; }
+
+  /* Cover title text shadow for depth */
+  .cover-title { text-shadow: 0 2px 15px rgba(0,0,0,0.3) !important; }
+
+  /* Boarding pass stamp more faded/tilted */
+  .cover-stamp { opacity: 0.25 !important; transform: rotate(-5deg) !important; }
+
+  /* Restaurant "known for" in italic */
+  .resto-known { font-style: italic; opacity: 0.8; }
+
+  /* Section header centered ornament lines */
+  .section-header {
+    display: flex; align-items: center; gap: 0.8rem;
+  }
+  .section-header::before, .section-header::after {
+    content: ''; flex: 1; height: 1px; background: var(--paper-edge);
+  }
+
+  /* Bold day names in booking meta */
+  .booking-meta { font-variant-numeric: tabular-nums; }
+
+  /* Active filter pills pressed-in feel */
+  .filter-btn.active { box-shadow: inset 0 1px 3px rgba(0,0,0,0.15) !important; }
+
+  /* Suggestion avatar accent border */
+  .sg-avatar { border: 2px solid var(--paper-edge) !important; }
+
+  /* Page-turn shadow on notebook right edge */
+  .notebook::after {
+    width: 20px !important;
+    background: linear-gradient(to left, rgba(0,0,0,0.08), rgba(0,0,0,0.02), transparent) !important;
+  }
+
+  /* Open cards feel elevated */
+  .day-page.open, .area-card.open {
+    box-shadow: 0 3px 10px rgba(0,0,0,0.08), 0 8px 25px rgba(0,0,0,0.04) !important;
+    transform: translateY(-1px);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.15, 1);
+  }
+
+  /* Prices in gold consistently */
+  .resto-price, .stay-price { color: var(--gold) !important; font-weight: 700; }
+
+  /* Smoother body transitions */
+  * { -webkit-tap-highlight-color: transparent; }
+
 </style>
 </head>
 <body>
