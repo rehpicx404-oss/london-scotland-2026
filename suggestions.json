@@ -1,11 +1,3 @@
 {
-  "suggestions": [
-    {
-      "idea": "test from API",
-      "name": "Cipher",
-      "priority": "chill",
-      "time": "test",
-      "done": false
-    }
-  ]
+  "suggestions": []
 }
