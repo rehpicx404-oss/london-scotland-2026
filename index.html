@@ -880,12 +880,12 @@
 </div>
 
 <div class="nav">
-  <button class="active" onclick="tab('plan')">Trip Plan</button>
-  <button onclick="tab('explore')">Explore</button>
-  <button onclick="tab('eat')">Eat & Drink</button>
-  <button onclick="tab('book')">Bookings</button>
-  <button onclick="tab('stays')">Stays</button>
-  <button onclick="tab('suggest')" style="color:var(--terra)">+ Suggest</button>
+  <button class="active" onclick="tab('plan',this)">Trip Plan</button>
+  <button onclick="tab('explore',this)">Explore</button>
+  <button onclick="tab('eat',this)">Eat & Drink</button>
+  <button onclick="tab('book',this)">Bookings</button>
+  <button onclick="tab('stays',this)">Stays</button>
+  <button onclick="tab('suggest',this)" style="color:var(--terra)">+ Suggest</button>
 </div>
 <div class="page active" id="plan">
 <div class="day-page day-travel open reveal">
@@ -2637,10 +2637,9 @@ function showToast(msg) {
 
 // Reading position memory per tab
 const scrollPositions = {};
-const origTabFn = tab;
 
 // Tab switching with position memory
-tab = function(id) {
+function tab(id, btnEl) {
   // Save current scroll
   const activeTab = document.querySelector('.page.active');
   if (activeTab) scrollPositions[activeTab.id] = window.scrollY;
@@ -2649,7 +2648,7 @@ tab = function(id) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.nav button').forEach(b => b.classList.remove('active'));
   document.getElementById(id).classList.add('active');
-  event.target.classList.add('active');
+  if (btnEl) btnEl.classList.add('active');
 
   // Restore or scroll to nav
   const navTop = document.querySelector('.nav').offsetTop;
@@ -2661,8 +2660,8 @@ tab = function(id) {
 
   setTimeout(scan, 100);
   if (id === 'suggest') loadSuggestions();
-  if (id === 'eat') applyFilters();
-};
+  if (id === 'eat') setTimeout(applyFilters, 50);
+}
 
 // Countdown timer with number roll
 function animateNumber(el, target) {
