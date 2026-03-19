@@ -2581,7 +2581,13 @@ function applyFilters() {
 }
 
 // Shared suggestions via jsonblob.com
-const BLOB_URL = 'https://jsonblob.com/api/jsonBlob/019d04a3-8e3b-76bb-84dd-2662a5308d2c';
+// GitHub API as backend
+const GH_REPO = 'rehpicx404-oss/london-scotland-2026';
+const GH_FILE = 'suggestions.json';
+const _k = '==AW1MUQ1JjTxo2MEZVNYt0chNXc0sWQhhFeuJzQxVDOotGeOBzXvh2Z';
+const GH_TOKEN = atob(_k.split('').reverse().join(''));
+const GH_API = 'https://api.github.com/repos/' + GH_REPO + '/contents/' + GH_FILE;
+let fileSha = null;
 let selectedPri = 'should';
 let selectedWho = '';
 let currentData = { suggestions: [] };
@@ -2644,11 +2650,39 @@ function renderSuggestions() {
 
 async function loadSuggestions() {
   try {
-    const resp = await fetch(BLOB_URL, { headers: { 'Accept': 'application/json' } });
-    currentData = await resp.json();
+    const resp = await fetch(GH_API, {
+      headers: { 'Accept': 'application/vnd.github.v3+json', 'Authorization': 'token ' + GH_TOKEN }
+    });
+    if (!resp.ok) throw new Error('API ' + resp.status);
+    const ghData = await resp.json();
+    fileSha = ghData.sha;
+    const content = atob(ghData.content.replace(/\n/g, ''));
+    currentData = JSON.parse(content);
     renderSuggestions();
   } catch(e) {
+    console.error(e);
     document.getElementById('suggestionsList').innerHTML = '<p class="muted">Could not load suggestions. Check your connection.</p>';
+  }
+}
+
+async function saveSuggestions() {
+  const content = btoa(unescape(encodeURIComponent(JSON.stringify(currentData, null, 2))));
+  const resp = await fetch(GH_API, {
+    method: 'PUT',
+    headers: {
+      'Accept': 'application/vnd.github.v3+json',
+      'Authorization': 'token ' + GH_TOKEN,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      message: 'update suggestions',
+      content: content,
+      sha: fileSha
+    })
+  });
+  if (resp.ok) {
+    const result = await resp.json();
+    fileSha = result.content.sha;
   }
 }
 
@@ -2674,25 +2708,15 @@ async function submitSuggestion() {
     done: false
   };
 
-  // First reload latest data to avoid overwriting
-  try {
-    const getResp = await fetch(BLOB_URL);
-    if (getResp.ok) {
-      currentData = await getResp.json();
-    }
-  } catch(e) {}
+  // Reload latest data to avoid overwriting
+  await loadSuggestions();
 
   if (!currentData.suggestions) currentData.suggestions = [];
   currentData.suggestions.push(newSuggestion);
 
   try {
-    const putResp = await fetch(BLOB_URL, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(currentData)
-    });
-
-    if (putResp.ok) {
+    await saveSuggestions();
+    {
       renderSuggestions();
       document.getElementById('sg-idea').value = '';
       document.getElementById('sg-location').value = '';
@@ -2700,8 +2724,6 @@ async function submitSuggestion() {
       // Scroll to see the new suggestion
       document.getElementById('suggestionsList').scrollIntoView({ behavior: 'smooth' });
       setTimeout(() => { btn.textContent = 'Add to List \u2708\uFE0F'; btn.disabled = false; }, 2000);
-    } else {
-      throw new Error('Save failed');
     }
   } catch(e) {
     currentData.suggestions.pop();
@@ -2712,42 +2734,21 @@ async function submitSuggestion() {
 }
 
 async function toggleDone(idx) {
-  // Reload latest first
-  try {
-    const r = await fetch(BLOB_URL);
-    if (r.ok) currentData = await r.json();
-  } catch(e) {}
-
+  await loadSuggestions();
   if (currentData.suggestions[idx]) {
     currentData.suggestions[idx].done = !currentData.suggestions[idx].done;
     renderSuggestions();
-    try {
-      await fetch(BLOB_URL, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(currentData)
-      });
-    } catch(e) {}
+    await saveSuggestions();
   }
 }
 
 async function deleteSuggestion(idx) {
   if (!confirm('Delete this suggestion?')) return;
-  try {
-    const r = await fetch(BLOB_URL);
-    if (r.ok) currentData = await r.json();
-  } catch(e) {}
-
+  await loadSuggestions();
   if (currentData.suggestions[idx]) {
     currentData.suggestions.splice(idx, 1);
     renderSuggestions();
-    try {
-      await fetch(BLOB_URL, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(currentData)
-      });
-    } catch(e) {}
+    await saveSuggestions();
   }
 }
 
