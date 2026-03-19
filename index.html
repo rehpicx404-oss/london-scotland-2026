@@ -2427,7 +2427,7 @@
 
 <div style="border-top:2px solid var(--paper-edge);padding-top:1rem;margin-top:0.5rem;">
 <div class="section-header" style="padding-top:0.5rem;">Add a Suggestion</div>
-<form id="suggestForm" onsubmit="return submitSuggestion()" style="display:flex;flex-direction:column;gap:0.8rem;">
+<form id="suggestForm" onsubmit="event.preventDefault(); submitSuggestion();" style="display:flex;flex-direction:column;gap:0.8rem;">
   <div class="form-group">
     <label class="form-label">What's your idea? *</label>
     <input type="text" id="sg-idea" class="form-input" placeholder="e.g. Check out Dishoom for dinner" required>
