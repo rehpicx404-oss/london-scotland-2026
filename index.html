@@ -1026,9 +1026,7 @@
   .nav::before {
     content: '';
     position: absolute;
-    top: -28px; left: 12px;
-    width: 14px; height: 55px;
-    background: var(--terra);
+    display: none;
     z-index: 101;
     border-radius: 0 0 2px 2px;
     box-shadow: 1px 1px 3px rgba(0,0,0,0.15);
@@ -1036,8 +1034,7 @@
   .nav::after {
     content: '';
     position: absolute;
-    top: 25px; left: 12px;
-    width: 14px; height: 8px;
+    display: none;
     z-index: 101;
     border-left: 7px solid var(--terra);
     border-right: 7px solid var(--terra);
@@ -1129,6 +1126,126 @@
     background: linear-gradient(to right, rgba(0,0,0,0.03), transparent);
     pointer-events: none;
     z-index: 50;
+  }
+
+
+  /* ====== LONDON + SCOTLAND VIBE ====== */
+
+  /* Remove broken ribbon, replace with simple bookmark tab on notebook edge */
+  .notebook::before {
+    content: '' !important;
+    position: fixed !important;
+    top: 45% !important;
+    left: max(0px, calc(50% - 363px)) !important;
+    width: 6px !important;
+    height: 50px !important;
+    background: var(--terra) !important;
+    border-radius: 0 3px 3px 0 !important;
+    z-index: 200 !important;
+    box-shadow: 1px 0 3px rgba(0,0,0,0.1) !important;
+  }
+
+  /* Passport stamp style on city headers */
+  .city-london, .city-scotland {
+    position: relative;
+    overflow: visible;
+  }
+  .city-london::after {
+    content: 'LONDON';
+    position: absolute;
+    right: 0.8rem; top: 50%; transform: translateY(-50%) rotate(-8deg);
+    font-size: 0.5rem;
+    font-weight: 800;
+    letter-spacing: 2px;
+    color: var(--teal);
+    opacity: 0.2;
+    border: 2px solid var(--teal);
+    border-radius: 50%;
+    width: 42px; height: 42px;
+    display: flex; align-items: center; justify-content: center;
+    padding: 2px;
+  }
+  .city-scotland::after {
+    content: 'EDI';
+    position: absolute;
+    right: 0.8rem; top: 50%; transform: translateY(-50%) rotate(5deg);
+    font-size: 0.55rem;
+    font-weight: 800;
+    letter-spacing: 2px;
+    color: var(--sage);
+    opacity: 0.2;
+    border: 2px solid var(--sage);
+    border-radius: 50%;
+    width: 42px; height: 42px;
+    display: flex; align-items: center; justify-content: center;
+    padding: 2px;
+  }
+
+  /* Scotland day cards — subtle crosshatch hint in header */
+  .day-scotland .day-head {
+    background-image:
+      repeating-linear-gradient(45deg, transparent, transparent 8px, rgba(92,107,74,0.03) 8px, rgba(92,107,74,0.03) 9px),
+      repeating-linear-gradient(-45deg, transparent, transparent 8px, rgba(92,107,74,0.03) 8px, rgba(92,107,74,0.03) 9px) !important;
+  }
+
+  /* London day cards — subtle brick pattern hint */
+  .day-london .day-head {
+    background-image:
+      repeating-linear-gradient(90deg, transparent, transparent 12px, rgba(45,74,62,0.02) 12px, rgba(45,74,62,0.02) 13px) !important;
+  }
+
+  /* Train journey divider — Day 8 (travel day from London to Edinburgh) */
+  .day-travel .day-head {
+    position: relative;
+  }
+  .day-travel .transport-bar {
+    background: linear-gradient(90deg, var(--teal-bg) 0%, var(--paper-dark) 30%, var(--paper-dark) 70%, var(--sage-bg) 100%) !important;
+    text-align: center;
+    position: relative;
+  }
+  .day-travel .transport-bar::before {
+    content: '';
+    position: absolute;
+    top: 50%; left: 1rem; right: 1rem;
+    height: 1px;
+    border-top: 2px dashed var(--paper-edge);
+  }
+
+  /* Explore area headers — add city vibe icons */
+  .area-london .area-head {
+    background-image: repeating-linear-gradient(90deg, transparent, transparent 14px, rgba(45,74,62,0.015) 14px, rgba(45,74,62,0.015) 15px);
+  }
+  .area-scotland .area-head {
+    background-image:
+      repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(92,107,74,0.02) 10px, rgba(92,107,74,0.02) 11px),
+      repeating-linear-gradient(-45deg, transparent, transparent 10px, rgba(92,107,74,0.02) 10px, rgba(92,107,74,0.02) 11px);
+  }
+
+  /* Cover — add subtle compass rose feel to the map grid */
+  .cover-route {
+    position: relative;
+    padding: 0.8rem 0;
+  }
+  .cover-route::before {
+    content: '2';
+    position: absolute;
+    left: -1.5rem; top: 50%;
+    transform: translateY(-50%);
+    color: rgba(212,197,160,0.15);
+    font-size: 2rem;
+  }
+  .cover-route::after {
+    content: '2';
+    position: absolute;
+    right: -1.5rem; top: 50%;
+    transform: translateY(-50%);
+    color: rgba(212,197,160,0.15);
+    font-size: 2rem;
+  }
+
+  /* Booking flight cards — subtle runway dashes */
+  .booking-card.flight {
+    background-image: repeating-linear-gradient(90deg, transparent, transparent 8px, rgba(45,74,62,0.02) 8px, rgba(45,74,62,0.02) 12px, transparent 12px, transparent 20px) !important;
   }
 
 </style>
