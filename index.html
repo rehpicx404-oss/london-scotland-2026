@@ -27,7 +27,19 @@
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
   html { scroll-behavior: smooth; }
-  ::selection { background: rgba(42,124,124,0.15); }
+  ::selection { background: rgba(45,74,62,0.15); }
+
+  /* Spring easing token — used everywhere */
+  :root { --spring: cubic-bezier(0.34, 1.56, 0.64, 1); --ease-out: cubic-bezier(0.25, 0.46, 0.45, 0.94); }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--paper-edge); border-radius: 4px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--ink-faint); }
+
+  /* Fluid typography */
+  h1, h2, h3, .day-title, .section-header, .cover-title { font-size: clamp(1rem, 4vw, inherit); }
 
   body {
     font-family: 'Inter', sans-serif;
@@ -295,12 +307,14 @@
   @keyframes bounce { 0%,100% { transform: translateY(0); } 50% { transform: translateY(6px); } }
 
   /* ===== NAV ===== */
+  /* Frosted glass nav */
   .nav {
     display: flex;
     overflow-x: auto;
-    background: var(--paper-dark);
-    border-bottom: 2px solid var(--paper-edge);
-    border-top: 1px solid var(--paper-edge);
+    background: rgba(224,215,192,0.85);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-bottom: 1px solid rgba(0,0,0,0.06);
     position: sticky;
     top: 0;
     z-index: 100;
@@ -310,7 +324,7 @@
   .nav::-webkit-scrollbar { display: none; }
   .nav button {
     flex: 1;
-    padding: 0.75rem 0.4rem;
+    padding: 0.8rem 0.4rem;
     border: none;
     background: none;
     color: var(--ink-faint);
@@ -321,11 +335,24 @@
     letter-spacing: 1px;
     cursor: pointer;
     border-bottom: 2.5px solid transparent;
-    transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+    transition: all 0.35s var(--ease-out);
     white-space: nowrap;
     position: relative;
   }
-  .nav button.active { color: var(--teal); border-bottom-color: var(--teal); background: var(--paper); }
+  .nav button.active {
+    color: var(--teal);
+    border-bottom-color: var(--teal);
+    background: rgba(255,255,255,0.15);
+  }
+  .nav button.active::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 20%; right: 20%;
+    height: 6px;
+    background: var(--teal);
+    filter: blur(6px);
+    opacity: 0.25;
+  }
 
   /* ===== PAGE ===== */
   .page {
@@ -342,14 +369,14 @@
     background: var(--paper);
     border-radius: 4px;
     margin-bottom: 0.7rem;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.06), 1px 2px 6px rgba(0,0,0,0.04);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.06), 0 2px 6px rgba(0,0,0,0.04);
     overflow: hidden;
     position: relative;
     border: 1px solid var(--paper-edge);
-    transition: box-shadow 0.3s ease, transform 0.2s ease;
+    transition: box-shadow 0.4s var(--ease-out), transform 0.25s var(--spring);
   }
-  .day-page:active { transform: scale(0.998); }
-  .day-page.open { box-shadow: 0 2px 4px rgba(0,0,0,0.08), 1px 3px 10px rgba(0,0,0,0.06); }
+  .day-page:active { transform: scale(0.985); box-shadow: 0 0 2px rgba(0,0,0,0.08); }
+  .day-page.open { box-shadow: 0 3px 8px rgba(0,0,0,0.07), 0 6px 20px rgba(0,0,0,0.05); }
 
   .day-head {
     padding: 1.1rem 1.3rem 0.9rem;
@@ -506,7 +533,7 @@
     box-shadow: 0 1px 2px rgba(0,0,0,0.02);
     transition: transform 0.15s ease;
   }
-  .resto-card:active { transform: scale(0.98); }
+  .resto-card:active { transform: scale(0.975); box-shadow: none; }
   .resto-name { font-weight: 600; font-size: 0.82rem; }
   .resto-name a { color: var(--teal); text-decoration: none; }
   .resto-cuisine { font-size: 0.68rem; color: var(--ink-light); }
@@ -633,7 +660,93 @@
     transition: transform 0.15s, opacity 0.15s;
     margin-top: 0.5rem;
   }
-  .submit-btn:active { transform: scale(0.97); opacity: 0.9; }
+  .submit-btn:active { transform: scale(0.95); box-shadow: none; }
+
+  /* Input focus glow */
+  .form-input:focus, input:focus {
+    border-color: var(--teal);
+    box-shadow: 0 0 0 3px rgba(45,74,62,0.1);
+    outline: none;
+  }
+
+  /* Back to top */
+  .back-top {
+    position: fixed;
+    bottom: 1.5rem;
+    right: 1.5rem;
+    width: 38px; height: 38px;
+    border-radius: 50%;
+    background: var(--ink);
+    color: var(--paper);
+    border: none;
+    font-size: 0.9rem;
+    cursor: pointer;
+    opacity: 0;
+    transform: scale(0.8) translateY(10px);
+    transition: all 0.35s var(--spring);
+    z-index: 90;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .back-top.show { opacity: 0.6; transform: scale(1) translateY(0); }
+  .back-top:active { transform: scale(0.85); }
+
+  /* Toast */
+  .toast {
+    position: fixed;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: var(--ink);
+    color: var(--paper);
+    padding: 0.55rem 1.1rem;
+    border-radius: 4px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    opacity: 0;
+    transition: all 0.4s var(--spring);
+    z-index: 200;
+    pointer-events: none;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    letter-spacing: 0.3px;
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  /* Smooth filter collapses */
+  .resto-card { transition: transform 0.2s var(--spring), box-shadow 0.2s ease, opacity 0.25s ease, max-height 0.3s ease, margin 0.3s ease, padding 0.3s ease; }
+  .resto-card.hidden { opacity: 0; max-height: 0; margin: 0; padding: 0; border: 0; overflow: hidden; }
+
+  /* Day peek preview */
+  .day-peek { font-size: 0.68rem; color: var(--ink-faint); margin-top: 0.15rem; overflow: hidden; transition: opacity 0.3s ease; }
+  .day-page.open .day-peek { opacity: 0; height: 0; }
+
+  /* Card entrance stagger */
+  .page.active .day-page, .page.active .area-card, .page.active .booking-card {
+    animation: cardIn 0.45s var(--ease-out) both;
+  }
+  .page.active > :nth-child(1) { animation-delay: 0s; }
+  .page.active > :nth-child(2) { animation-delay: 0.03s; }
+  .page.active > :nth-child(3) { animation-delay: 0.04s; }
+  .page.active > :nth-child(4) { animation-delay: 0.06s; }
+  .page.active > :nth-child(5) { animation-delay: 0.08s; }
+  .page.active > :nth-child(6) { animation-delay: 0.1s; }
+  .page.active > :nth-child(7) { animation-delay: 0.12s; }
+  .page.active > :nth-child(8) { animation-delay: 0.14s; }
+  .page.active > :nth-child(9) { animation-delay: 0.16s; }
+  .page.active > :nth-child(n+10) { animation-delay: 0.18s; }
+  @keyframes cardIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* Suggestion slide-in */
+  @keyframes sgSlide { from { opacity: 0; transform: translateX(-12px) rotate(-0.5deg); } to { opacity: 1; transform: translateX(0) rotate(0); } }
+  .sg-card.entering { animation: sgSlide 0.45s var(--spring); }
+
+  /* Avatar bounce */
+  @keyframes avBounce { 0% { transform: scale(1); } 40% { transform: scale(1.12); } 100% { transform: scale(1); } }
+  .who-btn.active { animation: avBounce 0.3s var(--spring); }
+
+  /* Countdown number roll */
+  .cd-num { transition: transform 0.4s var(--spring); }
+
   .who-btns { display: flex; gap: 0.6rem; }
   .who-btn {
     flex: 1;
@@ -779,7 +892,8 @@
   <div class="day-head" onclick="tog(this)">
     <div><div class="day-badge">Travel</div>
     <div class="day-title">Day 1 · Fly Out from DFW</div>
-    <div class="day-date">Thursday, Jul 09</div></div>
+    <div class="day-date">Thursday, Jul 09</div>
+    <div class="day-peek">Pack bags. Head to DFW airport by 3:30 PM (2 hrs before internati...</div></div>
     <div class="chevron">▼</div>
   </div>
   <div class="day-content">
@@ -795,7 +909,8 @@
   <div class="day-head" onclick="tog(this)">
     <div><div class="day-badge">London</div>
     <div class="day-title">Day 2 · Arrive London + Easy First Day</div>
-    <div class="day-date">Friday, Jul 10</div></div>
+    <div class="day-date">Friday, Jul 10</div>
+    <div class="day-peek">Land Heathrow 9 AM. Immigration + bags (~45 min). Elizabeth line ...</div></div>
     <div class="chevron">▼</div>
   </div>
   <div class="day-content">
@@ -812,7 +927,8 @@
   <div class="day-head" onclick="tog(this)">
     <div><div class="day-badge">London</div>
     <div class="day-title">Day 3 · Royal + culture (or cricket day)</div>
-    <div class="day-date">Saturday, Jul 11</div></div>
+    <div class="day-date">Saturday, Jul 11</div>
+    <div class="day-peek">Option A: Westminster Abbey interior visit (book). Option B: Lord...</div></div>
     <div class="chevron">▼</div>
   </div>
   <div class="day-content">
@@ -829,7 +945,8 @@
   <div class="day-head" onclick="tog(this)">
     <div><div class="day-badge">London</div>
     <div class="day-title">Day 4 · Sport day + relaxed Sunday</div>
-    <div class="day-date">Sunday, Jul 12</div></div>
+    <div class="day-date">Sunday, Jul 12</div>
+    <div class="day-peek">Wimbledon Championships (during your dates) OR Wimbledon Lawn Ten...</div></div>
     <div class="chevron">▼</div>
   </div>
   <div class="day-content">
@@ -846,7 +963,8 @@
   <div class="day-head" onclick="tog(this)">
     <div><div class="day-badge">London</div>
     <div class="day-title">Day 5 · City + Tower + Borough</div>
-    <div class="day-date">Monday, Jul 13</div></div>
+    <div class="day-date">Monday, Jul 13</div>
+    <div class="day-peek">Tower of London (arrive early for Crown Jewels) → Tower Bridge wa...</div></div>
     <div class="chevron">▼</div>
   </div>
   <div class="day-content">
@@ -863,7 +981,8 @@
   <div class="day-head" onclick="tog(this)">
     <div><div class="day-badge">London</div>
     <div class="day-title">Day 6 · South Kensington + Hyde Park</div>
-    <div class="day-date">Tuesday, Jul 14</div></div>
+    <div class="day-date">Tuesday, Jul 14</div>
+    <div class="day-peek">Museum trio: Natural History Museum / V&A / Science Museum (choos...</div></div>
     <div class="chevron">▼</div>
   </div>
   <div class="day-content">
@@ -880,7 +999,8 @@
   <div class="day-head" onclick="tog(this)">
     <div><div class="day-badge">Travel</div>
     <div class="day-title">Day 7 · Greenwich + train to Edinburgh</div>
-    <div class="day-date">Wednesday, Jul 15</div></div>
+    <div class="day-date">Wednesday, Jul 15</div>
+    <div class="day-peek">Greenwich: Cutty Sark (optional) + Royal Observatory + Prime Meri...</div></div>
     <div class="chevron">▼</div>
   </div>
   <div class="day-content">
@@ -897,7 +1017,8 @@
   <div class="day-head" onclick="tog(this)">
     <div><div class="day-badge">Scotland</div>
     <div class="day-title">Day 8 · Edinburgh Old Town</div>
-    <div class="day-date">Thursday, Jul 16</div></div>
+    <div class="day-date">Thursday, Jul 16</div>
+    <div class="day-peek">Edinburgh Castle (book) + Castle Esplanade views.</div></div>
     <div class="chevron">▼</div>
   </div>
   <div class="day-content">
@@ -914,7 +1035,8 @@
   <div class="day-head" onclick="tog(this)">
     <div><div class="day-badge">Scotland</div>
     <div class="day-title">Day 9 · Holyrood + Arthur's Seat + New Town</div>
-    <div class="day-date">Friday, Jul 17</div></div>
+    <div class="day-date">Friday, Jul 17</div>
+    <div class="day-peek">Sunrise hike: Arthur's Seat (weather-dependent) OR easy viewpoint...</div></div>
     <div class="chevron">▼</div>
   </div>
   <div class="day-content">
@@ -931,7 +1053,8 @@
   <div class="day-head" onclick="tog(this)">
     <div><div class="day-badge">Scotland</div>
     <div class="day-title">Day 10 · Highlands day tour (big scenery)</div>
-    <div class="day-date">Saturday, Jul 18</div></div>
+    <div class="day-date">Saturday, Jul 18</div>
+    <div class="day-peek">Full-day Highlands tour: Glencoe / Loch Lomond / or Loch Ness rou...</div></div>
     <div class="chevron">▼</div>
   </div>
   <div class="day-content">
@@ -948,7 +1071,8 @@
   <div class="day-head" onclick="tog(this)">
     <div><div class="day-badge">Scotland</div>
     <div class="day-title">Day 11 · Glasgow day trip</div>
-    <div class="day-date">Sunday, Jul 19</div></div>
+    <div class="day-date">Sunday, Jul 19</div>
+    <div class="day-peek">Train to Glasgow. West End: Kelvingrove Art Gallery & Museum + Un...</div></div>
     <div class="chevron">▼</div>
   </div>
   <div class="day-content">
@@ -965,7 +1089,8 @@
   <div class="day-head" onclick="tog(this)">
     <div><div class="day-badge">Travel</div>
     <div class="day-title">Day 12 · Edinburgh wrap + fly home</div>
-    <div class="day-date">Monday, Jul 20</div></div>
+    <div class="day-date">Monday, Jul 20</div>
+    <div class="day-peek">Easy final morning: Dean Village + Water of Leith walk OR Royal Y...</div></div>
     <div class="chevron">▼</div>
   </div>
   <div class="day-content">
@@ -2463,20 +2588,14 @@
 </div>
 </div>
 
-<div class="footer">London + Scotland 2026 · built for the crew ✈️</div>
+<div class="footer">· · ·<br>London + Scotland 2026<br>built for the crew</div>
 
 </div><!-- /notebook -->
 
-<script>
-function tab(id) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.nav button').forEach(b => b.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-  event.target.classList.add('active');
-  window.scrollTo({ top: document.querySelector('.nav').offsetTop, behavior: 'smooth' });
-  setTimeout(scan, 100);
-}
+<button class="back-top" id="backTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+<div class="toast" id="toast"></div>
 
+<script>
 function tog(el) {
   el.closest('.day-page,.area-card').classList.toggle('open');
 }
@@ -2488,8 +2607,76 @@ const obs = new IntersectionObserver(entries => {
 function scan() { document.querySelectorAll('.reveal:not(.vis)').forEach(el => obs.observe(el)); }
 scan();
 
+// Back to top button
+const backBtn = document.getElementById('backTop');
+window.addEventListener('scroll', () => {
+  backBtn.classList.toggle('show', window.scrollY > 600);
+}, { passive: true });
+
+// Cover parallax — title drifts slower on scroll
+const cover = document.querySelector('.cover');
+const coverContent = cover ? cover.querySelector('.cover-stamp, .cover-title') : null;
+if (cover) {
+  window.addEventListener('scroll', () => {
+    const y = window.scrollY;
+    const h = cover.offsetHeight;
+    if (y < h) {
+      cover.style.opacity = 1 - (y / h) * 0.7;
+      if (coverContent) coverContent.style.transform = 'translateY(' + (y * 0.15) + 'px)';
+    }
+  }, { passive: true });
+}
+
+// Toast notification
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+// Reading position memory per tab
+const scrollPositions = {};
+const origTabFn = tab;
+
+// Tab switching with position memory
+tab = function(id) {
+  // Save current scroll
+  const activeTab = document.querySelector('.page.active');
+  if (activeTab) scrollPositions[activeTab.id] = window.scrollY;
+
+  // Switch tab
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav button').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.target.classList.add('active');
+
+  // Restore or scroll to nav
+  const navTop = document.querySelector('.nav').offsetTop;
+  if (scrollPositions[id] && scrollPositions[id] > navTop) {
+    window.scrollTo({ top: scrollPositions[id], behavior: 'instant' });
+  } else {
+    window.scrollTo({ top: navTop, behavior: 'smooth' });
+  }
+
+  setTimeout(scan, 100);
+  if (id === 'suggest') loadSuggestions();
+  if (id === 'eat') applyFilters();
+};
+
+// Countdown timer with number roll
+function animateNumber(el, target) {
+  let current = 0;
+  const step = Math.max(1, Math.floor(target / 20));
+  const interval = setInterval(() => {
+    current += step;
+    if (current >= target) { current = target; clearInterval(interval); }
+    el.textContent = current;
+  }, 30);
+}
+let countdownAnimated = false;
+
 // Countdown timer
-function updateCountdown() {
   const trip = new Date('2026-07-09T17:55:00-05:00'); // AA20 departs 5:55 PM CDT
   const now = new Date();
   const diff = trip - now;
@@ -2502,9 +2689,16 @@ function updateCountdown() {
   const days = Math.floor(diff / (1000*60*60*24));
   const hrs = Math.floor((diff % (1000*60*60*24)) / (1000*60*60));
   const min = Math.floor((diff % (1000*60*60)) / (1000*60));
-  document.getElementById('cd-days').textContent = days;
-  document.getElementById('cd-hrs').textContent = hrs;
-  document.getElementById('cd-min').textContent = min;
+  if (!countdownAnimated) {
+    animateNumber(document.getElementById('cd-days'), days);
+    animateNumber(document.getElementById('cd-hrs'), hrs);
+    animateNumber(document.getElementById('cd-min'), min);
+    countdownAnimated = true;
+  } else {
+    document.getElementById('cd-days').textContent = days;
+    document.getElementById('cd-hrs').textContent = hrs;
+    document.getElementById('cd-min').textContent = min;
+  }
 }
 updateCountdown();
 setInterval(updateCountdown, 60000);
@@ -2722,8 +2916,12 @@ async function submitSuggestion() {
 
   try {
     await saveSuggestions();
-    btn.textContent = 'Added! \u2705';
-    setTimeout(() => { btn.textContent = 'Add to List \u2708\uFE0F'; btn.disabled = false; }, 2000);
+    showToast('Suggestion added \u2705');
+    btn.textContent = 'Add to List \u2708\uFE0F';
+    btn.disabled = false;
+    // Mark newest card for slide-in animation
+    const cards = document.querySelectorAll('.sg-card');
+    if (cards.length) cards[cards.length - 1].classList.add('entering');
   } catch(e) {
     currentData.suggestions.pop();
     renderSuggestions();
