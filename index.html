@@ -890,7 +890,7 @@
   .cover > * { position: relative; z-index: 2; }
 
   /* Suggest tab notification dot */
-  .nav button[onclick*="suggest"]::before {
+  .nav button[onclick*="suggest_disabled"]::before {
     content: '';
     position: absolute;
     top: 8px; right: calc(50% - 22px);
@@ -1026,7 +1026,7 @@
   .nav::before {
     content: '';
     position: absolute;
-    top: -28px; right: 24px;
+    top: -28px; left: 12px;
     width: 14px; height: 55px;
     background: var(--terra);
     z-index: 101;
@@ -1036,7 +1036,7 @@
   .nav::after {
     content: '';
     position: absolute;
-    top: 25px; right: 24px;
+    top: 25px; left: 12px;
     width: 14px; height: 8px;
     z-index: 101;
     border-left: 7px solid var(--terra);
