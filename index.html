@@ -1237,6 +1237,119 @@
     background-image: repeating-linear-gradient(90deg, transparent, transparent 8px, rgba(45,74,62,0.02) 8px, rgba(45,74,62,0.02) 12px, transparent 12px, transparent 20px) !important;
   }
 
+
+  /* ====== VIBE ROUND 2 ====== */
+
+  /* Faded Big Ben watermark on London days background */
+  #plan .day-london .day-content {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 200' opacity='0.018'%3E%3Crect x='45' y='20' width='10' height='140' fill='%232D4A3E'/%3E%3Crect x='40' y='10' width='20' height='15' fill='%232D4A3E'/%3E%3Crect x='42' y='0' width='16' height='14' rx='3' fill='%232D4A3E'/%3E%3Crect x='48' y='-5' width='4' height='8' fill='%232D4A3E'/%3E%3Crect x='35' y='155' width='30' height='10' fill='%232D4A3E'/%3E%3Ccircle cx='50' cy='30' r='5' fill='none' stroke='%232D4A3E' stroke-width='1.5'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right -10px bottom 10px;
+    background-size: 50px auto;
+  }
+
+  /* Faded castle watermark on Scotland days background */
+  #plan .day-scotland .day-content {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 100' opacity='0.018'%3E%3Crect x='10' y='40' width='20' height='50' fill='%235C6B4A'/%3E%3Crect x='50' y='30' width='20' height='60' fill='%235C6B4A'/%3E%3Crect x='90' y='40' width='20' height='50' fill='%235C6B4A'/%3E%3Crect x='5' y='35' width='30' height='8' fill='%235C6B4A'/%3E%3Crect x='45' y='25' width='30' height='8' fill='%235C6B4A'/%3E%3Crect x='85' y='35' width='30' height='8' fill='%235C6B4A'/%3E%3Crect x='0' y='85' width='120' height='8' fill='%235C6B4A'/%3E%3Crect x='13' y='32' width='4' height='6' fill='%235C6B4A'/%3E%3Crect x='23' y='32' width='4' height='6' fill='%235C6B4A'/%3E%3Crect x='53' y='22' width='4' height='6' fill='%235C6B4A'/%3E%3Crect x='63' y='22' width='4' height='6' fill='%235C6B4A'/%3E%3Crect x='93' y='32' width='4' height='6' fill='%235C6B4A'/%3E%3Crect x='103' y='32' width='4' height='6' fill='%235C6B4A'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right -5px bottom 10px;
+    background-size: 60px auto;
+  }
+
+  /* Ink splatter accents between sections */
+  .section-header::after {
+    content: '' !important;
+    flex: 1 !important;
+    height: 1px !important;
+    background: var(--paper-edge) !important;
+    position: relative !important;
+  }
+  .section-header::before {
+    content: '' !important;
+    flex: 1 !important;
+    height: 1px !important;
+    background: var(--paper-edge) !important;
+  }
+
+  /* Ink dots at end of day cards */
+  .day-content::after {
+    content: '·  ·  ·';
+    display: block;
+    text-align: center;
+    padding: 0.4rem 0 0.6rem;
+    color: var(--paper-edge);
+    font-size: 0.8rem;
+    letter-spacing: 3px;
+  }
+
+  /* Aged paper edge — rough top edge on pages */
+  .page {
+    border-top: none !important;
+    position: relative;
+  }
+  .page::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg,
+      var(--paper) 0%, var(--paper-dark) 8%, var(--paper) 15%,
+      var(--paper-dark) 25%, var(--paper) 33%, var(--paper-dark) 42%,
+      var(--paper) 48%, var(--paper-dark) 55%, var(--paper) 62%,
+      var(--paper-dark) 70%, var(--paper) 78%, var(--paper-dark) 85%,
+      var(--paper) 92%, var(--paper-dark) 100%);
+    pointer-events: none;
+  }
+
+  /* Animated route SVG on cover */
+  .cover-route-line {
+    position: relative;
+    z-index: 2;
+    margin: 1rem auto;
+    max-width: 280px;
+    height: 30px;
+  }
+  .cover-route-line svg {
+    width: 100%;
+    height: 100%;
+  }
+  .cover-route-line .route-path {
+    stroke: rgba(212,197,160,0.3);
+    stroke-width: 1.5;
+    fill: none;
+    stroke-dasharray: 300;
+    stroke-dashoffset: 300;
+    animation: drawRoute 2.5s ease 1.5s forwards;
+  }
+  .cover-route-line .route-dot {
+    fill: rgba(212,197,160,0.5);
+  }
+  .cover-route-line .route-dot-glow {
+    fill: rgba(212,197,160,0.15);
+  }
+  @keyframes drawRoute { to { stroke-dashoffset: 0; } }
+
+  /* Notebook page number feel */
+  .page::before {
+    content: '' !important;
+    position: absolute !important;
+    bottom: 1.5rem; right: 1.2rem;
+    font-size: 0.55rem;
+    color: var(--paper-edge);
+    letter-spacing: 1px;
+    z-index: 1;
+    pointer-events: none;
+    background: none !important;
+    width: auto !important; height: auto !important;
+    left: auto !important; top: auto !important;
+  }
+  #plan::before { content: 'trip plan' !important; }
+  #explore::before { content: 'explore' !important; }
+  #eat::before { content: 'eat & drink' !important; }
+  #book::before { content: 'bookings' !important; }
+  #stays::before { content: 'stays' !important; }
+  #suggest::before { content: 'suggestions' !important; }
+
 </style>
 </head>
 <body>
@@ -1263,6 +1376,25 @@
     <span>DFW</span>
   </div>
   <div class="cover-dates">JULY 9 – 20, 2026</div>
+  <div class="cover-route-line">
+  <svg viewBox="0 0 280 30">
+    <circle class="route-dot-glow" cx="20" cy="15" r="8"/>
+    <circle class="route-dot" cx="20" cy="15" r="3"/>
+    <path class="route-path" d="M 23 15 Q 80 2 120 15"/>
+    <circle class="route-dot-glow" cx="120" cy="15" r="8"/>
+    <circle class="route-dot" cx="120" cy="15" r="3"/>
+    <path class="route-path" d="M 123 15 L 180 15" style="animation-delay:2s"/>
+    <circle class="route-dot-glow" cx="180" cy="15" r="8"/>
+    <circle class="route-dot" cx="180" cy="15" r="3"/>
+    <path class="route-path" d="M 183 15 Q 230 2 260 15" style="animation-delay:2.3s"/>
+    <circle class="route-dot-glow" cx="260" cy="15" r="8"/>
+    <circle class="route-dot" cx="260" cy="15" r="3"/>
+    <text x="20" y="28" text-anchor="middle" fill="rgba(212,197,160,0.25)" font-size="5" font-family="Inter" font-weight="600">DFW</text>
+    <text x="120" y="28" text-anchor="middle" fill="rgba(212,197,160,0.25)" font-size="5" font-family="Inter" font-weight="600">LHR</text>
+    <text x="180" y="28" text-anchor="middle" fill="rgba(212,197,160,0.25)" font-size="5" font-family="Inter" font-weight="600">EDI</text>
+    <text x="260" y="28" text-anchor="middle" fill="rgba(212,197,160,0.25)" font-size="5" font-family="Inter" font-weight="600">DFW</text>
+  </svg>
+</div>
   <div class="countdown" id="countdown">
     <div class="cd-block"><div class="cd-num" id="cd-days">--</div><div class="cd-label">days</div></div>
     <div class="cd-block"><div class="cd-num" id="cd-hrs">--</div><div class="cd-label">hours</div></div>
