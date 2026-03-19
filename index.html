@@ -1350,6 +1350,23 @@
   #stays::before { content: 'stays' !important; }
   #suggest::before { content: 'suggestions' !important; }
 
+
+  .pack-overlay { position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);z-index:300;display:none;justify-content:center;align-items:flex-end; }
+  .pack-overlay.show { display:flex; }
+  .pack-sheet { background:var(--paper);width:100%;max-width:720px;max-height:85vh;border-radius:16px 16px 0 0;overflow-y:auto;padding:1.2rem;animation:sheetUp 0.35s cubic-bezier(0.4,0,0.2,1); }
+  @keyframes sheetUp { from{transform:translateY(100%)} to{transform:translateY(0)} }
+  .pack-header { display:flex;justify-content:space-between;align-items:center;margin-bottom:0.8rem;padding-bottom:0.6rem;border-bottom:1.5px solid var(--paper-edge); }
+  .pack-title { font-family:'DM Serif Display',serif;font-size:1.3rem;color:var(--ink); }
+  .pack-close { width:28px;height:28px;border:none;background:var(--paper-dark);border-radius:50%;cursor:pointer;font-size:0.8rem;color:var(--ink-light);display:flex;align-items:center;justify-content:center; }
+  .pack-cat { font-size:0.6rem;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;color:var(--ink-faint);margin:0.8rem 0 0.3rem;padding-top:0.5rem;border-top:1px dotted var(--paper-edge); }
+  .pack-cat:first-of-type { border-top:none;padding-top:0; }
+  .pack-item { display:flex;align-items:center;gap:0.7rem;padding:0.45rem 0;cursor:pointer;-webkit-tap-highlight-color:transparent; }
+  .pack-chk { width:20px;height:20px;border:2px solid var(--paper-edge);border-radius:4px;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all 0.2s;font-size:0.7rem;color:transparent; }
+  .pack-item.chkd .pack-chk { background:var(--teal);border-color:var(--teal);color:white; }
+  .pack-item.chkd .pack-lbl { text-decoration:line-through;color:var(--ink-faint); }
+  .pack-lbl { font-size:0.82rem;color:var(--ink); }
+  .pack-prog { font-size:0.65rem;color:var(--ink-faint);text-align:center;margin-top:0.8rem;padding-top:0.5rem;border-top:1px solid var(--paper-edge); }
+
 </style>
 </head>
 <body>
@@ -1409,7 +1426,7 @@
   </div>
   <div class="day-content">
 <div class="flight-strip"><div><div class="flight-code">AA20</div><div class="flight-info">DFW → LHR</div></div><div class="flight-info">5:55 PM → 9:00 AM+1<br><a href="https://www.flightradar24.com/data/flights/aa20" target="_blank">📡 Track</a></div></div>
-    <div class="act"><div class="act-icon">⛅</div><div><div class="act-label">Afternoon</div><div class="act-text">Pack bags. Head to DFW airport by 3:30 PM (2 hrs before international).</div><div class="act-tip">Be at DFW by 3:30 PM</div></div></div>
+    <div class="act"><div class="act-icon">⛅</div><div><div class="act-label">Afternoon</div><div class="act-text"><span onclick="oPack()" style="text-decoration:underline;text-decoration-style:dotted;cursor:pointer;color:var(--teal)">Pack bags</span>. Head to DFW airport by 3:30 PM (2 hrs before international).</div><div class="act-tip">Be at DFW by 3:30 PM</div></div></div>
     <div class="act"><div class="act-icon">🍽️</div><div><div class="act-label">Dinner</div><div class="act-text">Dinner on the plane. AA20 departs 5:55 PM.</div></div></div>
     <div class="act"><div class="act-icon">🌙</div><div><div class="act-label">Evening</div><div class="act-text">Overnight flight. Try to sleep. Arrive London 9 AM Friday.</div><div class="act-tip">Sleep on the plane!</div></div></div>
     <div class="transport-bar">🚇 Drive/Uber to DFW Terminal D. Check in online Wed Jul 8 5:55 PM CDT.</div>
@@ -3392,6 +3409,57 @@ loadSuggestions();
 window.addEventListener('scroll', function() {
   document.getElementById('backTop').classList.toggle('show', window.scrollY > 500);
 }, {passive: true});
+</script>
+
+
+<div class="pack-overlay" id="packO" onclick="if(event.target===this)cPack()">
+<div class="pack-sheet">
+<div class="pack-header"><div class="pack-title">Packing Checklist</div><button class="pack-close" onclick="cPack()">&#10005;</button></div>
+<div class="pack-cat">Documents</div>
+<div class="pack-item" onclick="tPack(this)"><div class="pack-chk">&#10003;</div><div class="pack-lbl">Passport (valid 6+ months)</div></div>
+<div class="pack-item" onclick="tPack(this)"><div class="pack-chk">&#10003;</div><div class="pack-lbl">Passport photocopy (separate from original)</div></div>
+<div class="pack-item" onclick="tPack(this)"><div class="pack-chk">&#10003;</div><div class="pack-lbl">Flight confirmation (LWBOPY)</div></div>
+<div class="pack-item" onclick="tPack(this)"><div class="pack-chk">&#10003;</div><div class="pack-lbl">Airbnb booking confirmation</div></div>
+<div class="pack-item" onclick="tPack(this)"><div class="pack-chk">&#10003;</div><div class="pack-lbl">Travel insurance docs</div></div>
+<div class="pack-item" onclick="tPack(this)"><div class="pack-chk">&#10003;</div><div class="pack-lbl">Train ticket (London to Edinburgh)</div></div>
+<div class="pack-cat">Tech</div>
+<div class="pack-item" onclick="tPack(this)"><div class="pack-chk">&#10003;</div><div class="pack-lbl">UK power adapter (Type G, 3 prongs)</div></div>
+<div class="pack-item" onclick="tPack(this)"><div class="pack-chk">&#10003;</div><div class="pack-lbl">Phone charger + cable</div></div>
+<div class="pack-item" onclick="tPack(this)"><div class="pack-chk">&#10003;</div><div class="pack-lbl">Portable battery pack</div></div>
+<div class="pack-item" onclick="tPack(this)"><div class="pack-chk">&#10003;</div><div class="pack-lbl">eSIM or UK SIM card</div></div>
+<div class="pack-item" onclick="tPack(this)"><div class="pack-chk">&#10003;</div><div class="pack-lbl">Earbuds / headphones</div></div>
+<div class="pack-cat">Clothes</div>
+<div class="pack-item" onclick="tPack(this)"><div class="pack-chk">&#10003;</div><div class="pack-lbl">Rain jacket / light waterproof</div></div>
+<div class="pack-item" onclick="tPack(this)"><div class="pack-chk">&#10003;</div><div class="pack-lbl">Comfortable walking shoes (break in NOW)</div></div>
+<div class="pack-item" onclick="tPack(this)"><div class="pack-chk">&#10003;</div><div class="pack-lbl">Layers (London July = 18-25C / 65-77F)</div></div>
+<div class="pack-item" onclick="tPack(this)"><div class="pack-chk">&#10003;</div><div class="pack-lbl">Light sweater for evenings + Scotland</div></div>
+<div class="pack-item" onclick="tPack(this)"><div class="pack-chk">&#10003;</div><div class="pack-lbl">Nice outfit for West End show / dinner</div></div>
+<div class="pack-item" onclick="tPack(this)"><div class="pack-chk">&#10003;</div><div class="pack-lbl">Socks (more than you think)</div></div>
+<div class="pack-item" onclick="tPack(this)"><div class="pack-chk">&#10003;</div><div class="pack-lbl">Sunglasses</div></div>
+<div class="pack-cat">Essentials</div>
+<div class="pack-item" onclick="tPack(this)"><div class="pack-chk">&#10003;</div><div class="pack-lbl">Medications (if any)</div></div>
+<div class="pack-item" onclick="tPack(this)"><div class="pack-chk">&#10003;</div><div class="pack-lbl">Motion sickness meds (Highlands tour)</div></div>
+<div class="pack-item" onclick="tPack(this)"><div class="pack-chk">&#10003;</div><div class="pack-lbl">Toiletries (travel size for carry-on)</div></div>
+<div class="pack-item" onclick="tPack(this)"><div class="pack-chk">&#10003;</div><div class="pack-lbl">Reusable water bottle</div></div>
+<div class="pack-item" onclick="tPack(this)"><div class="pack-chk">&#10003;</div><div class="pack-lbl">Small daypack / crossbody bag</div></div>
+<div class="pack-item" onclick="tPack(this)"><div class="pack-chk">&#10003;</div><div class="pack-lbl">Umbrella (compact, always in bag)</div></div>
+<div class="pack-cat">Nice to Have</div>
+<div class="pack-item" onclick="tPack(this)"><div class="pack-chk">&#10003;</div><div class="pack-lbl">Neck pillow for flights</div></div>
+<div class="pack-item" onclick="tPack(this)"><div class="pack-chk">&#10003;</div><div class="pack-lbl">Eye mask + earplugs (plane sleep)</div></div>
+<div class="pack-item" onclick="tPack(this)"><div class="pack-chk">&#10003;</div><div class="pack-lbl">Snacks for the flight</div></div>
+<div class="pack-item" onclick="tPack(this)"><div class="pack-chk">&#10003;</div><div class="pack-lbl">Pen (for immigration form)</div></div>
+<div class="pack-item" onclick="tPack(this)"><div class="pack-chk">&#10003;</div><div class="pack-lbl">Ziploc bags (liquids + dirty laundry)</div></div>
+
+<div class="pack-prog" id="packP">0 of 29 packed</div>
+</div></div>
+
+<script>
+function oPack(){document.getElementById('packO').classList.add('show');lPack();}
+function cPack(){document.getElementById('packO').classList.remove('show');}
+function tPack(el){el.classList.toggle('chkd');sPack();uPack();}
+function sPack(){var s=[];document.querySelectorAll('.pack-item').forEach(function(i){s.push(i.classList.contains('chkd'))});localStorage.setItem('packList',JSON.stringify(s));}
+function lPack(){var s=localStorage.getItem('packList');if(!s)return;var d=JSON.parse(s);document.querySelectorAll('.pack-item').forEach(function(i,x){if(d[x])i.classList.add('chkd');else i.classList.remove('chkd')});uPack();}
+function uPack(){var t=document.querySelectorAll('.pack-item').length;var c=document.querySelectorAll('.pack-item.chkd').length;document.getElementById('packP').textContent=c+' of '+t+' packed'+(c===t?' \u2714 Ready to go!':'');}
 </script>
 
 </body></html>
