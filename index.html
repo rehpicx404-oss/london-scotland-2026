@@ -1,0 +1,2763 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>London + Scotland 2026</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=DM+Serif+Display&display=swap');
+
+  :root {
+    --paper: #EDE5D0;
+    --paper-dark: #E0D7C0;
+    --paper-edge: #C8BBAA;
+    --ink: #2E2520;
+    --ink-light: #6B5B4A;
+    --ink-faint: #9A8B78;
+    --sage: #5C6B4A;
+    --sage-bg: #E2E8D8;
+    --terra: #A0522D;
+    --terra-bg: #EDDCCC;
+    --teal: #2D4A3E;
+    --teal-bg: #D5DED8;
+    --gold: #9E7B3C;
+    --red-tape: #8B3A3A;
+    --stamp: #3D5A5A;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  ::selection { background: rgba(42,124,124,0.15); }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: #C4BAA5;
+    color: var(--ink);
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .journal { font-family: 'DM Serif Display', serif; }
+
+  /* Staggered reveal for day cards */
+  .day-page:nth-child(1) { animation-delay: 0s; }
+  .day-page:nth-child(2) { animation-delay: 0.05s; }
+  .day-page:nth-child(3) { animation-delay: 0.1s; }
+  .day-page:nth-child(4) { animation-delay: 0.15s; }
+  .day-page:nth-child(5) { animation-delay: 0.2s; }
+
+  /* Notebook wrapper */
+  .notebook {
+    max-width: 720px;
+    margin: 0 auto;
+    background: var(--paper);
+    min-height: 100vh;
+    box-shadow: -4px 0 15px rgba(0,0,0,0.1), 4px 0 15px rgba(0,0,0,0.1), 0 0 40px rgba(0,0,0,0.05);
+    position: relative;
+  }
+  /* Stitched spine on the left */
+  .notebook::before {
+    content: '';
+    position: fixed;
+    top: 0; bottom: 0;
+    left: max(0px, calc(50% - 360px));
+    width: 3px;
+    background: repeating-linear-gradient(
+      to bottom,
+      var(--paper-edge) 0px,
+      var(--paper-edge) 6px,
+      transparent 6px,
+      transparent 12px
+    );
+    z-index: 200;
+  }
+  /* Aged edge shadow on right */
+  .notebook::after {
+    content: '';
+    position: fixed;
+    top: 0; bottom: 0;
+    right: max(0px, calc(50% - 360px));
+    width: 15px;
+    background: linear-gradient(to left, rgba(0,0,0,0.06), transparent);
+    z-index: 200;
+    pointer-events: none;
+  }
+
+  @media (max-width: 720px) {
+    .notebook::before { left: 0; }
+    .notebook::after { right: 0; }
+  }
+
+  /* ===== COVER ===== */
+  .cover {
+    background: #3D3530;
+    background-image: url("data:image/svg+xml,%3Csvg width='200' height='200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.06'/%3E%3C/svg%3E");
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2.5rem 2rem;
+    position: relative;
+    border-bottom: none;
+    overflow: hidden;
+    color: #E8E0D0;
+  }
+  .cover::before {
+    content: '';
+    position: absolute;
+    top: 1rem; left: 1rem; right: 1rem; bottom: 1rem;
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 2px;
+    pointer-events: none;
+  }
+
+  .cover-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 2.8rem;
+    font-weight: 400;
+    color: #D4C5A0;
+    text-align: center;
+    line-height: 1.2;
+    position: relative;
+    z-index: 2;
+    letter-spacing: -0.5px;
+  }
+  .cover-subtitle {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.75rem;
+    color: rgba(255,255,255,0.4);
+    margin-top: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    font-weight: 500;
+    text-align: center;
+    position: relative;
+    z-index: 2;
+  }
+  .cover-line {
+    width: 60px;
+    height: 2px;
+    background: var(--sage);
+    margin: 1.2rem auto 0;
+    border-radius: 1px;
+    opacity: 0.5;
+  }
+
+  .cover-stamp {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    border: 2px solid rgba(212,197,160,0.3);
+    border-radius: 3px;
+    padding: 0.4rem 1.2rem;
+    margin-top: 2rem;
+    color: rgba(212,197,160,0.5);
+    font-weight: 700;
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    transform: rotate(-3deg);
+    transition: transform 0.3s ease;
+  }
+  .cover-stamp:hover { transform: rotate(0deg); }
+
+  .cover-route {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    margin-top: 1.5rem;
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.1rem;
+    color: rgba(255,255,255,0.5);
+  }
+  .route-arrow { color: #D4C5A0; }
+
+  .cover-dates {
+    margin-top: 1rem;
+    font-size: 0.75rem;
+    color: rgba(255,255,255,0.35);
+    letter-spacing: 2px;
+  }
+
+  .cover-line { background: rgba(212,197,160,0.25); }
+
+  /* Countdown */
+  .countdown {
+    display: flex;
+    gap: 0.6rem;
+    margin-top: 1.5rem;
+    justify-content: center;
+  }
+  .cd-block {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 4px;
+    padding: 0.5rem 0.7rem;
+    min-width: 50px;
+    text-align: center;
+  }
+  .cd-num {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.7rem;
+    font-weight: 400;
+    color: #D4C5A0;
+    line-height: 1;
+  }
+  .cd-label {
+    font-size: 0.45rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: rgba(255,255,255,0.3);
+    font-weight: 700;
+    margin-top: 0.15rem;
+  }
+
+  /* Currency card */
+  .currency-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 4px;
+    padding: 0.5rem 0.8rem;
+    margin: 1rem auto;
+    max-width: 250px;
+    position: relative;
+    z-index: 2;
+  }
+  .currency-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 0.8rem;
+    color: rgba(255,255,255,0.35);
+    text-align: center;
+    margin-bottom: 0.2rem;
+  }
+  .currency-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.1rem 0;
+    font-size: 0.6rem;
+    border-bottom: 1px dotted rgba(255,255,255,0.06);
+  }
+  .currency-row:last-child { border-bottom: none; }
+  .currency-item { color: rgba(255,255,255,0.35); }
+  .currency-price { font-weight: 600; color: rgba(255,255,255,0.5); }
+
+  .cover-stats {
+    display: flex;
+    gap: 2rem;
+    margin-top: 2rem;
+  }
+  .cover-stat { text-align: center; }
+  .cover-stat-num { font-family: 'DM Serif Display', serif; font-size: 2rem; font-weight: 400; color: #D4C5A0; }
+  .cover-stat-label { font-size: 0.55rem; text-transform: uppercase; letter-spacing: 2px; color: rgba(255,255,255,0.25); font-weight: 600; }
+
+  /* Floating landmarks animation */
+  .cover-floats {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0; left: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
+  .float-icon {
+    position: absolute;
+    font-size: 1.2rem;
+    opacity: 0.08;
+    animation: floatAround 25s ease-in-out infinite;
+    filter: grayscale(0.3);
+  }
+  .float-icon:nth-child(1) { top: 10%; left: 8%; animation-delay: 0s; animation-duration: 22s; }
+  .float-icon:nth-child(2) { top: 20%; right: 10%; animation-delay: -3s; animation-duration: 18s; }
+  .float-icon:nth-child(3) { bottom: 25%; left: 12%; animation-delay: -7s; animation-duration: 25s; }
+  .float-icon:nth-child(4) { bottom: 15%; right: 15%; animation-delay: -11s; animation-duration: 20s; }
+  .float-icon:nth-child(5) { top: 40%; left: 5%; animation-delay: -5s; animation-duration: 23s; }
+  .float-icon:nth-child(6) { top: 35%; right: 5%; animation-delay: -9s; animation-duration: 19s; }
+  .float-icon:nth-child(7) { bottom: 35%; left: 25%; animation-delay: -14s; animation-duration: 21s; }
+  .float-icon:nth-child(8) { top: 60%; right: 20%; animation-delay: -2s; animation-duration: 24s; }
+
+  @keyframes floatAround {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    25% { transform: translateY(-15px) rotate(5deg); }
+    50% { transform: translateY(-8px) rotate(-3deg); }
+    75% { transform: translateY(-20px) rotate(4deg); }
+  }
+
+  .scroll-hint {
+    position: absolute;
+    bottom: 1.5rem;
+    font-size: 0.65rem;
+    color: rgba(255,255,255,0.2);
+    animation: bounce 2s infinite;
+    text-align: center;
+    letter-spacing: 1px;
+  }
+  @keyframes bounce { 0%,100% { transform: translateY(0); } 50% { transform: translateY(6px); } }
+
+  /* ===== NAV ===== */
+  .nav {
+    display: flex;
+    overflow-x: auto;
+    background: var(--paper-dark);
+    border-bottom: 2px solid var(--paper-edge);
+    border-top: 1px solid var(--paper-edge);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    scrollbar-width: none;
+    padding: 0;
+  }
+  .nav::-webkit-scrollbar { display: none; }
+  .nav button {
+    flex: 1;
+    padding: 0.75rem 0.4rem;
+    border: none;
+    background: none;
+    color: var(--ink-faint);
+    font-family: 'Inter', sans-serif;
+    font-size: 0.58rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    cursor: pointer;
+    border-bottom: 2.5px solid transparent;
+    transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+    white-space: nowrap;
+    position: relative;
+  }
+  .nav button.active { color: var(--teal); border-bottom-color: var(--teal); background: var(--paper); }
+
+  /* ===== PAGE ===== */
+  .page {
+    display: none;
+    padding: 1.2rem 1.2rem 5rem 1.5rem;
+    position: relative;
+    background: var(--paper);
+  }
+  .page.active { display: block; animation: pageIn 0.5s cubic-bezier(0.4,0,0.2,1); }
+  @keyframes pageIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* ===== DAY CARDS (journal pages) ===== */
+  .day-page {
+    background: var(--paper);
+    border-radius: 4px;
+    margin-bottom: 0.7rem;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.06), 1px 2px 6px rgba(0,0,0,0.04);
+    overflow: hidden;
+    position: relative;
+    border: 1px solid var(--paper-edge);
+    transition: box-shadow 0.3s ease, transform 0.2s ease;
+  }
+  .day-page:active { transform: scale(0.998); }
+  .day-page.open { box-shadow: 0 2px 4px rgba(0,0,0,0.08), 1px 3px 10px rgba(0,0,0,0.06); }
+
+  .day-head {
+    padding: 1.1rem 1.3rem 0.9rem;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .day-badge {
+    display: inline-block;
+    padding: 0.2rem 0.6rem;
+    border-radius: 4px;
+    font-size: 0.5rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 0.25rem;
+  }
+  .day-london .day-badge { background: var(--teal-bg); color: var(--teal); }
+  .day-scotland .day-badge { background: var(--sage-bg); color: var(--sage); }
+  .day-travel .day-badge { background: var(--terra-bg); color: var(--terra); }
+
+  /* Washi tape accent on left side of day cards */
+  .day-london .day-head { border-left: 4px solid var(--teal); border-radius: 0; }
+  .day-scotland .day-head { border-left: 4px solid var(--sage); border-radius: 0; }
+  .day-travel .day-head { border-left: 4px solid var(--terra); border-radius: 0; }
+
+  .day-title { font-family: 'DM Serif Display', serif; font-size: 1.2rem; font-weight: 400; color: var(--ink); line-height: 1.25; }
+  .day-date { font-size: 0.7rem; color: var(--ink-light); margin-top: 0.15rem; font-weight: 400; }
+  .chevron { font-size: 0.65rem; color: var(--ink-faint); transition: transform 0.4s cubic-bezier(0.4,0,0.2,1); margin-top: 0.5rem; }
+  .day-page.open .chevron { transform: rotate(180deg); color: var(--ink-light); }
+
+  .day-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.5s cubic-bezier(0.4,0,0.2,1);
+  }
+  .day-page.open .day-content { max-height: 3000px; }
+
+  .act {
+    padding: 0.85rem 1.3rem;
+    border-bottom: 1px dotted var(--paper-edge);
+    display: flex;
+    gap: 0.8rem;
+    transition: background 0.2s ease;
+  }
+  .act:last-child { border-bottom: none; }
+  .act:active { background: rgba(0,0,0,0.015); }
+  .act-icon { font-size: 1.05rem; width: 1.4rem; text-align: center; flex-shrink: 0; padding-top: 0.05rem; }
+  .act-label { font-size: 0.55rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; color: var(--ink-faint); }
+  .act-text { font-size: 0.85rem; margin-top: 0.15rem; line-height: 1.55; }
+  .act-tip {
+    font-size: 0.73rem;
+    color: var(--gold);
+    margin-top: 0.25rem;
+    padding: 0.2rem 0.5rem;
+    background: rgba(158,123,60,0.08);
+    border-radius: 6px;
+    display: inline-block;
+  }
+
+  .transport-bar {
+    padding: 0.55rem 1.3rem;
+    background: var(--paper-dark);
+    font-size: 0.7rem;
+    color: var(--ink-light);
+    border-top: 1px solid var(--paper-edge);
+    border-radius: 0 0 16px 16px;
+  }
+
+  /* Flight in day */
+  .flight-strip {
+    margin: 0.6rem 1rem;
+    padding: 0.8rem 1.1rem;
+    background: linear-gradient(135deg, var(--teal-bg), rgba(42,124,124,0.08));
+    border-left: 4px solid var(--teal);
+    border-radius: 0 12px 12px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+  }
+  .flight-code { font-weight: 800; font-size: 1.05rem; color: var(--teal); letter-spacing: 0.5px; }
+  .flight-info { font-size: 0.72rem; color: var(--ink-light); line-height: 1.5; }
+  .flight-info a { color: var(--teal); text-decoration: none; font-weight: 600; }
+
+  /* ===== EXPLORE ===== */
+  .area-card {
+    background: var(--paper);
+    border: 1px solid var(--paper-edge);
+    border-radius: 3px;
+    margin-bottom: 0.7rem;
+    overflow: hidden;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+    transition: box-shadow 0.3s ease;
+  }
+  .area-card.open { box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
+  .area-head {
+    padding: 0.9rem 1.2rem;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .area-head h3 { font-family: 'DM Serif Display', serif; font-size: 1.2rem; font-weight: 700; }
+  .area-london .area-head h3 { color: var(--teal); }
+  .area-scotland .area-head h3 { color: var(--sage); }
+
+  .area-body { max-height: 0; overflow: hidden; transition: max-height 0.5s cubic-bezier(0.4,0,0.2,1); }
+  .area-card.open .area-body { max-height: 5000px; }
+  .area-card.open .chevron { transform: rotate(180deg); }
+
+  .area-row { padding: 0.6rem 1.2rem; border-bottom: 1px dotted var(--paper-edge); }
+  .area-row:last-child { border-bottom: none; }
+  .area-row-label { font-size: 0.55rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; color: var(--terra); }
+  .area-row-text { font-size: 0.82rem; line-height: 1.7; white-space: pre-line; }
+
+  /* ===== RESTAURANTS ===== */
+  .filter-bar { margin-bottom: 1rem; }
+  .filter-row { display: flex; gap: 0.3rem; margin-bottom: 0.4rem; overflow-x: auto; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+  .filter-row::-webkit-scrollbar { display: none; }
+  .filter-btn {
+    padding: 0.45rem 0.8rem;
+    border: 1.5px solid var(--paper-edge);
+    border-radius: 4px;
+    background: var(--paper);
+    color: var(--ink-light);
+    font-family: 'Inter', sans-serif;
+    font-size: 0.65rem;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.2s;
+    flex-shrink: 0;
+  }
+  .filter-btn.active { background: var(--teal); color: white; border-color: var(--teal); }
+  .filter-btn.meal-btn.active { background: var(--terra); border-color: var(--terra); }
+  .filter-search { margin-top: 0.4rem; }
+  .filter-count { font-size: 0.65rem; color: var(--ink-faint); margin-top: 0.4rem; font-weight: 600; }
+  .resto-card.hidden { display: none; }
+
+  .resto-card {
+    background: var(--paper);
+    border: 1px solid rgba(0,0,0,0.03);
+    border-radius: 4px;
+    padding: 0.8rem 1.1rem;
+    margin-bottom: 0.4rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+    transition: transform 0.15s ease;
+  }
+  .resto-card:active { transform: scale(0.98); }
+  .resto-name { font-weight: 600; font-size: 0.82rem; }
+  .resto-name a { color: var(--teal); text-decoration: none; }
+  .resto-cuisine { font-size: 0.68rem; color: var(--ink-light); }
+  .resto-known { font-size: 0.72rem; color: var(--ink-light); margin-top: 0.15rem; }
+  .resto-price { font-weight: 700; color: var(--gold); font-size: 0.75rem; }
+  .resto-time { font-size: 0.6rem; color: var(--ink-faint); }
+  .resto-meta { text-align: right; flex-shrink: 0; padding-left: 0.5rem; }
+  .veg { color: var(--sage); }
+
+  .city-header {
+    padding: 0.7rem 1rem;
+    font-size: 0.6rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    border-radius: 4px;
+    margin: 1.2rem 0 0.6rem;
+  }
+  .city-london { background: var(--teal-bg); color: var(--teal); border: 1px solid #B8CCC5; }
+  .city-scotland { background: var(--sage-bg); color: var(--sage); border: 1px solid #C5D1B8; }
+
+  /* ===== BOOKINGS ===== */
+  .booking-card {
+    background: var(--paper);
+    border: 1px solid rgba(0,0,0,0.03);
+    border-radius: 4px;
+    padding: 0.9rem 1.1rem;
+    margin-bottom: 0.5rem;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+  }
+  .booking-card.flight { border-left: 4px solid var(--teal); }
+  .booking-card.alert { border-left: 4px solid var(--terra); }
+  .booking-name { font-weight: 700; font-size: 0.85rem; }
+  .booking-name a { color: var(--teal); text-decoration: none; }
+  .booking-meta { font-size: 0.72rem; color: var(--ink-light); margin-top: 0.2rem; line-height: 1.5; }
+  .booking-meta a { color: var(--teal); }
+  .booking-conf {
+    display: inline-block;
+    padding: 0.15rem 0.5rem;
+    border-radius: 3px;
+    font-size: 0.6rem;
+    font-weight: 800;
+    background: var(--teal-bg);
+    color: var(--teal);
+    margin-top: 0.3rem;
+    letter-spacing: 1px;
+  }
+
+  /* ===== STAYS ===== */
+  .stay-card {
+    background: var(--paper);
+    border: 1px solid var(--paper-edge);
+    border-radius: 6px;
+    padding: 0.9rem 1rem;
+    margin-bottom: 0.5rem;
+  }
+  .stay-top { display: flex; justify-content: space-between; align-items: flex-start; }
+  .stay-name { font-weight: 600; font-size: 0.85rem; color: var(--teal); text-decoration: none; }
+  .stay-price { font-weight: 800; color: var(--teal); font-size: 0.95rem; }
+  .stay-details { font-size: 0.72rem; color: var(--ink-light); margin-top: 0.2rem; }
+  .stay-pp { font-size: 0.75rem; color: var(--sage); font-weight: 600; margin-top: 0.2rem; }
+  .stay-badges { margin-top: 0.3rem; display: flex; gap: 0.3rem; flex-wrap: wrap; }
+  .badge { display: inline-block; padding: 0.1rem 0.4rem; border-radius: 3px; font-size: 0.55rem; font-weight: 700; }
+  .badge.ac { background: var(--teal-bg); color: var(--teal); }
+  .badge.sh { background: var(--terra-bg); color: var(--terra); }
+  .badge.wash { background: var(--sage-bg); color: var(--sage); }
+
+  /* ===== UTILS ===== */
+  .section-header {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.4rem;
+    font-weight: 400;
+    color: var(--ink);
+    padding: 1.5rem 0 0.5rem;
+    border-bottom: 1.5px solid var(--paper-edge);
+    margin-bottom: 1rem;
+  }
+  .muted { color: var(--ink-light); font-size: 0.75rem; }
+  .spacer { height: 1rem; }
+  a { color: var(--teal); }
+
+  
+  /* Form styles */
+  .form-group { display: flex; flex-direction: column; gap: 0.3rem; }
+  .form-label { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--ink-light); }
+  .form-input {
+    padding: 0.8rem 1rem;
+    border: 1px solid var(--paper-edge);
+    border-radius: 8px;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Inter', sans-serif;
+    font-size: 0.9rem;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .form-input:focus { border-color: var(--teal); }
+  .priority-btns { display: flex; gap: 0.5rem; }
+  .pri-btn {
+    flex: 1;
+    padding: 0.6rem;
+    border: 2px solid var(--paper-edge);
+    border-radius: 8px;
+    background: var(--paper);
+    color: var(--ink-light);
+    font-family: 'Inter', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .pri-btn.active { border-color: var(--teal); color: var(--teal); background: var(--teal-bg); }
+  .pri-btn[data-pri="must"].active { border-color: var(--terra); color: var(--terra); background: var(--terra-bg); }
+  .submit-btn {
+    padding: 0.9rem;
+    border: none;
+    border-radius: 8px;
+    background: var(--teal);
+    color: white;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform 0.15s, opacity 0.15s;
+    margin-top: 0.5rem;
+  }
+  .submit-btn:active { transform: scale(0.97); opacity: 0.9; }
+  .who-btns { display: flex; gap: 0.6rem; }
+  .who-btn {
+    flex: 1;
+    padding: 0.6rem 0.3rem;
+    border: 2px solid var(--paper-edge);
+    border-radius: 4px;
+    background: var(--paper);
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.2s;
+    font-family: 'Inter', sans-serif;
+  }
+  .who-btn.active { border-color: var(--teal); background: var(--teal-bg); }
+  .who-name { font-size: 0.65rem; font-weight: 700; color: var(--ink-light); letter-spacing: 0.5px; }
+  .who-btn.active .who-name { color: var(--teal); }
+  .sg-card {
+    background: var(--paper);
+    border: 1px solid rgba(0,0,0,0.04);
+    border-radius: 4px;
+    padding: 0.9rem 1.1rem;
+    margin-bottom: 0.6rem;
+    position: relative;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.03), 0 2px 8px rgba(0,0,0,0.04);
+    transition: all 0.3s ease;
+  }
+  .sg-card.done { opacity: 0.45; transform: scale(0.98); }
+  .sg-card.done .sg-idea { text-decoration: line-through; color: var(--ink-light); }
+  .sg-top { display: flex; gap: 0.8rem; align-items: center; }
+  .sg-avatar {
+    font-size: 1.8rem;
+    flex-shrink: 0;
+    width: 2.8rem;
+    height: 2.8rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--paper-dark);
+    border-radius: 50%;
+  }
+  .sg-idea { font-weight: 600; font-size: 0.9rem; line-height: 1.3; }
+  .sg-loc { font-size: 0.72rem; color: var(--ink-light); margin-top: 0.15rem; }
+  .sg-meta { display: flex; justify-content: space-between; align-items: center; margin-top: 0.5rem; padding-top: 0.4rem; border-top: 1px solid var(--paper-dark); }
+  .sg-who { font-size: 0.65rem; color: var(--ink-faint); }
+  .sg-pri { font-size: 0.5rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; }
+  .sg-actions { display: flex; gap: 0.4rem; }
+  .sg-done-btn, .sg-del-btn {
+    padding: 0.3rem 0.65rem;
+    border: 1px solid var(--paper-edge);
+    border-radius: 8px;
+    background: var(--paper);
+    font-size: 0.6rem;
+    font-weight: 700;
+    color: var(--ink-light);
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    transition: all 0.2s;
+  }
+  .sg-done-btn:active { background: var(--sage-bg); color: var(--sage); border-color: var(--sage); }
+  .sg-del-btn { color: var(--red-tape); border-color: transparent; }
+  .sg-del-btn:active { background: rgba(201,74,74,0.1); }
+
+  .footer {
+    text-align: center;
+    padding: 3rem 1rem 2rem;
+    color: var(--ink-faint);
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.1rem;
+    letter-spacing: 0.5px;
+  }
+  .footer::before {
+    content: '~ ~ ~';
+    display: block;
+    margin-bottom: 0.8rem;
+    font-family: 'Inter';
+    font-size: 0.7rem;
+    color: var(--paper-edge);
+    letter-spacing: 4px;
+  }
+
+  /* Reveal */
+  .reveal { opacity: 0; transform: translateY(15px); transition: all 0.5s ease; }
+  .reveal.vis { opacity: 1; transform: translateY(0); }
+
+  @media (max-width: 480px) {
+    .cover-title { font-size: 2.5rem; }
+    .cover-stats { gap: 1rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NOTEBOOK -->
+<div class="notebook">
+
+<!-- COVER -->
+<div class="cover">
+  <div class="cover-floats">
+    <span class="float-icon">🏰</span>
+    <span class="float-icon">🏔️</span>
+    <span class="float-icon">✈️</span>
+    <span class="float-icon">🚂</span>
+  </div>
+  <div class="cover-stamp">✈ BOARDING PASS</div>
+  <div class="cover-title">London<br>+ Scotland</div>
+  <div class="cover-subtitle">a travel journal</div>
+  <div class="cover-line"></div>
+  <div class="cover-route">
+    <span>DFW</span> <span class="route-arrow">✈→</span>
+    <span>London</span> <span class="route-arrow">🚂→</span>
+    <span>Edinburgh</span> <span class="route-arrow">✈→</span>
+    <span>DFW</span>
+  </div>
+  <div class="cover-dates">JULY 9 – 20, 2026</div>
+  <div class="countdown" id="countdown">
+    <div class="cd-block"><div class="cd-num" id="cd-days">--</div><div class="cd-label">days</div></div>
+    <div class="cd-block"><div class="cd-num" id="cd-hrs">--</div><div class="cd-label">hours</div></div>
+    <div class="cd-block"><div class="cd-num" id="cd-min">--</div><div class="cd-label">min</div></div>
+  </div>
+
+  <div class="currency-card" style="margin-top:1.2rem;">
+    <div class="currency-title">💷 Quick Currency (£1 ≈ $1.27)</div>
+    <div class="currency-row"><span class="currency-item">☕ Coffee</span><span class="currency-price">~£3.50 / $4.45</span></div>
+    <div class="currency-row"><span class="currency-item">🍺 Pint</span><span class="currency-price">~£6.00 / $7.60</span></div>
+    <div class="currency-row"><span class="currency-item">🚇 Tube ride</span><span class="currency-price">~£2.80 / $3.55</span></div>
+    <div class="currency-row"><span class="currency-item">🍽️ Casual meal</span><span class="currency-price">~£12-18 / $15-23</span></div>
+    <div class="currency-row"><span class="currency-item">🍷 Nice dinner</span><span class="currency-price">~£25-40 / $32-51</span></div>
+    <div class="currency-row"><span class="currency-item">💡 Tip</span><span class="currency-price">Not expected (optional 10%)</span></div>
+  </div>
+
+  <div class="scroll-hint">scroll to begin ↓</div>
+</div>
+
+<div class="nav">
+  <button class="active" onclick="tab('plan')">Trip Plan</button>
+  <button onclick="tab('explore')">Explore</button>
+  <button onclick="tab('eat')">Eat & Drink</button>
+  <button onclick="tab('book')">Bookings</button>
+  <button onclick="tab('stays')">Stays</button>
+  <button onclick="tab('suggest')" style="color:var(--terra)">+ Suggest</button>
+</div>
+<div class="page active" id="plan">
+<div class="day-page day-travel open reveal">
+  <div class="day-head" onclick="tog(this)">
+    <div><div class="day-badge">Travel</div>
+    <div class="day-title">Day 1 · Fly Out from DFW</div>
+    <div class="day-date">Thursday, Jul 09</div></div>
+    <div class="chevron">▼</div>
+  </div>
+  <div class="day-content">
+<div class="flight-strip"><div><div class="flight-code">AA20</div><div class="flight-info">DFW → LHR</div></div><div class="flight-info">5:55 PM → 9:00 AM+1<br><a href="https://www.flightradar24.com/data/flights/aa20" target="_blank">📡 Track</a></div></div>
+    <div class="act"><div class="act-icon">⛅</div><div><div class="act-label">Afternoon</div><div class="act-text">Pack bags. Head to DFW airport by 3:30 PM (2 hrs before international).</div><div class="act-tip">Be at DFW by 3:30 PM</div></div></div>
+    <div class="act"><div class="act-icon">🍽️</div><div><div class="act-label">Dinner</div><div class="act-text">Dinner on the plane. AA20 departs 5:55 PM.</div></div></div>
+    <div class="act"><div class="act-icon">🌙</div><div><div class="act-label">Evening</div><div class="act-text">Overnight flight. Try to sleep. Arrive London 9 AM Friday.</div><div class="act-tip">Sleep on the plane!</div></div></div>
+    <div class="transport-bar">🚇 Drive/Uber to DFW Terminal D. Check in online Wed Jul 8 5:55 PM CDT.</div>
+  </div>
+</div>
+
+<div class="day-page day-london reveal">
+  <div class="day-head" onclick="tog(this)">
+    <div><div class="day-badge">London</div>
+    <div class="day-title">Day 2 · Arrive London + Easy First Day</div>
+    <div class="day-date">Friday, Jul 10</div></div>
+    <div class="chevron">▼</div>
+  </div>
+  <div class="day-content">
+    <div class="act"><div class="act-icon">☀️</div><div><div class="act-label">Morning</div><div class="act-text">Land Heathrow 9 AM. Immigration + bags (~45 min). Elizabeth line to central.</div><div class="act-tip">Elizabeth line is fastest</div></div></div>
+    <div class="act"><div class="act-icon">🍴</div><div><div class="act-label">Lunch</div><div class="act-text">First London meal near Airbnb. Or Mercato Mayfair / Seven Dials Market.</div></div></div>
+    <div class="act"><div class="act-icon">⛅</div><div><div class="act-label">Afternoon</div><div class="act-text">Check into Airbnb. Neighborhood walk — coffee, groceries, Oyster setup.</div></div></div>
+    <div class="act"><div class="act-icon">🍽️</div><div><div class="act-label">Dinner</div><div class="act-text">Fish & chips or gastropub. Soho/Covent Garden for easy first night.</div><div class="act-tip">Try: Dishoom or Bao Soho</div></div></div>
+    <div class="act"><div class="act-icon">🌙</div><div><div class="act-label">Evening</div><div class="act-text">Thames sunset walk (Westminster Bridge → South Bank). Early night.</div><div class="act-tip">Stay up to beat jet lag</div></div></div>
+    <div class="transport-bar">🚇 Tube: Westminster/St James's Park/Victoria. Mostly walkable. Use Citymapper for routing. Bonus: ride a red double-decker bus for a classic London moment (Route 11 is iconic).</div>
+  </div>
+</div>
+
+<div class="day-page day-london reveal">
+  <div class="day-head" onclick="tog(this)">
+    <div><div class="day-badge">London</div>
+    <div class="day-title">Day 3 · Royal + culture (or cricket day)</div>
+    <div class="day-date">Saturday, Jul 11</div></div>
+    <div class="chevron">▼</div>
+  </div>
+  <div class="day-content">
+    <div class="act"><div class="act-icon">☀️</div><div><div class="act-label">Morning</div><div class="act-text">Option A: Westminster Abbey interior visit (book). Option B: Lord's Cricket Ground for England Women v India Test (if you want a London sports moment).</div><div class="act-tip">📸 Big Ben: Westminster Bridge</div></div></div>
+    <div class="act"><div class="act-icon">🍴</div><div><div class="act-label">Lunch</div><div class="act-text">Marylebone / St John's Wood (if at Lord's) or Westminster/Victoria (if at Abbey).</div></div></div>
+    <div class="act"><div class="act-icon">⛅</div><div><div class="act-label">Afternoon</div><div class="act-text">Churchill War Rooms (optional) + walk through St James's. Then a shopping loop: Regent Street / Oxford Street for matching football jerseys.</div><div class="act-tip">🎫 Book Palace ahead!</div></div></div>
+    <div class="act"><div class="act-icon">🍽️</div><div><div class="act-label">Dinner</div><div class="act-text">Marylebone/Soho dinner; keep it close to evening plans.</div></div></div>
+    <div class="act"><div class="act-icon">🌙</div><div><div class="act-label">Evening</div><div class="act-text">Changing of the Guard is usually around 11:00 on many summer days; check the official calendar. Late: Soho jazz bar / pub crawl.</div><div class="act-tip">TodayTix app for West End</div></div></div>
+    <div class="transport-bar">🚇 Tube: St James's Park / Westminster / Green Park; for Lord's: St John's Wood (Jubilee line).</div>
+  </div>
+</div>
+
+<div class="day-page day-london reveal">
+  <div class="day-head" onclick="tog(this)">
+    <div><div class="day-badge">London</div>
+    <div class="day-title">Day 4 · Sport day + relaxed Sunday</div>
+    <div class="day-date">Sunday, Jul 12</div></div>
+    <div class="chevron">▼</div>
+  </div>
+  <div class="day-content">
+    <div class="act"><div class="act-icon">☀️</div><div><div class="act-label">Morning</div><div class="act-text">Wimbledon Championships (during your dates) OR Wimbledon Lawn Tennis Museum & tour if you skip matches.</div><div class="act-tip">⏰ Abbey opens 9:30</div></div></div>
+    <div class="act"><div class="act-icon">🍴</div><div><div class="act-label">Lunch</div><div class="act-text">Wimbledon Village area or return central for a classic Sunday roast.</div></div></div>
+    <div class="act"><div class="act-icon">⛅</div><div><div class="act-label">Afternoon</div><div class="act-text">Regent's Park + Camden Market OR a slower museum afternoon (British Museum).</div></div></div>
+    <div class="act"><div class="act-icon">🍽️</div><div><div class="act-label">Dinner</div><div class="act-text">Pick a neighborhood favorite close to your stay (keep Sunday vibes).</div><div class="act-tip">Try: The Wolseley</div></div></div>
+    <div class="act"><div class="act-icon">🌙</div><div><div class="act-label">Evening</div><div class="act-text">Comedy club or cozy pub night. Pack lightly for the week ahead.</div><div class="act-tip">Ronnie Scott's jazz</div></div></div>
+    <div class="transport-bar">🚇 For Wimbledon: District line to Wimbledon + shuttle/ walk. For Camden: Northern line.</div>
+  </div>
+</div>
+
+<div class="day-page day-london reveal">
+  <div class="day-head" onclick="tog(this)">
+    <div><div class="day-badge">London</div>
+    <div class="day-title">Day 5 · City + Tower + Borough</div>
+    <div class="day-date">Monday, Jul 13</div></div>
+    <div class="chevron">▼</div>
+  </div>
+  <div class="day-content">
+    <div class="act"><div class="act-icon">☀️</div><div><div class="act-label">Morning</div><div class="act-text">Tower of London (arrive early for Crown Jewels) → Tower Bridge walk.</div><div class="act-tip">🎾 Queue starts at dawn</div></div></div>
+    <div class="act"><div class="act-icon">🍴</div><div><div class="act-label">Lunch</div><div class="act-text">Borough Market (go hungry) OR riverside along the Thames Path.</div></div></div>
+    <div class="act"><div class="act-icon">⛅</div><div><div class="act-label">Afternoon</div><div class="act-text">St Paul's Cathedral (optional) + Millennium Bridge → Tate Modern (free) OR river cruise.</div><div class="act-tip">Camden = street food heaven</div></div></div>
+    <div class="act"><div class="act-icon">🍽️</div><div><div class="act-label">Dinner</div><div class="act-text">South Bank / London Bridge area for easy transit back.</div></div></div>
+    <div class="act"><div class="act-icon">🌙</div><div><div class="act-label">Evening</div><div class="act-text">Sky Garden (free timed ticket) OR The Shard (paid) for night views.</div></div></div>
+    <div class="transport-bar">🚇 Tube: Tower Hill / London Bridge / St Paul's. Consider Uber Boat by Thames Clippers for a scenic ride.</div>
+  </div>
+</div>
+
+<div class="day-page day-london reveal">
+  <div class="day-head" onclick="tog(this)">
+    <div><div class="day-badge">London</div>
+    <div class="day-title">Day 6 · South Kensington + Hyde Park</div>
+    <div class="day-date">Tuesday, Jul 14</div></div>
+    <div class="chevron">▼</div>
+  </div>
+  <div class="day-content">
+    <div class="act"><div class="act-icon">☀️</div><div><div class="act-label">Morning</div><div class="act-text">Museum trio: Natural History Museum / V&A / Science Museum (choose 1-2).</div><div class="act-tip">⏰ Crown Jewels: 10 AM</div></div></div>
+    <div class="act"><div class="act-icon">🍴</div><div><div class="act-label">Lunch</div><div class="act-text">South Ken cafés or a picnic in Hyde Park/Kensington Gardens.</div><div class="act-tip">💥 Borough Market!</div></div></div>
+    <div class="act"><div class="act-icon">⛅</div><div><div class="act-label">Afternoon</div><div class="act-text">Notting Hill wander (Portobello Road area) + antique stores + photos (grab a Notting Hill tote bag if you find one).</div></div></div>
+    <div class="act"><div class="act-icon">🍽️</div><div><div class="act-label">Dinner</div><div class="act-text">Notting Hill / Kensington for a calm evening (or return to Soho for energy).</div></div></div>
+    <div class="act"><div class="act-icon">🌙</div><div><div class="act-label">Evening</div><div class="act-text">Optional: sunset at Primrose Hill or a low-key wine bar. Park swap: Richmond Park for deer + golden-hour photos.</div><div class="act-tip">🎫 Sky Garden: book 3wks ahead</div></div></div>
+    <div class="transport-bar">🚇 Tube: South Kensington. Walk to Hyde Park/Notting Hill. Buses are great here too.</div>
+  </div>
+</div>
+
+<div class="day-page day-travel reveal">
+  <div class="day-head" onclick="tog(this)">
+    <div><div class="day-badge">Travel</div>
+    <div class="day-title">Day 7 · Greenwich + train to Edinburgh</div>
+    <div class="day-date">Wednesday, Jul 15</div></div>
+    <div class="chevron">▼</div>
+  </div>
+  <div class="day-content">
+    <div class="act"><div class="act-icon">☀️</div><div><div class="act-label">Morning</div><div class="act-text">Greenwich: Cutty Sark (optional) + Royal Observatory + Prime Meridian + Greenwich Market.</div><div class="act-tip">Museums are FREE!</div></div></div>
+    <div class="act"><div class="act-icon">🍴</div><div><div class="act-label">Lunch</div><div class="act-text">Greenwich Market food stalls or riverside pub. Optional detour: Brockley’s Rock (fish & chips) if you want a local chippy mission.</div></div></div>
+    <div class="act"><div class="act-icon">⛅</div><div><div class="act-label">Afternoon</div><div class="act-text">Return to central London, grab bags, then train London King's Cross → Edinburgh Waverley.</div><div class="act-tip">📸 Portobello Road</div></div></div>
+    <div class="act"><div class="act-icon">🍽️</div><div><div class="act-label">Dinner</div><div class="act-text">Arrive Edinburgh: quick dinner near your accommodation (Old Town or New Town).</div></div></div>
+    <div class="act"><div class="act-icon">🌙</div><div><div class="act-label">Evening</div><div class="act-text">Gentle Old Town stroll: Royal Mile at night + early rest.</div><div class="act-tip">🌅 Primrose Hill sunset</div></div></div>
+    <div class="transport-bar">🚇 London: DLR/Tube to Greenwich. Rail: LNER/Lumo/CrossCountry to Edinburgh (book in advance).</div>
+  </div>
+</div>
+
+<div class="day-page day-scotland reveal">
+  <div class="day-head" onclick="tog(this)">
+    <div><div class="day-badge">Scotland</div>
+    <div class="day-title">Day 8 · Edinburgh Old Town</div>
+    <div class="day-date">Thursday, Jul 16</div></div>
+    <div class="chevron">▼</div>
+  </div>
+  <div class="day-content">
+    <div class="act"><div class="act-icon">☀️</div><div><div class="act-label">Morning</div><div class="act-text">Edinburgh Castle (book) + Castle Esplanade views.</div><div class="act-tip">📸 Prime Meridian photo</div></div></div>
+    <div class="act"><div class="act-icon">🍴</div><div><div class="act-label">Lunch</div><div class="act-text">Royal Mile side streets: quick bites or cozy cafés.</div></div></div>
+    <div class="act"><div class="act-icon">⛅</div><div><div class="act-label">Afternoon</div><div class="act-text">Royal Mile highlights: St Giles' Cathedral → closes/wynds exploration → Victoria Street → Grassmarket.</div><div class="act-tip">🚂 Book Lumo for £20!</div></div></div>
+    <div class="act"><div class="act-icon">🍽️</div><div><div class="act-label">Dinner</div><div class="act-text">Old Town: Scottish seasonal dinner + mocktails/dessert (no drinking required).</div></div></div>
+    <div class="act"><div class="act-icon">🌙</div><div><div class="act-label">Evening</div><div class="act-text">Ghost tour (fun) OR live music pub. Sunset from Calton Hill if you still have energy.</div></div></div>
+    <div class="transport-bar">🚇 Mostly walking. If needed: Lothian Buses day ticket / tap-to-cap contactless.</div>
+  </div>
+</div>
+
+<div class="day-page day-scotland reveal">
+  <div class="day-head" onclick="tog(this)">
+    <div><div class="day-badge">Scotland</div>
+    <div class="day-title">Day 9 · Holyrood + Arthur's Seat + New Town</div>
+    <div class="day-date">Friday, Jul 17</div></div>
+    <div class="chevron">▼</div>
+  </div>
+  <div class="day-content">
+    <div class="act"><div class="act-icon">☀️</div><div><div class="act-label">Morning</div><div class="act-text">Sunrise hike: Arthur's Seat (weather-dependent) OR easy viewpoints (Calton Hill).</div><div class="act-tip">🎫 Book Castle online!</div></div></div>
+    <div class="act"><div class="act-icon">🍴</div><div><div class="act-label">Lunch</div><div class="act-text">New Town/Princes Street area cafés.</div></div></div>
+    <div class="act"><div class="act-icon">⛅</div><div><div class="act-label">Afternoon</div><div class="act-text">Palace of Holyroodhouse (book) + Scottish Parliament exterior → walk up to New Town shopping streets.</div><div class="act-tip">📸 Victoria St = Instagram gold</div></div></div>
+    <div class="act"><div class="act-icon">🍽️</div><div><div class="act-label">Dinner</div><div class="act-text">Stockbridge or New Town for a relaxed dinner.</div></div></div>
+    <div class="act"><div class="act-icon">🌙</div><div><div class="act-label">Evening</div><div class="act-text">Evening: Ghost tour (Mercat Tours) OR The Real Mary King's Close (tour) OR live folk music at Sandy Bell’s (order a soft drink).</div><div class="act-tip">👻 Mercat ghost tour</div></div></div>
+    <div class="transport-bar">🚇 Walk + buses. For Arthur's Seat, start early and bring layers.</div>
+  </div>
+</div>
+
+<div class="day-page day-scotland reveal">
+  <div class="day-head" onclick="tog(this)">
+    <div><div class="day-badge">Scotland</div>
+    <div class="day-title">Day 10 · Highlands day tour (big scenery)</div>
+    <div class="day-date">Saturday, Jul 18</div></div>
+    <div class="chevron">▼</div>
+  </div>
+  <div class="day-content">
+    <div class="act"><div class="act-icon">☀️</div><div><div class="act-label">Morning</div><div class="act-text">Full-day Highlands tour: Glencoe / Loch Lomond / or Loch Ness route (choose based on vibe).</div><div class="act-tip">Arthur's Seat: 45 min, worth it</div></div></div>
+    <div class="act"><div class="act-icon">🍴</div><div><div class="act-label">Lunch</div><div class="act-text">Tour stop (typically included as a café stop) or pack snacks.</div></div></div>
+    <div class="act"><div class="act-icon">⛅</div><div><div class="act-label">Afternoon</div><div class="act-text">More Highlands vistas + photo stops; return Edinburgh evening.</div></div></div>
+    <div class="act"><div class="act-icon">🍽️</div><div><div class="act-label">Dinner</div><div class="act-text">Easy dinner near home base (you’ll be tired).</div></div></div>
+    <div class="act"><div class="act-icon">🌙</div><div><div class="act-label">Evening</div><div class="act-text">Early night or a one-drink nightcap.</div><div class="act-tip">Sandy Bell's folk music</div></div></div>
+    <div class="transport-bar">🚇 Coach tour pickup in central Edinburgh. Book seats early for July.</div>
+  </div>
+</div>
+
+<div class="day-page day-scotland reveal">
+  <div class="day-head" onclick="tog(this)">
+    <div><div class="day-badge">Scotland</div>
+    <div class="day-title">Day 11 · Glasgow day trip</div>
+    <div class="day-date">Sunday, Jul 19</div></div>
+    <div class="chevron">▼</div>
+  </div>
+  <div class="day-content">
+    <div class="act"><div class="act-icon">☀️</div><div><div class="act-label">Morning</div><div class="act-text">Train to Glasgow. West End: Kelvingrove Art Gallery & Museum + University of Glasgow stroll.</div><div class="act-tip">🚌 Tour pickup ~8 AM</div></div></div>
+    <div class="act"><div class="act-icon">🍴</div><div><div class="act-label">Lunch</div><div class="act-text">Ashton Lane (West End) for lively lunch options.</div></div></div>
+    <div class="act"><div class="act-icon">⛅</div><div><div class="act-label">Afternoon</div><div class="act-text">City Centre: Buchanan Street shopping + Glasgow Cathedral or Riverside Museum (pick one).</div><div class="act-tip">Glencoe = jaw-dropping</div></div></div>
+    <div class="act"><div class="act-icon">🍽️</div><div><div class="act-label">Dinner</div><div class="act-text">Return to Edinburgh OR stay for dinner in Glasgow then late train back.</div></div></div>
+    <div class="act"><div class="act-icon">🌙</div><div><div class="act-label">Evening</div><div class="act-text">If in Glasgow: live music. If back in Edinburgh: evening walk + dessert.</div></div></div>
+    <div class="transport-bar">🚇 ScotRail Edinburgh Waverley ↔ Glasgow (Queen Street or Central).</div>
+  </div>
+</div>
+
+<div class="day-page day-travel reveal">
+  <div class="day-head" onclick="tog(this)">
+    <div><div class="day-badge">Travel</div>
+    <div class="day-title">Day 12 · Edinburgh wrap + fly home</div>
+    <div class="day-date">Monday, Jul 20</div></div>
+    <div class="chevron">▼</div>
+  </div>
+  <div class="day-content">
+<div class="flight-strip"><div><div class="flight-code">BA1439</div><div class="flight-info">EDI → LHR · 10:05 AM</div></div><div class="flight-info"><a href="https://www.flightradar24.com/data/flights/ba1439" target="_blank">Track</a></div></div>
+<div class="flight-strip"><div><div class="flight-code">BA193</div><div class="flight-info">LHR → DFW · 12:55 PM</div></div><div class="flight-info">Land 5:05 PM<br><a href="https://www.flightradar24.com/data/flights/ba193" target="_blank">Track</a></div></div>
+    <div class="act"><div class="act-icon">☀️</div><div><div class="act-label">Morning</div><div class="act-text">Easy final morning: Dean Village + Water of Leith walk OR Royal Yacht Britannia (Leith).</div><div class="act-tip">🚂 ScotRail ~50 min</div></div></div>
+    <div class="act"><div class="act-icon">🍴</div><div><div class="act-label">Lunch</div><div class="act-text">Brunch near your base; grab pastries for the road.</div><div class="act-tip">💥 Ashton Lane: great vibe</div></div></div>
+    <div class="act"><div class="act-icon">⛅</div><div><div class="act-label">Afternoon</div><div class="act-text">Travel to airport OR (if flying from London) early train back and head to LHR.</div></div></div>
+    <div class="act"><div class="act-icon">🍽️</div><div><div class="act-label">Dinner</div><div class="act-text">Airport meal or in-flight.</div></div></div>
+    <div class="act"><div class="act-icon">🌙</div><div><div class="act-label">Evening</div><div class="act-text">Fly UK → DFW.</div></div></div>
+    <div class="transport-bar">🚇 EDI airport: tram/bus/taxi. If returning to London: rail ~4h 10m+ then Heathrow transfer.</div>
+  </div>
+</div>
+
+</div>
+<div class="page" id="explore">
+<div class="section-header">Area Guides</div>
+<p class="muted" style="margin-bottom:1rem;">Tap any area to see sights, restaurants, quick bites, pubs, and transport.</p>
+<div class="area-card area-london reveal">
+  <div class="area-head" onclick="tog(this)"><h3>📍 Westminster + St James's</h3><div class="chevron">▼</div></div>
+  <div class="area-body">
+    <div class="area-row"><div class="area-row-label">Sights</div><div class="area-row-text">• Big Ben (free) • Westminster Abbey (£27) • Buckingham Palace (£30, summer) • Churchill War Rooms (£25) • St James's Park (pelicans 2:30 PM!)</div></div>
+    <div class="area-row"><div class="area-row-label">Eat</div><div class="area-row-text">The Wolseley 🌿 • Regency Café • Cinnamon Club 🌿 • Quilon 🌿 • Cellarium Café 🌿</div></div>
+    <div class="area-row"><div class="area-row-label">Quick</div><div class="area-row-text">Pret a Manger • Leon 🌿 • Itsu 🌿 • Wasabi • M&S Food (Victoria)</div></div>
+    <div class="area-row"><div class="area-row-label">Pubs</div><div class="area-row-text">The Red Lion (500+ yrs!) • St Stephen's Tavern • The Albert</div></div>
+    <div class="area-row"><div class="area-row-label">Tube</div><div class="area-row-text">Westminster • St James's Park • Green Park • Victoria</div></div>
+  </div>
+</div>
+<div class="area-card area-london reveal">
+  <div class="area-head" onclick="tog(this)"><h3>📍 Covent Garden + Soho</h3><div class="chevron">▼</div></div>
+  <div class="area-body">
+    <div class="area-row"><div class="area-row-label">Eat</div><div class="area-row-text">Dishoom 🌿 • Kiln 🌿 • Barrafina • Bao 🌿 • Hoppers 🌿 • Mildreds 🌿 (fully veg!) • Brasserie Zédel 🌿 • Flat Iron (£11 steak) • Rules</div></div>
+    <div class="area-row"><div class="area-row-label">Quick</div><div class="area-row-text">Pret • Leon 🌿 • Crosstown Doughnuts • Knoops (hot choc) • Monmouth Coffee • Seven Dials Market</div></div>
+    <div class="area-row"><div class="area-row-label">Pubs</div><div class="area-row-text">Lamb & Flag (1623!) • The Harp (CAMRA winner) • Swift (cocktails)</div></div>
+    <div class="area-row"><div class="area-row-label">Shows</div><div class="area-row-text">West End (TodayTix app) • Prince Charles Cinema (£6!) • Ronnie Scott's Jazz</div></div>
+  </div>
+</div>
+<div class="area-card area-london reveal">
+  <div class="area-head" onclick="tog(this)"><h3>📍 Tower + Borough + Shoreditch</h3><div class="chevron">▼</div></div>
+  <div class="area-body">
+    <div class="area-row"><div class="area-row-label">Sights</div><div class="area-row-text">• Tower of London + Crown Jewels (£33) • Tower Bridge • St Paul's (£25) • Sky Garden (FREE!) • Borough Market • Leadenhall Market (Harry Potter!) • Millennium Bridge (also HP!)</div></div>
+    <div class="area-row"><div class="area-row-label">Eat</div><div class="area-row-text">Borough Market 🌿 • Padella 🌿 (pasta, queue worth it) • Flat Iron • Dishoom Shoreditch 🌿 • Ye Olde Cheshire Cheese (1667 pub!)</div></div>
+    <div class="area-row"><div class="area-row-label">Quick</div><div class="area-row-text">Pret • Kappacasein cheese toasties • Bread Ahead doughnuts • Spitalfields Market</div></div>
+  </div>
+</div>
+<div class="area-card area-london reveal">
+  <div class="area-head" onclick="tog(this)"><h3>📍 South Ken + Notting Hill</h3><div class="chevron">▼</div></div>
+  <div class="area-body">
+    <div class="area-row"><div class="area-row-label">Sights</div><div class="area-row-text">• Natural History Museum (FREE) • V&A (FREE) • Science Museum (FREE) • Hyde Park • Portobello Road Market • Harrods food hall</div></div>
+    <div class="area-row"><div class="area-row-label">Eat</div><div class="area-row-text">Ottolenghi 🌿 • Churchill Arms (pub + Thai) • Granger & Co 🌿 • Books for Cooks (café in a bookshop!)</div></div>
+    <div class="area-row"><div class="area-row-label">Quick</div><div class="area-row-text">Pret • Leon 🌿 • Whole Foods • Gail's Bakery • Farm Girl 🌿</div></div>
+  </div>
+</div>
+<div class="area-card area-london reveal">
+  <div class="area-head" onclick="tog(this)"><h3>📍 Greenwich</h3><div class="chevron">▼</div></div>
+  <div class="area-body">
+    <div class="area-row"><div class="area-row-label">Sights</div><div class="area-row-text">• Royal Observatory + Prime Meridian (£16) • Greenwich Market (40+ stalls) • Cutty Sark (£18) • Painted Hall (£17.50, "Britain's Sistine Chapel") • Maritime Museum (FREE)</div></div>
+    <div class="area-row"><div class="area-row-label">Eat</div><div class="area-row-text">Greenwich Market stalls 🌿 • Gipsy Moth (gastropub) • Goddard's (pie & mash) • Trafalgar Tavern (riverside)</div></div>
+    <div class="area-row"><div class="area-row-label">Getting There</div><div class="area-row-text">DLR to Cutty Sark (~20 min from Bank). Then Jubilee to King's Cross for Edinburgh train.</div></div>
+  </div>
+</div>
+<div class="area-card area-london reveal">
+  <div class="area-head" onclick="tog(this)"><h3>📍 Camden + King's Cross</h3><div class="chevron">▼</div></div>
+  <div class="area-body">
+    <div class="area-row"><div class="area-row-label">Sights</div><div class="area-row-text">• Camden Market (450+ stalls, covered) • Coal Drops Yard • British Library (Magna Carta, FREE) • Platform 9¾ • Primrose Hill (sunset)</div></div>
+    <div class="area-row"><div class="area-row-label">Eat</div><div class="area-row-text">Camden street food 🌿 • Dishoom King's Cross 🌿 • Caravan 🌿</div></div>
+    <div class="area-row"><div class="area-row-label">Fun</div><div class="area-row-text">DNA VR arcade (£25-35) • Junkyard Golf (crazy golf + cocktails) • The Roundhouse (live music)</div></div>
+    <div class="area-row"><div class="area-row-label">Tube</div><div class="area-row-text">King's Cross St Pancras • Camden Town • Chalk Farm</div></div>
+  </div>
+</div>
+<div class="area-card area-scotland reveal">
+  <div class="area-head" onclick="tog(this)"><h3>📍 Edinburgh Old Town</h3><div class="chevron">▼</div></div>
+  <div class="area-body">
+    <div class="area-row"><div class="area-row-label">Sights</div><div class="area-row-text">• Edinburgh Castle (£19.50) • Royal Mile (free stroll) • Victoria Street (📸!) • Grassmarket • Camera Obscura (£22) • Mary King's Close (£25, underground) • National Museum (FREE) • Calton Hill (free sunset)</div></div>
+    <div class="area-row"><div class="area-row-label">Eat</div><div class="area-row-text">The Witchery (gothic splurge) • Ondine (seafood) • Oink (£5 pork rolls) • Mary's Milk Bar (gelato)</div></div>
+    <div class="area-row"><div class="area-row-label">Pubs</div><div class="area-row-text">White Hart Inn (1516!) • Beehive Inn (castle views) • Jolly Judge (hidden)</div></div>
+    <div class="area-row"><div class="area-row-label">Tours</div><div class="area-row-text">Mercat ghost tour (£17) • Edinburgh Vaults • Free walking tours • Harry Potter tour</div></div>
+    <div class="area-row"><div class="area-row-label">Quick</div><div class="area-row-text">Pret (High St) • Greggs • Oink • The Fudge Kitchen • Mimi's Bakehouse</div></div>
+  </div>
+</div>
+<div class="area-card area-scotland reveal">
+  <div class="area-head" onclick="tog(this)"><h3>📍 New Town + Stockbridge</h3><div class="chevron">▼</div></div>
+  <div class="area-body">
+    <div class="area-row"><div class="area-row-label">Sights</div><div class="area-row-text">• Dean Village (hidden gem!) • Stockbridge Sunday Market • Royal Botanic Garden (FREE) • Johnnie Walker (£30-75) • Scottish National Portrait Gallery (FREE)</div></div>
+    <div class="area-row"><div class="area-row-label">Eat</div><div class="area-row-text">Gardener's Cottage 🌿 • Urban Angel 🌿 • Café St Honoré 🌿 • Bramble Bar (hidden cocktails!)</div></div>
+    <div class="area-row"><div class="area-row-label">Quick</div><div class="area-row-text">Pret (Princes St) • Artisan Roast • Stockbridge Market stalls • The Pantry</div></div>
+  </div>
+</div>
+<div class="area-card area-scotland reveal">
+  <div class="area-head" onclick="tog(this)"><h3>📍 Glasgow West End</h3><div class="chevron">▼</div></div>
+  <div class="area-body">
+    <div class="area-row"><div class="area-row-label">Sights</div><div class="area-row-text">• Kelvingrove Art Gallery (FREE!) • University of Glasgow (HP vibes) • Ashton Lane (string lights!) • Glasgow Cathedral + Necropolis (FREE)</div></div>
+    <div class="area-row"><div class="area-row-label">Eat</div><div class="area-row-text">Ubiquitous Chip • Ox and Finch 🌿 • Mother India 🌿 • Paesano Pizza 🌿 • Platform 🌿</div></div>
+    <div class="area-row"><div class="area-row-label">Getting There</div><div class="area-row-text">ScotRail from Edinburgh ~50 min. Frequent. Return trains run late.</div></div>
+  </div>
+</div>
+</div>
+<div class="page" id="eat">
+<div class="section-header">Eat & Drink</div>
+<p class="muted" style="margin-bottom:0.8rem;">🌿 = vegetarian options · Tap name for Google Maps</p>
+<div class="filter-bar">
+  <div class="filter-row">
+    <button class="filter-btn active" onclick="filterCity('all',this)">All</button>
+    <button class="filter-btn" onclick="filterCity('london',this)">London</button>
+    <button class="filter-btn" onclick="filterCity('edinburgh',this)">Edinburgh</button>
+    <button class="filter-btn" onclick="filterCity('glasgow',this)">Glasgow</button>
+  </div>
+  <div class="filter-row" id="areaRow" style="display:none;">
+    <button class="filter-btn area-btn active" onclick="filterArea('all',this)">All Areas</button>
+    <span id="londonAreas" style="display:none;contents:flex;gap:0.3rem;"><button class="filter-btn area-btn" onclick="filterArea('Brockley / SE London',this)">Brockley</button><button class="filter-btn area-btn" onclick="filterArea('Camden / Regents Park',this)">Camden</button><button class="filter-btn area-btn" onclick="filterArea('City / Shoreditch / Spitalfields',this)">City</button><button class="filter-btn area-btn" onclick="filterArea('Greenwich',this)">Greenwich</button><button class="filter-btn area-btn" onclick="filterArea('Kensington / Notting Hill / Hyde Park',this)">Kensington</button><button class="filter-btn area-btn" onclick="filterArea('Kings Cross / Bloomsbury',this)">King's Cross</button><button class="filter-btn area-btn" onclick="filterArea('Mayfair / Marylebone',this)">Mayfair</button><button class="filter-btn area-btn" onclick="filterArea('Multiple / Citywide',this)">Multiple</button><button class="filter-btn area-btn" onclick="filterArea('Soho / Covent Garden',this)">Soho</button><button class="filter-btn area-btn" onclick="filterArea('Soho / Covent Garden / Chinatown',this)">Soho</button><button class="filter-btn area-btn" onclick="filterArea('South Bank / Borough / London Bridge',this)">South Bank</button><button class="filter-btn area-btn" onclick="filterArea('Westminster / St Jamess / Victoria',this)">Westminster</button></span>
+    <span id="ediAreas" style="display:none;"><button class="filter-btn area-btn" onclick="filterArea('Bruntsfield / Meadows',this)">Bruntsfield</button><button class="filter-btn area-btn" onclick="filterArea('Leith',this)">Leith</button><button class="filter-btn area-btn" onclick="filterArea('New Town / Stockbridge',this)">New Town</button><button class="filter-btn area-btn" onclick="filterArea('Old Town',this)">Old Town</button></span>
+  </div>
+  <div class="filter-row">
+    <button class="filter-btn meal-btn active" onclick="filterMeal('all',this)">All Meals</button>
+    <button class="filter-btn meal-btn" onclick="filterMeal('brunch',this)">Brunch</button>
+    <button class="filter-btn meal-btn" onclick="filterMeal('lunch',this)">Lunch</button>
+    <button class="filter-btn meal-btn" onclick="filterMeal('dinner',this)">Dinner</button>
+    <button class="filter-btn meal-btn" onclick="filterMeal('snack',this)">Snack</button>
+  </div>
+  <div class="filter-search">
+    <input type="text" id="restoSearch" class="form-input" placeholder="Search restaurants..." oninput="filterSearch(this.value)" style="font-size:0.8rem;padding:0.6rem 1rem;border-radius:12px;">
+  </div>
+  <div class="filter-count" id="restoCount"></div>
+</div>
+<div id="restoList">
+<div class="resto-card" data-city="london" data-area="Westminster   St Jamess   Victoria" data-meal="brunch" data-name="the wolseley">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=The%20Wolseley%20London" target="_blank">The Wolseley</a></div>
+              <div class="resto-cuisine">Westminster / St James's / Victoria · European </div>
+              <div class="resto-known">Grand café breakfast/tea; classic all-day</div></div>
+              <div class="resto-meta"><div class="resto-price">£££</div>
+              <div class="resto-time">Breakfast / lunch</div></div>
+            </div>
+<div class="resto-card" data-city="london" data-area="Westminster   St Jamess   Victoria" data-meal="lunch" data-name="the laughing halibut">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=The%20Laughing%20Halibut%20London" target="_blank">The Laughing Halibut</a></div>
+              <div class="resto-cuisine">Westminster / St James's / Victoria · British </div>
+              <div class="resto-known">Old-school fish & chips near Westminster</div></div>
+              <div class="resto-meta"><div class="resto-price">££</div>
+              <div class="resto-time">Quick lunch</div></div>
+            </div>
+<div class="resto-card" data-city="london" data-area="Westminster   St Jamess   Victoria" data-meal="brunch" data-name="regency café">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=Regency%20Caf%C3%A9%20London" target="_blank">Regency Café</a></div>
+              <div class="resto-cuisine">Westminster / St James's / Victoria · British </div>
+              <div class="resto-known">Iconic fry-up spot (cashier line vibes)</div></div>
+              <div class="resto-meta"><div class="resto-price">£</div>
+              <div class="resto-time">Breakfast</div></div>
+            </div>
+<div class="resto-card" data-city="london" data-area="Westminster   St Jamess   Victoria" data-meal="dinner" data-name="the cinnamon club">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=The%20Cinnamon%20Club%20London" target="_blank">The Cinnamon Club</a></div>
+              <div class="resto-cuisine">Westminster / St James's / Victoria · Indian <span class="veg">🌿</span></div>
+              <div class="resto-known">Modern Indian in a historic library room</div></div>
+              <div class="resto-meta"><div class="resto-price">£££</div>
+              <div class="resto-time">Dinner</div></div>
+            </div>
+<div class="resto-card" data-city="london" data-area="Westminster   St Jamess   Victoria" data-meal="dinner" data-name="quilon">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=Quilon%20London" target="_blank">Quilon</a></div>
+              <div class="resto-cuisine">Westminster / St James's / Victoria · Indian <span class="veg">🌿</span></div>
+              <div class="resto-known">South-west coastal Indian (seafood)</div></div>
+              <div class="resto-meta"><div class="resto-price">£££</div>
+              <div class="resto-time">Dinner</div></div>
+            </div>
+<div class="resto-card" data-city="london" data-area="Westminster   St Jamess   Victoria" data-meal="lunch" data-name="cellarium café & terrace">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=Cellarium%20Caf%C3%A9%20%26%20Terrace%20London" target="_blank">Cellarium Café & Terrace</a></div>
+              <div class="resto-cuisine">Westminster / St James's / Victoria · Café <span class="veg">🌿</span></div>
+              <div class="resto-known">Easy bites right by Westminster Abbey</div></div>
+              <div class="resto-meta"><div class="resto-price">££</div>
+              <div class="resto-time">Lunch</div></div>
+            </div>
+<div class="resto-card" data-city="london" data-area="Soho   Covent Garden   Chinatown" data-meal="lunch" data-name="dishoom covent garden">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=Dishoom%20Covent%20Garden%20London" target="_blank">Dishoom Covent Garden</a></div>
+              <div class="resto-cuisine">Soho / Covent Garden / Chinatown · Indian <span class="veg">🌿</span></div>
+              <div class="resto-known">Black daal, chicken ruby, bacon naan</div></div>
+              <div class="resto-meta"><div class="resto-price">££</div>
+              <div class="resto-time">Lunch / dinner</div></div>
+            </div>
+<div class="resto-card" data-city="london" data-area="Soho   Covent Garden   Chinatown" data-meal="dinner" data-name="kiln">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=Kiln%20London" target="_blank">Kiln</a></div>
+              <div class="resto-cuisine">Soho / Covent Garden / Chinatown · Thai <span class="veg">🌿</span></div>
+              <div class="resto-known">Open-fire Thai dishes, great for small groups</div></div>
+              <div class="resto-meta"><div class="resto-price">££</div>
+              <div class="resto-time">Dinner</div></div>
+            </div>
+<div class="resto-card" data-city="london" data-area="Soho   Covent Garden   Chinatown" data-meal="lunch" data-name="barrafina">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=Barrafina%20London" target="_blank">Barrafina</a></div>
+              <div class="resto-cuisine">Soho / Covent Garden / Chinatown · Spanish </div>
+              <div class="resto-known">Counter tapas, jamón, seafood</div></div>
+              <div class="resto-meta"><div class="resto-price">£££</div>
+              <div class="resto-time">Lunch / dinner</div></div>
+            </div>
+<div class="resto-card" data-city="london" data-area="Soho   Covent Garden   Chinatown" data-meal="lunch" data-name="bao soho">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=Bao%20Soho%20London" target="_blank">Bao Soho</a></div>
+              <div class="resto-cuisine">Soho / Covent Garden / Chinatown · Taiwanese <span class="veg">🌿</span></div>
+              <div class="resto-known">Fluffy bao buns + small plates</div></div>
+              <div class="resto-meta"><div class="resto-price">££</div>
+              <div class="resto-time">Lunch / dinner</div></div>
+            </div>
+<div class="resto-card" data-city="london" data-area="Soho   Covent Garden   Chinatown" data-meal="dinner" data-name="hoppers soho">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=Hoppers%20Soho%20London" target="_blank">Hoppers Soho</a></div>
+              <div class="resto-cuisine">Soho / Covent Garden / Chinatown · Sri Lankan <span class="veg">🌿</span></div>
+              <div class="resto-known">Hoppers + curry, lively</div></div>
+              <div class="resto-meta"><div class="resto-price">££</div>
+              <div class="resto-time">Dinner</div></div>
+            </div>
+<div class="resto-card" data-city="london" data-area="Soho   Covent Garden   Chinatown" data-meal="dinner" data-name="brasserie zédel">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=Brasserie%20Z%C3%A9del%20London" target="_blank">Brasserie Zédel</a></div>
+              <div class="resto-cuisine">Soho / Covent Garden / Chinatown · French <span class="veg">🌿</span></div>
+              <div class="resto-known">Big brasserie; great value set menus</div></div>
+              <div class="resto-meta"><div class="resto-price">££</div>
+              <div class="resto-time">Dinner</div></div>
+            </div>
+<div class="resto-card" data-city="london" data-area="Soho   Covent Garden   Chinatown" data-meal="dinner" data-name="rules">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=Rules%20London" target="_blank">Rules</a></div>
+              <div class="resto-cuisine">Soho / Covent Garden / Chinatown · British </div>
+              <div class="resto-known">Classic British institution (game, pies)</div></div>
+              <div class="resto-meta"><div class="resto-price">£££</div>
+              <div class="resto-time">Dinner</div></div>
+            </div>
+<div class="resto-card" data-city="london" data-area="Soho   Covent Garden   Chinatown" data-meal="dinner" data-name="mildreds soho">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=Mildreds%20Soho%20London" target="_blank">Mildreds Soho</a></div>
+              <div class="resto-cuisine">Soho / Covent Garden / Chinatown · Vegan <span class="veg">🌿</span></div>
+              <div class="resto-known">Colorful vegan bowls + cocktails</div></div>
+              <div class="resto-meta"><div class="resto-price">££</div>
+              <div class="resto-time">Dinner</div></div>
+            </div>
+<div class="resto-card" data-city="london" data-area="Soho   Covent Garden   Chinatown" data-meal="dinner" data-name="flat iron soho">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=Flat%20Iron%20Soho%20London" target="_blank">Flat Iron Soho</a></div>
+              <div class="resto-cuisine">Soho / Covent Garden / Chinatown · Steak <span class="veg">🌿</span></div>
+              <div class="resto-known">Great value steak, casual</div></div>
+              <div class="resto-meta"><div class="resto-price">££</div>
+              <div class="resto-time">Dinner</div></div>
+            </div>
+<div class="resto-card" data-city="london" data-area="Soho   Covent Garden   Chinatown" data-meal="any" data-name="opium chinatown">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=Opium%20Chinatown%20London" target="_blank">Opium Chinatown</a></div>
+              <div class="resto-cuisine">Soho / Covent Garden / Chinatown · Chinese / bar <span class="veg">🌿</span></div>
+              <div class="resto-known">Dim sum + cocktails (speakeasy style)</div></div>
+              <div class="resto-meta"><div class="resto-price">£££</div>
+              <div class="resto-time">Late night</div></div>
+            </div>
+<div class="resto-card" data-city="london" data-area="South Bank   Borough   London Bridge" data-meal="lunch" data-name="borough market">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=Borough%20Market%20London" target="_blank">Borough Market</a></div>
+              <div class="resto-cuisine">South Bank / Borough / London Bridge · Market <span class="veg">🌿</span></div>
+              <div class="resto-known">Choose-your-own food tour; go hungry</div></div>
+              <div class="resto-meta"><div class="resto-price">££</div>
+              <div class="resto-time">Lunch</div></div>
+            </div>
+<div class="resto-card" data-city="london" data-area="South Bank   Borough   London Bridge" data-meal="lunch" data-name="padella">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=Padella%20London" target="_blank">Padella</a></div>
+              <div class="resto-cuisine">South Bank / Borough / London Bridge · Italian <span class="veg">🌿</span></div>
+              <div class="resto-known">Fresh pasta; expect a queue</div></div>
+              <div class="resto-meta"><div class="resto-price">££</div>
+              <div class="resto-time">Lunch / dinner</div></div>
+            </div>
+<div class="resto-card" data-city="london" data-area="South Bank   Borough   London Bridge" data-meal="dinner" data-name="flour & grape">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=Flour%20%26%20Grape%20London" target="_blank">Flour & Grape</a></div>
+              <div class="resto-cuisine">South Bank / Borough / London Bridge · Italian <span class="veg">🌿</span></div>
+              <div class="resto-known">Pasta + shared plates; good for groups</div></div>
+              <div class="resto-meta"><div class="resto-price">££</div>
+              <div class="resto-time">Dinner</div></div>
+            </div>
+<div class="resto-card" data-city="london" data-area="South Bank   Borough   London Bridge" data-meal="lunch" data-name="wright brothers borough">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=Wright%20Brothers%20Borough%20London" target="_blank">Wright Brothers Borough</a></div>
+              <div class="resto-cuisine">South Bank / Borough / London Bridge · Seafood </div>
+              <div class="resto-known">Oysters + seafood platters</div></div>
+              <div class="resto-meta"><div class="resto-price">£££</div>
+              <div class="resto-time">Lunch / dinner</div></div>
+            </div>
+<div class="resto-card" data-city="london" data-area="South Bank   Borough   London Bridge" data-meal="dinner" data-name="skylon">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=Skylon%20London" target="_blank">Skylon</a></div>
+              <div class="resto-cuisine">South Bank / Borough / London Bridge · Modern British <span class="veg">🌿</span></div>
+              <div class="resto-known">River views on the South Bank</div></div>
+              <div class="resto-meta"><div class="resto-price">£££</div>
+              <div class="resto-time">Dinner</div></div>
+            </div>
+<div class="resto-card" data-city="london" data-area="South Bank   Borough   London Bridge" data-meal="dinner" data-name="sea containers restaurant">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=Sea%20Containers%20Restaurant%20London" target="_blank">Sea Containers Restaurant</a></div>
+              <div class="resto-cuisine">South Bank / Borough / London Bridge · Modern </div>
+              <div class="resto-known">Stylish riverside dining</div></div>
+              <div class="resto-meta"><div class="resto-price">£££</div>
+              <div class="resto-time">Dinner</div></div>
+            </div>
+<div class="resto-card" data-city="london" data-area="South Bank   Borough   London Bridge" data-meal="dinner" data-name="oxo tower restaurant">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=OXO%20Tower%20Restaurant%20London" target="_blank">OXO Tower Restaurant</a></div>
+              <div class="resto-cuisine">South Bank / Borough / London Bridge · Modern British </div>
+              <div class="resto-known">Views + special-occasion vibe</div></div>
+              <div class="resto-meta"><div class="resto-price">££££</div>
+              <div class="resto-time">Dinner</div></div>
+            </div>
+<div class="resto-card" data-city="london" data-area="South Bank   Borough   London Bridge" data-meal="any" data-name="the george inn">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=The%20George%20Inn%20London" target="_blank">The George Inn</a></div>
+              <div class="resto-cuisine">South Bank / Borough / London Bridge · Pub </div>
+              <div class="resto-known">Historic pub courtyard</div></div>
+              <div class="resto-meta"><div class="resto-price">££</div>
+              <div class="resto-time">Drinks / casual</div></div>
+            </div>
+<div class="resto-card" data-city="london" data-area="City   Shoreditch   Spitalfields" data-meal="brunch" data-name="duck & waffle">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=Duck%20%26%20Waffle%20London" target="_blank">Duck & Waffle</a></div>
+              <div class="resto-cuisine">City / Shoreditch / Spitalfields · Modern European </div>
+              <div class="resto-known">Skyline views, late-night, brunch</div></div>
+              <div class="resto-meta"><div class="resto-price">£££</div>
+              <div class="resto-time">Brunch / late</div></div>
+            </div>
+<div class="resto-card" data-city="london" data-area="City   Shoreditch   Spitalfields" data-meal="dinner" data-name="sushisamba heron tower">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=SUSHISAMBA%20Heron%20Tower%20London" target="_blank">SUSHISAMBA Heron Tower</a></div>
+              <div class="resto-cuisine">City / Shoreditch / Spitalfields · Japanese / Brazilian </div>
+              <div class="resto-known">Views + high-energy dining</div></div>
+              <div class="resto-meta"><div class="resto-price">££££</div>
+              <div class="resto-time">Dinner</div></div>
+            </div>
+<div class="resto-card" data-city="london" data-area="City   Shoreditch   Spitalfields" data-meal="lunch" data-name="st john smithfield">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=St%20JOHN%20Smithfield%20London" target="_blank">St JOHN Smithfield</a></div>
+              <div class="resto-cuisine">City / Shoreditch / Spitalfields · British </div>
+              <div class="resto-known">Nose-to-tail; bone marrow</div></div>
+              <div class="resto-meta"><div class="resto-price">£££</div>
+              <div class="resto-time">Lunch / dinner</div></div>
+            </div>
+<div class="resto-card" data-city="london" data-area="City   Shoreditch   Spitalfields" data-meal="lunch" data-name="dishoom shoreditch">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=Dishoom%20Shoreditch%20London" target="_blank">Dishoom Shoreditch</a></div>
+              <div class="resto-cuisine">City / Shoreditch / Spitalfields · Indian <span class="veg">🌿</span></div>
+              <div class="resto-known">Crowd-pleasing classics</div></div>
+              <div class="resto-meta"><div class="resto-price">££</div>
+              <div class="resto-time">Lunch / dinner</div></div>
+            </div>
+<div class="resto-card" data-city="london" data-area="City   Shoreditch   Spitalfields" data-meal="dinner" data-name="brat shoreditch">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=Brat%20Shoreditch%20London" target="_blank">Brat Shoreditch</a></div>
+              <div class="resto-cuisine">City / Shoreditch / Spitalfields · Basque </div>
+              <div class="resto-known">Wood-fired, great seafood</div></div>
+              <div class="resto-meta"><div class="resto-price">£££</div>
+              <div class="resto-time">Dinner</div></div>
+            </div>
+<div class="resto-card" data-city="london" data-area="City   Shoreditch   Spitalfields" data-meal="dinner" data-name="smoking goat">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=Smoking%20Goat%20London" target="_blank">Smoking Goat</a></div>
+              <div class="resto-cuisine">City / Shoreditch / Spitalfields · Thai </div>
+              <div class="resto-known">Thai BBQ; fun vibes</div></div>
+              <div class="resto-meta"><div class="resto-price">££</div>
+              <div class="resto-time">Dinner</div></div>
+            </div>
+<div class="resto-card" data-city="london" data-area="City   Shoreditch   Spitalfields" data-meal="lunch" data-name="poppies fish & chips">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=Poppies%20Fish%20%26%20Chips%20London" target="_blank">Poppies Fish & Chips</a></div>
+              <div class="resto-cuisine">City / Shoreditch / Spitalfields · British </div>
+              <div class="resto-known">Classic chippy in Spitalfields</div></div>
+              <div class="resto-meta"><div class="resto-price">££</div>
+              <div class="resto-time">Lunch / dinner</div></div>
+            </div>
+<div class="resto-card" data-city="london" data-area="City   Shoreditch   Spitalfields" data-meal="dinner" data-name="lyle's">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=Lyle%27s%20London" target="_blank">Lyle's</a></div>
+              <div class="resto-cuisine">City / Shoreditch / Spitalfields · Modern British </div>
+              <div class="resto-known">Tasting/menu-driven, minimalist</div></div>
+              <div class="resto-meta"><div class="resto-price">££££</div>
+              <div class="resto-time">Dinner</div></div>
+            </div>
+<div class="resto-card" data-city="london" data-area="City   Shoreditch   Spitalfields" data-meal="dinner" data-name="gloria trattoria shoreditch">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=Gloria%20Trattoria%20Shoreditch%20London" target="_blank">Gloria Trattoria Shoreditch</a></div>
+              <div class="resto-cuisine">City / Shoreditch / Spitalfields · Italian </div>
+              <div class="resto-known">Big, playful trattoria energy</div></div>
+              <div class="resto-meta"><div class="resto-price">£££</div>
+              <div class="resto-time">Dinner</div></div>
+            </div>
+<div class="resto-card" data-city="london" data-area="City   Shoreditch   Spitalfields" data-meal="dinner" data-name="the ned">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=The%20Ned%20London" target="_blank">The Ned</a></div>
+              <div class="resto-cuisine">City / Shoreditch / Spitalfields · Various </div>
+              <div class="resto-known">Multiple restaurants + live music vibes</div></div>
+              <div class="resto-meta"><div class="resto-price">££££</div>
+              <div class="resto-time">Evening</div></div>
+            </div>
+<div class="resto-card" data-city="london" data-area="Kensington   Notting Hill   Hyde Park" data-meal="lunch" data-name="ottolenghi notting hill">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=Ottolenghi%20Notting%20Hill%20London" target="_blank">Ottolenghi Notting Hill</a></div>
+              <div class="resto-cuisine">Kensington / Notting Hill / Hyde Park · Mediterranean <span class="veg">🌿</span></div>
+              <div class="resto-known">Bright plates + pastries</div></div>
+              <div class="resto-meta"><div class="resto-price">££</div>
+              <div class="resto-time">Lunch</div></div>
+            </div>
+<div class="resto-card" data-city="london" data-area="Kensington   Notting Hill   Hyde Park" data-meal="dinner" data-name="the churchill arms">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=The%20Churchill%20Arms%20London" target="_blank">The Churchill Arms</a></div>
+              <div class="resto-cuisine">Kensington / Notting Hill / Hyde Park · Pub / Thai </div>
+              <div class="resto-known">Flower-covered pub + Thai menu</div></div>
+              <div class="resto-meta"><div class="resto-price">££</div>
+              <div class="resto-time">Dinner</div></div>
+            </div>
+<div class="resto-card" data-city="london" data-area="Kensington   Notting Hill   Hyde Park" data-meal="brunch" data-name="granger & co notting hill">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=Granger%20%26%20Co%20Notting%20Hill%20London" target="_blank">Granger & Co Notting Hill</a></div>
+              <div class="resto-cuisine">Kensington / Notting Hill / Hyde Park · Brunch <span class="veg">🌿</span></div>
+              <div class="resto-known">Aussie brunch classic</div></div>
+              <div class="resto-meta"><div class="resto-price">££</div>
+              <div class="resto-time">Breakfast</div></div>
+            </div>
+<div class="resto-card" data-city="london" data-area="Kensington   Notting Hill   Hyde Park" data-meal="lunch" data-name="dishoom kensington">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=Dishoom%20Kensington%20London" target="_blank">Dishoom Kensington</a></div>
+              <div class="resto-cuisine">Kensington / Notting Hill / Hyde Park · Indian <span class="veg">🌿</span></div>
+              <div class="resto-known">Bombay café classics</div></div>
+              <div class="resto-meta"><div class="resto-price">££</div>
+              <div class="resto-time">Lunch / dinner</div></div>
+            </div>
+<div class="resto-card" data-city="london" data-area="Kensington   Notting Hill   Hyde Park" data-meal="dinner" data-name="core by clare smyth">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=Core%20by%20Clare%20Smyth%20London" target="_blank">Core by Clare Smyth</a></div>
+              <div class="resto-cuisine">Kensington / Notting Hill / Hyde Park · Fine dining </div>
+              <div class="resto-known">Three-Michelin-star splurge</div></div>
+              <div class="resto-meta"><div class="resto-price">££££</div>
+              <div class="resto-time">Dinner</div></div>
+            </div>
+<div class="resto-card" data-city="london" data-area="Kensington   Notting Hill   Hyde Park" data-meal="dinner" data-name="the ledbury">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=The%20Ledbury%20London" target="_blank">The Ledbury</a></div>
+              <div class="resto-cuisine">Kensington / Notting Hill / Hyde Park · Fine dining </div>
+              <div class="resto-known">High-end tasting menus</div></div>
+              <div class="resto-meta"><div class="resto-price">££££</div>
+              <div class="resto-time">Dinner</div></div>
+            </div>
+<div class="resto-card" data-city="london" data-area="Kensington   Notting Hill   Hyde Park" data-meal="any" data-name="honest burgers kensington">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=Honest%20Burgers%20Kensington%20London" target="_blank">Honest Burgers Kensington</a></div>
+              <div class="resto-cuisine">Kensington / Notting Hill / Hyde Park · Burgers <span class="veg">🌿</span></div>
+              <div class="resto-known">Reliable burgers + rosemary chips</div></div>
+              <div class="resto-meta"><div class="resto-price">££</div>
+              <div class="resto-time">Casual</div></div>
+            </div>
+<div class="resto-card" data-city="london" data-area="Kensington   Notting Hill   Hyde Park" data-meal="dinner" data-name="the ivy kensington brasserie">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=The%20Ivy%20Kensington%20Brasserie%20London" target="_blank">The Ivy Kensington Brasserie</a></div>
+              <div class="resto-cuisine">Kensington / Notting Hill / Hyde Park · British / brasserie </div>
+              <div class="resto-known">Reliable crowd-pleaser</div></div>
+              <div class="resto-meta"><div class="resto-price">£££</div>
+              <div class="resto-time">Dinner</div></div>
+            </div>
+<div class="resto-card" data-city="london" data-area="Greenwich" data-meal="lunch" data-name="godard's at greenwich">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=Godard%27s%20at%20Greenwich%20London" target="_blank">Godard's at Greenwich</a></div>
+              <div class="resto-cuisine">Greenwich · British </div>
+              <div class="resto-known">Pie & mash institution</div></div>
+              <div class="resto-meta"><div class="resto-price">£</div>
+              <div class="resto-time">Lunch</div></div>
+            </div>
+<div class="resto-card" data-city="london" data-area="Greenwich" data-meal="lunch" data-name="the gipsy moth">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=The%20Gipsy%20Moth%20London" target="_blank">The Gipsy Moth</a></div>
+              <div class="resto-cuisine">Greenwich · Gastropub </div>
+              <div class="resto-known">Pub meals by Cutty Sark</div></div>
+              <div class="resto-meta"><div class="resto-price">££</div>
+              <div class="resto-time">Lunch / dinner</div></div>
+            </div>
+<div class="resto-card" data-city="london" data-area="Greenwich" data-meal="dinner" data-name="the trafalgar tavern">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=The%20Trafalgar%20Tavern%20London" target="_blank">The Trafalgar Tavern</a></div>
+              <div class="resto-cuisine">Greenwich · Pub </div>
+              <div class="resto-known">Historic riverside pub (photo-worthy)</div></div>
+              <div class="resto-meta"><div class="resto-price">££</div>
+              <div class="resto-time">Dinner</div></div>
+            </div>
+<div class="resto-card" data-city="london" data-area="Greenwich" data-meal="dinner" data-name="sticks'n'sushi greenwich">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=Sticks%27n%27Sushi%20Greenwich%20London" target="_blank">Sticks'n'Sushi Greenwich</a></div>
+              <div class="resto-cuisine">Greenwich · Japanese <span class="veg">🌿</span></div>
+              <div class="resto-known">Sushi + yakitori</div></div>
+              <div class="resto-meta"><div class="resto-price">£££</div>
+              <div class="resto-time">Dinner</div></div>
+            </div>
+<div class="resto-card" data-city="london" data-area="Greenwich" data-meal="dinner" data-name="buenos aires café">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=Buenos%20Aires%20Caf%C3%A9%20London" target="_blank">Buenos Aires Café</a></div>
+              <div class="resto-cuisine">Greenwich · Argentinian </div>
+              <div class="resto-known">Steak + empanadas</div></div>
+              <div class="resto-meta"><div class="resto-price">££</div>
+              <div class="resto-time">Dinner</div></div>
+            </div>
+<div class="resto-card" data-city="london" data-area="Greenwich" data-meal="lunch" data-name="greenwich market stalls">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=Greenwich%20Market%20stalls%20London" target="_blank">Greenwich Market stalls</a></div>
+              <div class="resto-cuisine">Greenwich · Market </div>
+              <div class="resto-known">Street food + snacks</div></div>
+              <div class="resto-meta"><div class="resto-price">££</div>
+              <div class="resto-time">Lunch</div></div>
+            </div>
+<div class="resto-card" data-city="london" data-area="Westminster   St Jamess   Victoria" data-meal="lunch" data-name="the ivy victoria">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=The%20Ivy%20Victoria%20London" target="_blank">The Ivy Victoria</a></div>
+              <div class="resto-cuisine">Westminster / St James's / Victoria · British brasserie </div>
+              <div class="resto-known">Classic all-day brasserie; great pre-theatre</div></div>
+              <div class="resto-meta"><div class="resto-price">£££</div>
+              <div class="resto-time">Lunch / dinner</div></div>
+            </div>
+<div class="resto-card" data-city="london" data-area="Westminster   St Jamess   Victoria" data-meal="dinner" data-name="the goring dining room">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=The%20Goring%20Dining%20Room%20London" target="_blank">The Goring Dining Room</a></div>
+              <div class="resto-cuisine">Westminster / St James's / Victoria · British </div>
+              <div class="resto-known">Elevated British; famous afternoon tea</div></div>
+              <div class="resto-meta"><div class="resto-price">££££</div>
+              <div class="resto-time">Dinner / tea</div></div>
+            </div>
+<div class="resto-card" data-city="london" data-area="Westminster   St Jamess   Victoria" data-meal="lunch" data-name="market halls victoria">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=Market%20Halls%20Victoria%20London" target="_blank">Market Halls Victoria</a></div>
+              <div class="resto-cuisine">Westminster / St James's / Victoria · Food hall </div>
+              <div class="resto-known">Multiple stalls; easy group-friendly option</div></div>
+              <div class="resto-meta"><div class="resto-price">££</div>
+              <div class="resto-time">Lunch / casual</div></div>
+            </div>
+<div class="resto-card" data-city="london" data-area="Westminster   St Jamess   Victoria" data-meal="dinner" data-name="ishbilia">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=Ishbilia%20London" target="_blank">Ishbilia</a></div>
+              <div class="resto-cuisine">Westminster / St James's / Victoria · Spanish </div>
+              <div class="resto-known">Old-school tapas; relaxed</div></div>
+              <div class="resto-meta"><div class="resto-price">£££</div>
+              <div class="resto-time">Dinner</div></div>
+            </div>
+<div class="resto-card" data-city="london" data-area="Westminster   St Jamess   Victoria" data-meal="brunch" data-name="the english rose café (victoria)">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=The%20English%20Rose%20Caf%C3%A9%20%28Victoria%29%20London" target="_blank">The English Rose Café (Victoria)</a></div>
+              <div class="resto-cuisine">Westminster / St James's / Victoria · Cafe </div>
+              <div class="resto-known">Quintessential British breakfast; cozy</div></div>
+              <div class="resto-meta"><div class="resto-price">£</div>
+              <div class="resto-time">Breakfast</div></div>
+            </div>
+<div class="resto-card" data-city="london" data-area="Mayfair   Marylebone" data-meal="dinner" data-name="gymkhana">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=Gymkhana%20London" target="_blank">Gymkhana</a></div>
+              <div class="resto-cuisine">Mayfair / Marylebone · Indian </div>
+              <div class="resto-known">Modern Indian; special-occasion vibes</div></div>
+              <div class="resto-meta"><div class="resto-price">££££</div>
+              <div class="resto-time">Dinner</div></div>
+            </div>
+<div class="resto-card" data-city="london" data-area="Mayfair   Marylebone" data-meal="dinner" data-name="sketch">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=Sketch%20London" target="_blank">Sketch</a></div>
+              <div class="resto-cuisine">Mayfair / Marylebone · Modern European </div>
+              <div class="resto-known">Iconic rooms; afternoon tea; celebratory</div></div>
+              <div class="resto-meta"><div class="resto-price">££££</div>
+              <div class="resto-time">Tea / dinner</div></div>
+            </div>
+<div class="resto-card" data-city="london" data-area="Mayfair   Marylebone" data-meal="dinner" data-name="the gate (marylebone)">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=The%20Gate%20%28Marylebone%29%20London" target="_blank">The Gate (Marylebone)</a></div>
+              <div class="resto-cuisine">Mayfair / Marylebone · Vegetarian </div>
+              <div class="resto-known">Vegetarian plates; polished but relaxed</div></div>
+              <div class="resto-meta"><div class="resto-price">£££</div>
+              <div class="resto-time">Dinner</div></div>
+            </div>
+<div class="resto-card" data-city="london" data-area="Mayfair   Marylebone" data-meal="dinner" data-name="wulf & lamb">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=Wulf%20%26%20Lamb%20London" target="_blank">Wulf & Lamb</a></div>
+              <div class="resto-cuisine">Mayfair / Marylebone · Plant-based </div>
+              <div class="resto-known">Plant-based comfort + cocktails</div></div>
+              <div class="resto-meta"><div class="resto-price">£££</div>
+              <div class="resto-time">Dinner / late</div></div>
+            </div>
+<div class="resto-card" data-city="london" data-area="Mayfair   Marylebone" data-meal="dinner" data-name="flat iron marylebone">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=Flat%20Iron%20Marylebone%20London" target="_blank">Flat Iron Marylebone</a></div>
+              <div class="resto-cuisine">Mayfair / Marylebone · Steak <span class="veg">🌿</span></div>
+              <div class="resto-known">Great value steak; casual</div></div>
+              <div class="resto-meta"><div class="resto-price">££</div>
+              <div class="resto-time">Dinner</div></div>
+            </div>
+<div class="resto-card" data-city="london" data-area="Soho   Covent Garden   Chinatown" data-meal="lunch" data-name="bancone covent garden">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=Bancone%20Covent%20Garden%20London" target="_blank">Bancone Covent Garden</a></div>
+              <div class="resto-cuisine">Soho / Covent Garden / Chinatown · Italian </div>
+              <div class="resto-known">Silk handkerchief pasta; great value</div></div>
+              <div class="resto-meta"><div class="resto-price">££</div>
+              <div class="resto-time">Lunch / dinner</div></div>
+            </div>
+<div class="resto-card" data-city="london" data-area="Soho   Covent Garden   Chinatown" data-meal="dinner" data-name="bob bob ricard">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=Bob%20Bob%20Ricard%20London" target="_blank">Bob Bob Ricard</a></div>
+              <div class="resto-cuisine">Soho / Covent Garden / Chinatown · Modern British </div>
+              <div class="resto-known">Press-for-champagne booths</div></div>
+              <div class="resto-meta"><div class="resto-price">££££</div>
+              <div class="resto-time">Dinner</div></div>
+            </div>
+<div class="resto-card" data-city="london" data-area="Soho   Covent Garden   Chinatown" data-meal="dinner" data-name="gauthier soho">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=Gauthier%20Soho%20London" target="_blank">Gauthier Soho</a></div>
+              <div class="resto-cuisine">Soho / Covent Garden / Chinatown · Vegan fine dining </div>
+              <div class="resto-known">Tasting menus; fully plant-based</div></div>
+              <div class="resto-meta"><div class="resto-price">££££</div>
+              <div class="resto-time">Dinner</div></div>
+            </div>
+<div class="resto-card" data-city="london" data-area="Soho   Covent Garden   Chinatown" data-meal="dinner" data-name="club mexicana">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=Club%20Mexicana%20London" target="_blank">Club Mexicana</a></div>
+              <div class="resto-cuisine">Soho / Covent Garden / Chinatown · Vegan Mexican </div>
+              <div class="resto-known">Vegan tacos + margaritas</div></div>
+              <div class="resto-meta"><div class="resto-price">££</div>
+              <div class="resto-time">Dinner / late</div></div>
+            </div>
+<div class="resto-card" data-city="london" data-area="Soho   Covent Garden   Chinatown" data-meal="dinner" data-name="the palomar">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=The%20Palomar%20London" target="_blank">The Palomar</a></div>
+              <div class="resto-cuisine">Soho / Covent Garden / Chinatown · Middle Eastern </div>
+              <div class="resto-known">Jerusalem-inspired small plates</div></div>
+              <div class="resto-meta"><div class="resto-price">£££</div>
+              <div class="resto-time">Dinner</div></div>
+            </div>
+<div class="resto-card" data-city="london" data-area="Soho   Covent Garden   Chinatown" data-meal="dinner" data-name="the barbary (neal's yard)">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=The%20Barbary%20%28Neal%27s%20Yard%29%20London" target="_blank">The Barbary (Neal's Yard)</a></div>
+              <div class="resto-cuisine">Soho / Covent Garden / Chinatown · North African </div>
+              <div class="resto-known">Charcoal-grilled small plates</div></div>
+              <div class="resto-meta"><div class="resto-price">£££</div>
+              <div class="resto-time">Dinner</div></div>
+            </div>
+<div class="resto-card" data-city="london" data-area="Soho   Covent Garden   Chinatown" data-meal="dinner" data-name="hawksmoor seven dials">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=Hawksmoor%20Seven%20Dials%20London" target="_blank">Hawksmoor Seven Dials</a></div>
+              <div class="resto-cuisine">Soho / Covent Garden / Chinatown · Steak </div>
+              <div class="resto-known">Steak + cocktails; big portions</div></div>
+              <div class="resto-meta"><div class="resto-price">£££</div>
+              <div class="resto-time">Dinner</div></div>
+            </div>
+<div class="resto-card" data-city="london" data-area="Soho   Covent Garden   Chinatown" data-meal="lunch" data-name="homeslice neal's yard">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=Homeslice%20Neal%27s%20Yard%20London" target="_blank">Homeslice Neal's Yard</a></div>
+              <div class="resto-cuisine">Soho / Covent Garden / Chinatown · Pizza </div>
+              <div class="resto-known">Giant slices; quick and easy</div></div>
+              <div class="resto-meta"><div class="resto-price">£</div>
+              <div class="resto-time">Lunch / casual</div></div>
+            </div>
+<div class="resto-card" data-city="london" data-area="South Bank   Borough   London Bridge" data-meal="lunch" data-name="hawksmoor borough">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=Hawksmoor%20Borough%20London" target="_blank">Hawksmoor Borough</a></div>
+              <div class="resto-cuisine">South Bank / Borough / London Bridge · Steak </div>
+              <div class="resto-known">Steakhouse staple; great Sunday roast</div></div>
+              <div class="resto-meta"><div class="resto-price">£££</div>
+              <div class="resto-time">Dinner / Sunday lunch</div></div>
+            </div>
+<div class="resto-card" data-city="london" data-area="South Bank   Borough   London Bridge" data-meal="lunch" data-name="bao borough">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=Bao%20Borough%20London" target="_blank">Bao Borough</a></div>
+              <div class="resto-cuisine">South Bank / Borough / London Bridge · Taiwanese <span class="veg">🌿</span></div>
+              <div class="resto-known">Bao buns; casual; good for sharing</div></div>
+              <div class="resto-meta"><div class="resto-price">££</div>
+              <div class="resto-time">Lunch / dinner</div></div>
+            </div>
+<div class="resto-card" data-city="london" data-area="South Bank   Borough   London Bridge" data-meal="dinner" data-name="mallow (borough market)">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=Mallow%20%28Borough%20Market%29%20London" target="_blank">Mallow (Borough Market)</a></div>
+              <div class="resto-cuisine">South Bank / Borough / London Bridge · Plant-based <span class="veg">🌿</span></div>
+              <div class="resto-known">Creative plant-based plates; gorgeous room</div></div>
+              <div class="resto-meta"><div class="resto-price">£££</div>
+              <div class="resto-time">Dinner</div></div>
+            </div>
+<div class="resto-card" data-city="london" data-area="South Bank   Borough   London Bridge" data-meal="dinner" data-name="the swan at the globe">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=The%20Swan%20at%20the%20Globe%20London" target="_blank">The Swan at the Globe</a></div>
+              <div class="resto-cuisine">South Bank / Borough / London Bridge · British </div>
+              <div class="resto-known">Dinner with a view; theatre-friendly</div></div>
+              <div class="resto-meta"><div class="resto-price">£££</div>
+              <div class="resto-time">Dinner</div></div>
+            </div>
+<div class="resto-card" data-city="london" data-area="South Bank   Borough   London Bridge" data-meal="lunch" data-name="bancone borough yards">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=Bancone%20Borough%20Yards%20London" target="_blank">Bancone Borough Yards</a></div>
+              <div class="resto-cuisine">South Bank / Borough / London Bridge · Italian </div>
+              <div class="resto-known">Pasta; easy near London Bridge</div></div>
+              <div class="resto-meta"><div class="resto-price">££</div>
+              <div class="resto-time">Lunch / dinner</div></div>
+            </div>
+<div class="resto-card" data-city="london" data-area="South Bank   Borough   London Bridge" data-meal="dinner" data-name="trivet">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=Trivet%20London" target="_blank">Trivet</a></div>
+              <div class="resto-cuisine">South Bank / Borough / London Bridge · Modern European </div>
+              <div class="resto-known">Fine dining; polished service</div></div>
+              <div class="resto-meta"><div class="resto-price">££££</div>
+              <div class="resto-time">Dinner</div></div>
+            </div>
+<div class="resto-card" data-city="london" data-area="City   Shoreditch   Spitalfields" data-meal="dinner" data-name="bubala spitalfields">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=Bubala%20Spitalfields%20London" target="_blank">Bubala Spitalfields</a></div>
+              <div class="resto-cuisine">City / Shoreditch / Spitalfields · Vegetarian </div>
+              <div class="resto-known">Vegetarian Middle Eastern sharing plates</div></div>
+              <div class="resto-meta"><div class="resto-price">£££</div>
+              <div class="resto-time">Dinner</div></div>
+            </div>
+<div class="resto-card" data-city="london" data-area="City   Shoreditch   Spitalfields" data-meal="dinner" data-name="tofu vegan (spitalfields)">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=Tofu%20Vegan%20%28Spitalfields%29%20London" target="_blank">Tofu Vegan (Spitalfields)</a></div>
+              <div class="resto-cuisine">City / Shoreditch / Spitalfields · Vegan </div>
+              <div class="resto-known">Vegan Chinese; crowd-pleaser</div></div>
+              <div class="resto-meta"><div class="resto-price">££</div>
+              <div class="resto-time">Dinner</div></div>
+            </div>
+<div class="resto-card" data-city="london" data-area="City   Shoreditch   Spitalfields" data-meal="dinner" data-name="som saa">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=Som%20Saa%20London" target="_blank">Som Saa</a></div>
+              <div class="resto-cuisine">City / Shoreditch / Spitalfields · Thai </div>
+              <div class="resto-known">Smoky Thai sharing plates</div></div>
+              <div class="resto-meta"><div class="resto-price">£££</div>
+              <div class="resto-time">Dinner</div></div>
+            </div>
+<div class="resto-card" data-city="london" data-area="City   Shoreditch   Spitalfields" data-meal="dinner" data-name="hawksmoor spitalfields">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=Hawksmoor%20Spitalfields%20London" target="_blank">Hawksmoor Spitalfields</a></div>
+              <div class="resto-cuisine">City / Shoreditch / Spitalfields · Steak </div>
+              <div class="resto-known">Steaks + cocktails; classic</div></div>
+              <div class="resto-meta"><div class="resto-price">£££</div>
+              <div class="resto-time">Dinner</div></div>
+            </div>
+<div class="resto-card" data-city="london" data-area="City   Shoreditch   Spitalfields" data-meal="any" data-name="the culpeper">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=The%20Culpeper%20London" target="_blank">The Culpeper</a></div>
+              <div class="resto-cuisine">City / Shoreditch / Spitalfields · Pub / British </div>
+              <div class="resto-known">Rooftop + gastropub plates</div></div>
+              <div class="resto-meta"><div class="resto-price">££</div>
+              <div class="resto-time">Drinks / casual</div></div>
+            </div>
+<div class="resto-card" data-city="london" data-area="Camden   Regents Park" data-meal="lunch" data-name="kerb camden market">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=KERB%20Camden%20Market%20London" target="_blank">KERB Camden Market</a></div>
+              <div class="resto-cuisine">Camden / Regent's Park · Street food </div>
+              <div class="resto-known">Street food stalls; quick + fun</div></div>
+              <div class="resto-meta"><div class="resto-price">£</div>
+              <div class="resto-time">Lunch</div></div>
+            </div>
+<div class="resto-card" data-city="london" data-area="Camden   Regents Park" data-meal="lunch" data-name="the cheese bar (camden)">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=The%20Cheese%20Bar%20%28Camden%29%20London" target="_blank">The Cheese Bar (Camden)</a></div>
+              <div class="resto-cuisine">Camden / Regent's Park · British </div>
+              <div class="resto-known">Cheese toasties + cheese-focused plates</div></div>
+              <div class="resto-meta"><div class="resto-price">££</div>
+              <div class="resto-time">Lunch / dinner</div></div>
+            </div>
+<div class="resto-card" data-city="london" data-area="Camden   Regents Park" data-meal="dinner" data-name="mildreds camden">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=Mildreds%20Camden%20London" target="_blank">Mildreds Camden</a></div>
+              <div class="resto-cuisine">Camden / Regent's Park · Vegan <span class="veg">🌿</span></div>
+              <div class="resto-known">Plant-based classics; very reliable</div></div>
+              <div class="resto-meta"><div class="resto-price">££</div>
+              <div class="resto-time">Dinner</div></div>
+            </div>
+<div class="resto-card" data-city="london" data-area="Camden   Regents Park" data-meal="lunch" data-name="poppies fish & chips (camden)">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=Poppies%20Fish%20%26%20Chips%20%28Camden%29%20London" target="_blank">Poppies Fish & Chips (Camden)</a></div>
+              <div class="resto-cuisine">Camden / Regent's Park · British </div>
+              <div class="resto-known">Classic fish & chips; casual</div></div>
+              <div class="resto-meta"><div class="resto-price">££</div>
+              <div class="resto-time">Lunch / early dinner</div></div>
+            </div>
+<div class="resto-card" data-city="london" data-area="Camden   Regents Park" data-meal="dinner" data-name="the colonel fawcett">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=The%20Colonel%20Fawcett%20London" target="_blank">The Colonel Fawcett</a></div>
+              <div class="resto-cuisine">Camden / Regent's Park · Pub </div>
+              <div class="resto-known">Pub classics; relaxed vibe</div></div>
+              <div class="resto-meta"><div class="resto-price">££</div>
+              <div class="resto-time">Dinner / drinks</div></div>
+            </div>
+<div class="resto-card" data-city="london" data-area="Kings Cross   Bloomsbury" data-meal="brunch" data-name="dishoom king's cross">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=Dishoom%20King%27s%20Cross%20London" target="_blank">Dishoom King's Cross</a></div>
+              <div class="resto-cuisine">King's Cross / Bloomsbury · Indian <span class="veg">🌿</span></div>
+              <div class="resto-known">Bombay cafe; bacon naan + veg options</div></div>
+              <div class="resto-meta"><div class="resto-price">££</div>
+              <div class="resto-time">Breakfast / dinner</div></div>
+            </div>
+<div class="resto-card" data-city="london" data-area="Kings Cross   Bloomsbury" data-meal="brunch" data-name="caravan king's cross">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=Caravan%20King%27s%20Cross%20London" target="_blank">Caravan King's Cross</a></div>
+              <div class="resto-cuisine">King's Cross / Bloomsbury · Modern / brunch </div>
+              <div class="resto-known">Brunch + coffee; good all-day</div></div>
+              <div class="resto-meta"><div class="resto-price">££</div>
+              <div class="resto-time">Breakfast / lunch</div></div>
+            </div>
+<div class="resto-card" data-city="london" data-area="Kings Cross   Bloomsbury" data-meal="dinner" data-name="german gymnasium">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=German%20Gymnasium%20London" target="_blank">German Gymnasium</a></div>
+              <div class="resto-cuisine">King's Cross / Bloomsbury · German </div>
+              <div class="resto-known">Grand room; schnitzel + cocktails</div></div>
+              <div class="resto-meta"><div class="resto-price">£££</div>
+              <div class="resto-time">Dinner</div></div>
+            </div>
+<div class="resto-card" data-city="london" data-area="Kings Cross   Bloomsbury" data-meal="dinner" data-name="coal office (king's cross)">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=Coal%20Office%20%28King%27s%20Cross%29%20London" target="_blank">Coal Office (King's Cross)</a></div>
+              <div class="resto-cuisine">King's Cross / Bloomsbury · Middle Eastern </div>
+              <div class="resto-known">Live-fire cooking; stylish</div></div>
+              <div class="resto-meta"><div class="resto-price">£££</div>
+              <div class="resto-time">Dinner</div></div>
+            </div>
+<div class="resto-card" data-city="london" data-area="Kings Cross   Bloomsbury" data-meal="brunch" data-name="honey & co">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=Honey%20%26%20Co%20London" target="_blank">Honey & Co</a></div>
+              <div class="resto-cuisine">King's Cross / Bloomsbury · Middle Eastern bakery </div>
+              <div class="resto-known">Baking + brunch; pastries</div></div>
+              <div class="resto-meta"><div class="resto-price">££</div>
+              <div class="resto-time">Brunch</div></div>
+            </div>
+<div class="resto-card" data-city="london" data-area="Kensington   Notting Hill   Hyde Park" data-meal="brunch" data-name="farmacy (notting hill)">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=Farmacy%20%28Notting%20Hill%29%20London" target="_blank">Farmacy (Notting Hill)</a></div>
+              <div class="resto-cuisine">Kensington / Notting Hill / Hyde Park · Vegetarian </div>
+              <div class="resto-known">Vegetarian brunch + bowls; bright vibe</div></div>
+              <div class="resto-meta"><div class="resto-price">£££</div>
+              <div class="resto-time">Brunch / lunch</div></div>
+            </div>
+<div class="resto-card" data-city="london" data-area="Greenwich" data-meal="brunch" data-name="greenwich grind">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=Greenwich%20Grind%20London" target="_blank">Greenwich Grind</a></div>
+              <div class="resto-cuisine">Greenwich · Cafe / brunch </div>
+              <div class="resto-known">Coffee + brunch; stylish</div></div>
+              <div class="resto-meta"><div class="resto-price">££</div>
+              <div class="resto-time">Breakfast / brunch</div></div>
+            </div>
+<div class="resto-card" data-city="london" data-area="Greenwich" data-meal="lunch" data-name="the cutty sark (pub)">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=The%20Cutty%20Sark%20%28pub%29%20London" target="_blank">The Cutty Sark (pub)</a></div>
+              <div class="resto-cuisine">Greenwich · Pub </div>
+              <div class="resto-known">Pub classics; riverside</div></div>
+              <div class="resto-meta"><div class="resto-price">££</div>
+              <div class="resto-time">Lunch / drinks</div></div>
+            </div>
+<div class="resto-card" data-city="london" data-area="Soho   Covent Garden   Chinatown" data-meal="dinner" data-name="bubala soho">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=Bubala%20Soho%20London" target="_blank">Bubala Soho</a></div>
+              <div class="resto-cuisine">Soho / Covent Garden / Chinatown · Vegetarian </div>
+              <div class="resto-known">Vegetarian Middle Eastern sharing plates</div></div>
+              <div class="resto-meta"><div class="resto-price">£££</div>
+              <div class="resto-time">Dinner</div></div>
+            </div>
+<div class="resto-card" data-city="london" data-area="City   Shoreditch   Spitalfields" data-meal="dinner" data-name="unity diner">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=Unity%20Diner%20London" target="_blank">Unity Diner</a></div>
+              <div class="resto-cuisine">City / Shoreditch / Spitalfields · Vegan </div>
+              <div class="resto-known">Vegan comfort food; ethical focus</div></div>
+              <div class="resto-meta"><div class="resto-price">££</div>
+              <div class="resto-time">Dinner</div></div>
+            </div>
+<div class="resto-card" data-city="london" data-area="City   Shoreditch   Spitalfields" data-meal="dinner" data-name="the spread eagle (hackney)">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=The%20Spread%20Eagle%20%28Hackney%29%20London" target="_blank">The Spread Eagle (Hackney)</a></div>
+              <div class="resto-cuisine">City / Shoreditch / Spitalfields · Plant-based pub </div>
+              <div class="resto-known">Plant-based pub classics</div></div>
+              <div class="resto-meta"><div class="resto-price">££</div>
+              <div class="resto-time">Dinner / drinks</div></div>
+            </div>
+<div class="resto-card" data-city="london" data-area="City   Shoreditch   Spitalfields" data-meal="dinner" data-name="silo (hackney wick)">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=Silo%20%28Hackney%20Wick%29%20London" target="_blank">Silo (Hackney Wick)</a></div>
+              <div class="resto-cuisine">City / Shoreditch / Spitalfields · Modern </div>
+              <div class="resto-known">Zero-waste dining; creative plates</div></div>
+              <div class="resto-meta"><div class="resto-price">££££</div>
+              <div class="resto-time">Dinner</div></div>
+            </div>
+<div class="resto-card" data-city="london" data-area="Mayfair   Marylebone" data-meal="brunch" data-name="the delaunay">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=The%20Delaunay%20London" target="_blank">The Delaunay</a></div>
+              <div class="resto-cuisine">Mayfair / Marylebone · European brasserie </div>
+              <div class="resto-known">Classic brasserie; great all-day</div></div>
+              <div class="resto-meta"><div class="resto-price">£££</div>
+              <div class="resto-time">Breakfast / dinner</div></div>
+            </div>
+<div class="resto-card" data-city="london" data-area="Multiple   Citywide" data-meal="brunch" data-name="pret a manger">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=Pret%20a%20Manger%20London" target="_blank">Pret a Manger</a></div>
+              <div class="resto-cuisine">Multiple / Citywide · Sandwiches / café </div>
+              <div class="resto-known">Fast grab-and-go sandwiches, salads, coffee</div></div>
+              <div class="resto-meta"><div class="resto-price">£</div>
+              <div class="resto-time">Breakfast / quick lunch</div></div>
+            </div>
+<div class="resto-card" data-city="london" data-area="Soho   Covent Garden" data-meal="snack" data-name="knoops (hot chocolate)">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=Knoops%20%28hot%20chocolate%29%20London" target="_blank">Knoops (hot chocolate)</a></div>
+              <div class="resto-cuisine">Soho / Covent Garden · Dessert / café </div>
+              <div class="resto-known">Custom hot chocolate bar + sweet treats</div></div>
+              <div class="resto-meta"><div class="resto-price">££</div>
+              <div class="resto-time">Dessert / afternoon</div></div>
+            </div>
+<div class="resto-card" data-city="london" data-area="Brockley   SE London" data-meal="dinner" data-name="brockley’s rock">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=Brockley%E2%80%99s%20Rock%20London" target="_blank">Brockley’s Rock</a></div>
+              <div class="resto-cuisine">Brockley / SE London · Fish & chips </div>
+              <div class="resto-known">Local-favorite chippy</div></div>
+              <div class="resto-meta"><div class="resto-price">££</div>
+              <div class="resto-time">Dinner</div></div>
+            </div>
+<div class="resto-card" data-city="edinburgh" data-area="Old Town" data-meal="dinner" data-name="the witchery by the castle">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=The%20Witchery%20by%20the%20Castle%20Edinburgh" target="_blank">The Witchery by the Castle</a></div>
+              <div class="resto-cuisine">Old Town · Scottish </div>
+              <div class="resto-known">Iconic atmospheric splurge</div></div>
+              <div class="resto-meta"><div class="resto-price">££££</div>
+              <div class="resto-time">Dinner</div></div>
+            </div>
+<div class="resto-card" data-city="edinburgh" data-area="Old Town" data-meal="lunch" data-name="makars mash bar">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=Makars%20Mash%20Bar%20Edinburgh" target="_blank">Makars Mash Bar</a></div>
+              <div class="resto-cuisine">Old Town · Scottish </div>
+              <div class="resto-known">Mash bowls + stews</div></div>
+              <div class="resto-meta"><div class="resto-price">££</div>
+              <div class="resto-time">Lunch / dinner</div></div>
+            </div>
+<div class="resto-card" data-city="edinburgh" data-area="Old Town" data-meal="dinner" data-name="ondine">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=Ondine%20Edinburgh" target="_blank">Ondine</a></div>
+              <div class="resto-cuisine">Old Town · Seafood </div>
+              <div class="resto-known">Oysters + seafood</div></div>
+              <div class="resto-meta"><div class="resto-price">£££</div>
+              <div class="resto-time">Dinner</div></div>
+            </div>
+<div class="resto-card" data-city="edinburgh" data-area="Old Town" data-meal="lunch" data-name="oink">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=Oink%20Edinburgh" target="_blank">Oink</a></div>
+              <div class="resto-cuisine">Old Town · Scottish street food </div>
+              <div class="resto-known">Roast pork rolls</div></div>
+              <div class="resto-meta"><div class="resto-price">£</div>
+              <div class="resto-time">Quick lunch</div></div>
+            </div>
+<div class="resto-card" data-city="edinburgh" data-area="Old Town" data-meal="dinner" data-name="the devil's advocate">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=The%20Devil%27s%20Advocate%20Edinburgh" target="_blank">The Devil's Advocate</a></div>
+              <div class="resto-cuisine">Old Town · Pub </div>
+              <div class="resto-known">Cozy closes + Scottish plates (great atmosphere)</div></div>
+              <div class="resto-meta"><div class="resto-price">££</div>
+              <div class="resto-time">Evening</div></div>
+            </div>
+<div class="resto-card" data-city="edinburgh" data-area="Old Town" data-meal="dinner" data-name="howies victoria street">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=Howies%20Victoria%20Street%20Edinburgh" target="_blank">Howies Victoria Street</a></div>
+              <div class="resto-cuisine">Old Town · Scottish </div>
+              <div class="resto-known">Scottish classics + warm vibe (group-friendly)</div></div>
+              <div class="resto-meta"><div class="resto-price">££</div>
+              <div class="resto-time">Dinner</div></div>
+            </div>
+<div class="resto-card" data-city="edinburgh" data-area="Old Town" data-meal="any" data-name="the world's end">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=The%20World%27s%20End%20Edinburgh" target="_blank">The World's End</a></div>
+              <div class="resto-cuisine">Old Town · Pub </div>
+              <div class="resto-known">Classic Old Town pub stop</div></div>
+              <div class="resto-meta"><div class="resto-price">££</div>
+              <div class="resto-time">Drinks</div></div>
+            </div>
+<div class="resto-card" data-city="edinburgh" data-area="New Town   Stockbridge" data-meal="dinner" data-name="the gardener's cottage">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=The%20Gardener%27s%20Cottage%20Edinburgh" target="_blank">The Gardener's Cottage</a></div>
+              <div class="resto-cuisine">New Town / Stockbridge · Modern Scottish <span class="veg">🌿</span></div>
+              <div class="resto-known">Seasonal set menus</div></div>
+              <div class="resto-meta"><div class="resto-price">£££</div>
+              <div class="resto-time">Dinner</div></div>
+            </div>
+<div class="resto-card" data-city="edinburgh" data-area="New Town   Stockbridge" data-meal="dinner" data-name="timberyard">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=Timberyard%20Edinburgh" target="_blank">Timberyard</a></div>
+              <div class="resto-cuisine">New Town / Stockbridge · Modern Scottish </div>
+              <div class="resto-known">Tasting menus</div></div>
+              <div class="resto-meta"><div class="resto-price">££££</div>
+              <div class="resto-time">Dinner</div></div>
+            </div>
+<div class="resto-card" data-city="edinburgh" data-area="New Town   Stockbridge" data-meal="lunch" data-name="the palmerston">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=The%20Palmerston%20Edinburgh" target="_blank">The Palmerston</a></div>
+              <div class="resto-cuisine">New Town / Stockbridge · Modern </div>
+              <div class="resto-known">Bread + bistro vibes</div></div>
+              <div class="resto-meta"><div class="resto-price">£££</div>
+              <div class="resto-time">Lunch / dinner</div></div>
+            </div>
+<div class="resto-card" data-city="edinburgh" data-area="New Town   Stockbridge" data-meal="dinner" data-name="café st honoré">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=Caf%C3%A9%20St%20Honor%C3%A9%20Edinburgh" target="_blank">Café St Honoré</a></div>
+              <div class="resto-cuisine">New Town / Stockbridge · French/Scottish </div>
+              <div class="resto-known">Local produce, cozy</div></div>
+              <div class="resto-meta"><div class="resto-price">£££</div>
+              <div class="resto-time">Dinner</div></div>
+            </div>
+<div class="resto-card" data-city="edinburgh" data-area="New Town   Stockbridge" data-meal="dinner" data-name="hawksmoor edinburgh">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=Hawksmoor%20Edinburgh%20Edinburgh" target="_blank">Hawksmoor Edinburgh</a></div>
+              <div class="resto-cuisine">New Town / Stockbridge · Steak </div>
+              <div class="resto-known">Steak + cocktails (stunning room)</div></div>
+              <div class="resto-meta"><div class="resto-price">£££</div>
+              <div class="resto-time">Dinner</div></div>
+            </div>
+<div class="resto-card" data-city="edinburgh" data-area="New Town   Stockbridge" data-meal="brunch" data-name="urban angel">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=Urban%20Angel%20Edinburgh" target="_blank">Urban Angel</a></div>
+              <div class="resto-cuisine">New Town / Stockbridge · Brunch <span class="veg">🌿</span></div>
+              <div class="resto-known">Brunch favorite</div></div>
+              <div class="resto-meta"><div class="resto-price">££</div>
+              <div class="resto-time">Breakfast</div></div>
+            </div>
+<div class="resto-card" data-city="edinburgh" data-area="New Town   Stockbridge" data-meal="any" data-name="bramble bar">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=Bramble%20Bar%20Edinburgh" target="_blank">Bramble Bar</a></div>
+              <div class="resto-cuisine">New Town / Stockbridge · Cocktails </div>
+              <div class="resto-known">Hidden cocktail bar classic</div></div>
+              <div class="resto-meta"><div class="resto-price">££</div>
+              <div class="resto-time">Late</div></div>
+            </div>
+<div class="resto-card" data-city="edinburgh" data-area="New Town   Stockbridge" data-meal="dinner" data-name="the stockbridge restaurant">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=The%20Stockbridge%20Restaurant%20Edinburgh" target="_blank">The Stockbridge Restaurant</a></div>
+              <div class="resto-cuisine">New Town / Stockbridge · Bistro </div>
+              <div class="resto-known">Small plates + neighborhood vibes</div></div>
+              <div class="resto-meta"><div class="resto-price">£££</div>
+              <div class="resto-time">Dinner</div></div>
+            </div>
+<div class="resto-card" data-city="edinburgh" data-area="Leith" data-meal="dinner" data-name="the kitchin">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=The%20Kitchin%20Edinburgh" target="_blank">The Kitchin</a></div>
+              <div class="resto-cuisine">Leith · Modern Scottish </div>
+              <div class="resto-known">Michelin-star (book early)</div></div>
+              <div class="resto-meta"><div class="resto-price">££££</div>
+              <div class="resto-time">Dinner</div></div>
+            </div>
+<div class="resto-card" data-city="edinburgh" data-area="Leith" data-meal="dinner" data-name="restaurant martin wishart">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=Restaurant%20Martin%20Wishart%20Edinburgh" target="_blank">Restaurant Martin Wishart</a></div>
+              <div class="resto-cuisine">Leith · Fine dining </div>
+              <div class="resto-known">Michelin-star classic</div></div>
+              <div class="resto-meta"><div class="resto-price">££££</div>
+              <div class="resto-time">Dinner</div></div>
+            </div>
+<div class="resto-card" data-city="edinburgh" data-area="Leith" data-meal="lunch" data-name="fishers">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=Fishers%20Edinburgh" target="_blank">Fishers</a></div>
+              <div class="resto-cuisine">Leith · Seafood </div>
+              <div class="resto-known">Casual seafood</div></div>
+              <div class="resto-meta"><div class="resto-price">£££</div>
+              <div class="resto-time">Lunch / dinner</div></div>
+            </div>
+<div class="resto-card" data-city="edinburgh" data-area="Leith" data-meal="lunch" data-name="teuchters landing">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=Teuchters%20Landing%20Edinburgh" target="_blank">Teuchters Landing</a></div>
+              <div class="resto-cuisine">Leith · Pub </div>
+              <div class="resto-known">Pub with good for groups</div></div>
+              <div class="resto-meta"><div class="resto-price">££</div>
+              <div class="resto-time">Lunch / drinks</div></div>
+            </div>
+<div class="resto-card" data-city="edinburgh" data-area="Leith" data-meal="dinner" data-name="the ship on the shore">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=The%20Ship%20on%20the%20Shore%20Edinburgh" target="_blank">The Ship on the Shore</a></div>
+              <div class="resto-cuisine">Leith · Seafood </div>
+              <div class="resto-known">Seafood + wine</div></div>
+              <div class="resto-meta"><div class="resto-price">£££</div>
+              <div class="resto-time">Dinner</div></div>
+            </div>
+<div class="resto-card" data-city="edinburgh" data-area="Leith" data-meal="brunch" data-name="mimi's bakehouse">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=Mimi%27s%20Bakehouse%20Edinburgh" target="_blank">Mimi's Bakehouse</a></div>
+              <div class="resto-cuisine">Leith · Bakery <span class="veg">🌿</span></div>
+              <div class="resto-known">Cakes + brunch</div></div>
+              <div class="resto-meta"><div class="resto-price">££</div>
+              <div class="resto-time">Brunch</div></div>
+            </div>
+<div class="resto-card" data-city="edinburgh" data-area="Old Town" data-meal="dinner" data-name="david bann">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=David%20Bann%20Edinburgh" target="_blank">David Bann</a></div>
+              <div class="resto-cuisine">Old Town · Vegetarian </div>
+              <div class="resto-known">Vegetarian fine-casual; long-running favorite</div></div>
+              <div class="resto-meta"><div class="resto-price">£££</div>
+              <div class="resto-time">Dinner</div></div>
+            </div>
+<div class="resto-card" data-city="edinburgh" data-area="Old Town" data-meal="lunch" data-name="holy cow (edinburgh)">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=Holy%20Cow%20%28Edinburgh%29%20Edinburgh" target="_blank">Holy Cow (Edinburgh)</a></div>
+              <div class="resto-cuisine">Old Town · Vegan / Indian </div>
+              <div class="resto-known">Vegan curries + street food</div></div>
+              <div class="resto-meta"><div class="resto-price">££</div>
+              <div class="resto-time">Quick lunch / dinner</div></div>
+            </div>
+<div class="resto-card" data-city="edinburgh" data-area="Old Town" data-meal="dinner" data-name="paradise palms">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=Paradise%20Palms%20Edinburgh" target="_blank">Paradise Palms</a></div>
+              <div class="resto-cuisine">Old Town · Vegan </div>
+              <div class="resto-known">Vegan comfort food + bar vibe</div></div>
+              <div class="resto-meta"><div class="resto-price">££</div>
+              <div class="resto-time">Dinner / late</div></div>
+            </div>
+<div class="resto-card" data-city="edinburgh" data-area="New Town   Stockbridge" data-meal="dinner" data-name="the scran & scallie">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=The%20Scran%20%26%20Scallie%20Edinburgh" target="_blank">The Scran & Scallie</a></div>
+              <div class="resto-cuisine">New Town / Stockbridge · Scottish gastropub </div>
+              <div class="resto-known">Modern Scottish pub classics</div></div>
+              <div class="resto-meta"><div class="resto-price">£££</div>
+              <div class="resto-time">Dinner</div></div>
+            </div>
+<div class="resto-card" data-city="edinburgh" data-area="New Town   Stockbridge" data-meal="dinner" data-name="harmonium">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=Harmonium%20Edinburgh" target="_blank">Harmonium</a></div>
+              <div class="resto-cuisine">New Town / Stockbridge · Vegan </div>
+              <div class="resto-known">Creative vegan plates; cozy</div></div>
+              <div class="resto-meta"><div class="resto-price">££</div>
+              <div class="resto-time">Dinner</div></div>
+            </div>
+<div class="resto-card" data-city="edinburgh" data-area="Leith" data-meal="dinner" data-name="the little chartroom">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=The%20Little%20Chartroom%20Edinburgh" target="_blank">The Little Chartroom</a></div>
+              <div class="resto-cuisine">Leith · Modern Scottish </div>
+              <div class="resto-known">Tasting-menu style; intimate</div></div>
+              <div class="resto-meta"><div class="resto-price">££££</div>
+              <div class="resto-time">Dinner</div></div>
+            </div>
+<div class="resto-card" data-city="edinburgh" data-area="Bruntsfield   Meadows" data-meal="brunch" data-name="seeds for the soul">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=Seeds%20For%20The%20Soul%20Edinburgh" target="_blank">Seeds For The Soul</a></div>
+              <div class="resto-cuisine">Bruntsfield / Meadows · Vegetarian / vegan </div>
+              <div class="resto-known">Veg brunch, bowls, and comfort plates</div></div>
+              <div class="resto-meta"><div class="resto-price">££</div>
+              <div class="resto-time">Brunch / lunch</div></div>
+            </div>
+<div class="resto-card" data-city="edinburgh" data-area="Bruntsfield   Meadows" data-meal="dinner" data-name="kalpna">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=Kalpna%20Edinburgh" target="_blank">Kalpna</a></div>
+              <div class="resto-cuisine">Bruntsfield / Meadows · Vegetarian Indian </div>
+              <div class="resto-known">Vegetarian curries; classic Edinburgh veg staple</div></div>
+              <div class="resto-meta"><div class="resto-price">££</div>
+              <div class="resto-time">Dinner</div></div>
+            </div>
+<div class="resto-card" data-city="glasgow" data-area="West End" data-meal="dinner" data-name="ubiquitous chip">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=Ubiquitous%20Chip%20Glasgow" target="_blank">Ubiquitous Chip</a></div>
+              <div class="resto-cuisine">West End · Scottish </div>
+              <div class="resto-known">Glasgow institution</div></div>
+              <div class="resto-meta"><div class="resto-price">£££</div>
+              <div class="resto-time">Dinner</div></div>
+            </div>
+<div class="resto-card" data-city="glasgow" data-area="West End" data-meal="dinner" data-name="ox and finch">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=Ox%20and%20Finch%20Glasgow" target="_blank">Ox and Finch</a></div>
+              <div class="resto-cuisine">West End · Small plates <span class="veg">🌿</span></div>
+              <div class="resto-known">Often top-rated small plates</div></div>
+              <div class="resto-meta"><div class="resto-price">£££</div>
+              <div class="resto-time">Dinner</div></div>
+            </div>
+<div class="resto-card" data-city="glasgow" data-area="West End" data-meal="dinner" data-name="mother india">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=Mother%20India%20Glasgow" target="_blank">Mother India</a></div>
+              <div class="resto-cuisine">West End · Indian <span class="veg">🌿</span></div>
+              <div class="resto-known">Glasgow icon</div></div>
+              <div class="resto-meta"><div class="resto-price">££</div>
+              <div class="resto-time">Dinner</div></div>
+            </div>
+<div class="resto-card" data-city="glasgow" data-area="West End" data-meal="any" data-name="brel">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=Brel%20Glasgow" target="_blank">Brel</a></div>
+              <div class="resto-cuisine">West End · Bar / Belgian <span class="veg">🌿</span></div>
+              <div class="resto-known">Beer garden + bites</div></div>
+              <div class="resto-meta"><div class="resto-price">££</div>
+              <div class="resto-time">Drinks / casual</div></div>
+            </div>
+<div class="resto-card" data-city="glasgow" data-area="West End" data-meal="lunch" data-name="paesano pizza">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=Paesano%20Pizza%20Glasgow" target="_blank">Paesano Pizza</a></div>
+              <div class="resto-cuisine">West End · Pizza <span class="veg">🌿</span></div>
+              <div class="resto-known">Cult-favorite casual pizza</div></div>
+              <div class="resto-meta"><div class="resto-price">£</div>
+              <div class="resto-time">Lunch / dinner</div></div>
+            </div>
+<div class="resto-card" data-city="glasgow" data-area="West End" data-meal="brunch" data-name="the left bank">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=The%20Left%20Bank%20Glasgow" target="_blank">The Left Bank</a></div>
+              <div class="resto-cuisine">West End · Café/bar </div>
+              <div class="resto-known">Easy group hang</div></div>
+              <div class="resto-meta"><div class="resto-price">££</div>
+              <div class="resto-time">Brunch / drinks</div></div>
+            </div>
+<div class="resto-card" data-city="glasgow" data-area="City Centre   Finnieston" data-meal="dinner" data-name="the gannet">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=The%20Gannet%20Glasgow" target="_blank">The Gannet</a></div>
+              <div class="resto-cuisine">City Centre / Finnieston · Modern Scottish </div>
+              <div class="resto-known">Seasonal modern plates</div></div>
+              <div class="resto-meta"><div class="resto-price">£££</div>
+              <div class="resto-time">Dinner</div></div>
+            </div>
+<div class="resto-card" data-city="glasgow" data-area="City Centre   Finnieston" data-meal="dinner" data-name="rogano">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=Rogano%20Glasgow" target="_blank">Rogano</a></div>
+              <div class="resto-cuisine">City Centre / Finnieston · Seafood </div>
+              <div class="resto-known">Art deco seafood classic</div></div>
+              <div class="resto-meta"><div class="resto-price">££££</div>
+              <div class="resto-time">Dinner</div></div>
+            </div>
+<div class="resto-card" data-city="glasgow" data-area="City Centre   Finnieston" data-meal="lunch" data-name="sugo pasta">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=Sugo%20Pasta%20Glasgow" target="_blank">Sugo Pasta</a></div>
+              <div class="resto-cuisine">City Centre / Finnieston · Italian <span class="veg">🌿</span></div>
+              <div class="resto-known">No-fuss pasta</div></div>
+              <div class="resto-meta"><div class="resto-price">££</div>
+              <div class="resto-time">Lunch / dinner</div></div>
+            </div>
+<div class="resto-card" data-city="glasgow" data-area="City Centre   Finnieston" data-meal="any" data-name="platform at argyle st arches">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=Platform%20at%20Argyle%20St%20Arches%20Glasgow" target="_blank">Platform at Argyle St Arches</a></div>
+              <div class="resto-cuisine">City Centre / Finnieston · Food hall <span class="veg">🌿</span></div>
+              <div class="resto-known">Lots of options (groups)</div></div>
+              <div class="resto-meta"><div class="resto-price">££</div>
+              <div class="resto-time">Anytime</div></div>
+            </div>
+<div class="resto-card" data-city="glasgow" data-area="City Centre   Finnieston" data-meal="lunch" data-name="crabshakk">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=Crabshakk%20Glasgow" target="_blank">Crabshakk</a></div>
+              <div class="resto-cuisine">City Centre / Finnieston · Seafood </div>
+              <div class="resto-known">Seafood favorite</div></div>
+              <div class="resto-meta"><div class="resto-price">£££</div>
+              <div class="resto-time">Lunch / dinner</div></div>
+            </div>
+<div class="resto-card" data-city="glasgow" data-area="City Centre   Finnieston" data-meal="dinner" data-name="five march">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=Five%20March%20Glasgow" target="_blank">Five March</a></div>
+              <div class="resto-cuisine">City Centre / Finnieston · Modern <span class="veg">🌿</span></div>
+              <div class="resto-known">Seasonal small plates</div></div>
+              <div class="resto-meta"><div class="resto-price">£££</div>
+              <div class="resto-time">Dinner</div></div>
+            </div>
+<div class="resto-card" data-city="glasgow" data-area="City Centre   Finnieston" data-meal="dinner" data-name="six by nico">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=Six%20by%20Nico%20Glasgow" target="_blank">Six by Nico</a></div>
+              <div class="resto-cuisine">City Centre / Finnieston · Tasting menu </div>
+              <div class="resto-known">Theme tasting menus; great value for the experience</div></div>
+              <div class="resto-meta"><div class="resto-price">£££</div>
+              <div class="resto-time">Dinner</div></div>
+            </div>
+<div class="resto-card" data-city="glasgow" data-area="Merchant City" data-meal="lunch" data-name="mono">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=Mono%20Glasgow" target="_blank">Mono</a></div>
+              <div class="resto-cuisine">Merchant City · Vegan </div>
+              <div class="resto-known">Vegan cafe + bar; casual</div></div>
+              <div class="resto-meta"><div class="resto-price">££</div>
+              <div class="resto-time">Lunch / dinner</div></div>
+            </div>
+<div class="resto-card" data-city="glasgow" data-area="City Centre   Finnieston" data-meal="dinner" data-name="the 78">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=The%2078%20Glasgow" target="_blank">The 78</a></div>
+              <div class="resto-cuisine">City Centre / Finnieston · Vegan </div>
+              <div class="resto-known">Vegan comfort food; relaxed</div></div>
+              <div class="resto-meta"><div class="resto-price">££</div>
+              <div class="resto-time">Dinner</div></div>
+            </div>
+<div class="resto-card" data-city="glasgow" data-area="City Centre   Finnieston" data-meal="dinner" data-name="stereo">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=Stereo%20Glasgow" target="_blank">Stereo</a></div>
+              <div class="resto-cuisine">City Centre / Finnieston · Vegetarian / vegan </div>
+              <div class="resto-known">Veg-focused cafe + bar; live music sometimes</div></div>
+              <div class="resto-meta"><div class="resto-price">££</div>
+              <div class="resto-time">Dinner / drinks</div></div>
+            </div>
+<div class="resto-card" data-city="glasgow" data-area="West End" data-meal="brunch" data-name="stravaigin">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=Stravaigin%20Glasgow" target="_blank">Stravaigin</a></div>
+              <div class="resto-cuisine">West End · Scottish / global </div>
+              <div class="resto-known">Lively neighborhood spot; brunch and dinner</div></div>
+              <div class="resto-meta"><div class="resto-price">£££</div>
+              <div class="resto-time">Brunch / dinner</div></div>
+            </div>
+<div class="resto-card" data-city="glasgow" data-area="City Centre   Finnieston" data-meal="dinner" data-name="cail bruich">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=Cail%20Bruich%20Glasgow" target="_blank">Cail Bruich</a></div>
+              <div class="resto-cuisine">City Centre / Finnieston · Modern Scottish <span class="veg">🌿</span></div>
+              <div class="resto-known">Michelin-star dining; special occasion</div></div>
+              <div class="resto-meta"><div class="resto-price">££££</div>
+              <div class="resto-time">Dinner</div></div>
+            </div>
+<div class="resto-card" data-city="glasgow" data-area="Merchant City" data-meal="lunch" data-name="soul food kitchen">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=Soul%20Food%20Kitchen%20Glasgow" target="_blank">Soul Food Kitchen</a></div>
+              <div class="resto-cuisine">Merchant City · Vegan </div>
+              <div class="resto-known">Vegan comfort food; casual</div></div>
+              <div class="resto-meta"><div class="resto-price">££</div>
+              <div class="resto-time">Lunch / dinner</div></div>
+            </div>
+<div class="resto-card" data-city="glasgow" data-area="West End" data-meal="dinner" data-name="the hug and pint">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=The%20Hug%20and%20Pint%20Glasgow" target="_blank">The Hug and Pint</a></div>
+              <div class="resto-cuisine">West End · Thai / bar </div>
+              <div class="resto-known">Thai plates + drinks; good atmosphere</div></div>
+              <div class="resto-meta"><div class="resto-price">££</div>
+              <div class="resto-time">Dinner / late</div></div>
+            </div>
+<div class="resto-card" data-city="glasgow" data-area="West End" data-meal="dinner" data-name="oran mor">
+              <div><div class="resto-name"><a href="https://www.google.com/maps/search/?api=1&query=Oran%20Mor%20Glasgow" target="_blank">Oran Mor</a></div>
+              <div class="resto-cuisine">West End · Brasserie / bar </div>
+              <div class="resto-known">Big venue; food + drinks</div></div>
+              <div class="resto-meta"><div class="resto-price">£££</div>
+              <div class="resto-time">Dinner / drinks</div></div>
+            </div>
+</div>
+</div>
+<div class="page" id="book">
+<div class="section-header">Flights</div>
+<div class="booking-card flight reveal"><div class="booking-name">✈️ AA20 — DFW → London Heathrow</div><div class="booking-meta">Thu Jul 9, 5:55 PM → Fri Jul 10, 9:00 AM · 9h 05m<br><a href="https://www.flightradar24.com/data/flights/aa20" target="_blank">📡 Track</a> · <a href="https://www.flightaware.com/live/flight/AA20" target="_blank">FlightAware</a></div><div class="booking-conf">LWBOPY</div></div>
+<div class="booking-card flight reveal"><div class="booking-name">✈️ BA1439 — Edinburgh → Heathrow</div><div class="booking-meta">Mon Jul 20, 10:05 AM → 11:40 AM · 1h 35m · Connect T5<br><a href="https://www.flightradar24.com/data/flights/ba1439" target="_blank">📡 Track</a></div><div class="booking-conf">LWBOPY</div></div>
+<div class="booking-card flight reveal"><div class="booking-name">✈️ BA193 — Heathrow → DFW</div><div class="booking-meta">Mon Jul 20, 12:55 PM → 5:05 PM · 10h 10m<br><a href="https://www.flightradar24.com/data/flights/ba193" target="_blank">📡 Track</a></div><div class="booking-conf">LWBOPY</div></div>
+
+<div class="section-header">Check-In Reminders</div>
+<div class="booking-card alert reveal"><div class="booking-name" style="color:var(--terra)">⏰ Outbound Check-In</div><div class="booking-meta">Opens: Wed Jul 8, 5:55 PM CDT<br><a href="https://www.aa.com/reservation/flightCheckInViewReservationsAccess.do" target="_blank">Check in on AA.com</a></div></div>
+<div class="booking-card alert reveal"><div class="booking-name" style="color:var(--terra)">⏰ Return Check-In</div><div class="booking-meta">Opens: Sun Jul 19, 10:05 AM BST (4:05 AM CDT)<br><a href="https://www.britishairways.com/travel/olcilandingpagealiased/public/en_us" target="_blank">Check in on BA.com</a></div></div>
+
+<div class="section-header">Key Bookings</div>
+<div class="booking-card reveal"><div class="booking-name"><a href="https://www.rct.uk/visit/buckingham-palace" target="_blank">Buckingham Palace State Rooms</a></div><div class="booking-meta">Book now · Summer opening · ~£30</div></div>
+<div class="booking-card reveal"><div class="booking-name"><a href="https://www.hrp.org.uk/tower-of-london/" target="_blank">Tower of London</a></div><div class="booking-meta">Book ahead · Crown Jewels · ~£33</div></div>
+<div class="booking-card reveal"><div class="booking-name"><a href="https://skygarden.london/booking/" target="_blank">Sky Garden</a></div><div class="booking-meta">Book 3 weeks ahead · FREE · Night views</div></div>
+<div class="booking-card reveal"><div class="booking-name"><a href="https://www.edinburghcastle.scot/" target="_blank">Edinburgh Castle</a></div><div class="booking-meta">Book online · ~£19.50 · 2 hours</div></div>
+<div class="booking-card reveal"><div class="booking-name"><a href="https://www.lumo.co.uk" target="_blank">Lumo Train — London → Edinburgh</a></div><div class="booking-meta">Book mid-April when released · From £20</div></div>
+<div class="booking-card reveal"><div class="booking-name"><a href="https://www.aa.com/reservation/view/find-your-trip" target="_blank">Manage Flight Booking</a></div><div class="booking-meta">AA.com · Confirmation: LWBOPY · 3 passengers</div></div>
+</div>
+<div class="page" id="stays">
+<div class="section-header">Where to Stay</div>
+<p class="muted" style="margin-bottom:0.3rem;">Requirements: 3 separate beds · Washer · AC preferred (London) · Entire place</p>
+<p class="muted" style="margin-bottom:1rem;">Real Airbnb listings verified for your exact dates. Prices are totals for the full stay.</p>
+<div class="city-header city-london">London — Jul 9–15 (6 nights)</div>
+<div class="stay-card">
+      <div class="stay-top">
+        <a href="https://www.airbnb.com/rooms/1504363600595400970" target="_blank" class="stay-name">Penthouse in South Kensington-15 mins from Harrods</a>
+        <span class="stay-price">$1,847</span>
+      </div>
+      <div class="stay-details">1BR · 3 beds · 1 bath · ★ 4.67 (30)</div>
+      <div class="stay-pp">$616/person total · $103/person/night</div>
+      <div class="stay-badges"><span class="badge ac">❄️ AC</span>  <span class="badge wash">🧺 Washer</span></div>
+    </div>
+<div class="stay-card">
+      <div class="stay-top">
+        <a href="https://www.airbnb.com/rooms/1537937424523813717" target="_blank" class="stay-name">Swiss Cottage Retreat | Sleeps 5 | Regents Park</a>
+        <span class="stay-price">$1,955</span>
+      </div>
+      <div class="stay-details">1BR · 3 beds · 1 bath · ★ 4.83 (18)</div>
+      <div class="stay-pp">$652/person total · $109/person/night</div>
+      <div class="stay-badges"><span class="badge ac">❄️ AC</span>  <span class="badge wash">🧺 Washer</span></div>
+    </div>
+<div class="stay-card">
+      <div class="stay-top">
+        <a href="https://www.airbnb.com/rooms/938364889428767893" target="_blank" class="stay-name">Magnificent Flat across Harrods</a>
+        <span class="stay-price">$2,578</span>
+      </div>
+      <div class="stay-details">1BR · 3 beds · 1 bath · ★ 4.51 (55)</div>
+      <div class="stay-pp">$859/person total · $143/person/night</div>
+      <div class="stay-badges"><span class="badge ac">❄️ AC</span>  <span class="badge wash">🧺 Washer</span></div>
+    </div>
+<div class="stay-card">
+      <div class="stay-top">
+        <a href="https://www.airbnb.com/rooms/872973003673665549" target="_blank" class="stay-name">Top-floor 2BR duplex w/ Roof Terrace in Shoreditch</a>
+        <span class="stay-price">$3,372</span>
+      </div>
+      <div class="stay-details">2BR · 3 beds · 2 bath · ★ 4.64 (28)</div>
+      <div class="stay-pp">$1,124/person total · $187/person/night</div>
+      <div class="stay-badges"><span class="badge ac">❄️ AC</span>  <span class="badge wash">🧺 Washer</span></div>
+    </div>
+<div class="stay-card">
+      <div class="stay-top">
+        <a href="https://www.airbnb.com/rooms/1378543191937248499" target="_blank" class="stay-name">The Thames Embrace 3 BR+Garden House in Battersea</a>
+        <span class="stay-price">$3,765</span>
+      </div>
+      <div class="stay-details">3BR · 4 beds · 2 bath · ★ 4.72 (18)</div>
+      <div class="stay-pp">$1,255/person total · $209/person/night</div>
+      <div class="stay-badges"><span class="badge ac">❄️ AC</span> <span class="badge sh">★ Superhost</span> <span class="badge wash">🧺 Washer</span></div>
+    </div>
+<div class="stay-card">
+      <div class="stay-top">
+        <a href="https://www.airbnb.com/rooms/1581227523751859854" target="_blank" class="stay-name">Luxury Kensington Mews - Lush 2-Bed Home</a>
+        <span class="stay-price">$3,854</span>
+      </div>
+      <div class="stay-details">2BR · 4 beds · 1 bath · ★ 4.64 (11)</div>
+      <div class="stay-pp">$1,285/person total · $214/person/night</div>
+      <div class="stay-badges"><span class="badge ac">❄️ AC</span>  <span class="badge wash">🧺 Washer</span></div>
+    </div>
+<div class="stay-card">
+      <div class="stay-top">
+        <a href="https://www.airbnb.com/rooms/1581364421406978955" target="_blank" class="stay-name">Stylish 2-Bedroom Kensington Mews - Luxury Home</a>
+        <span class="stay-price">$3,865</span>
+      </div>
+      <div class="stay-details">2BR · 4 beds · 1 bath · ★ 5.0 (5)</div>
+      <div class="stay-pp">$1,288/person total · $215/person/night</div>
+      <div class="stay-badges"><span class="badge ac">❄️ AC</span>  <span class="badge wash">🧺 Washer</span></div>
+    </div>
+<div class="stay-card">
+      <div class="stay-top">
+        <a href="https://www.airbnb.com/rooms/1104874818864083251" target="_blank" class="stay-name">2BD Victoria Gem MewsHouse for 5</a>
+        <span class="stay-price">$4,012</span>
+      </div>
+      <div class="stay-details">2BR · 4 beds · 2 bath · ★ 4.67 (9)</div>
+      <div class="stay-pp">$1,337/person total · $223/person/night</div>
+      <div class="stay-badges"><span class="badge ac">❄️ AC</span>  <span class="badge wash">🧺 Washer</span></div>
+    </div>
+<div class="stay-card">
+      <div class="stay-top">
+        <a href="https://www.airbnb.com/rooms/1426616137350427829" target="_blank" class="stay-name">American Embassy 2BD 2BA/ Battersea Power station</a>
+        <span class="stay-price">$4,027</span>
+      </div>
+      <div class="stay-details">2BR · 3 beds · 2 bath · ★ 4.9 (21)</div>
+      <div class="stay-pp">$1,342/person total · $224/person/night</div>
+      <div class="stay-badges"><span class="badge ac">❄️ AC</span> <span class="badge sh">★ Superhost</span> <span class="badge wash">🧺 Washer</span></div>
+    </div>
+<div class="stay-card">
+      <div class="stay-top">
+        <a href="https://www.airbnb.com/rooms/965816585357643979" target="_blank" class="stay-name">Modern flat with stunning views in Kensington</a>
+        <span class="stay-price">$4,090</span>
+      </div>
+      <div class="stay-details">2BR · 3 beds · 2 bath · ★ 4.88 (115)</div>
+      <div class="stay-pp">$1,363/person total · $227/person/night</div>
+      <div class="stay-badges"><span class="badge ac">❄️ AC</span> <span class="badge sh">★ Superhost</span> <span class="badge wash">🧺 Washer</span></div>
+    </div>
+<div class="stay-card">
+      <div class="stay-top">
+        <a href="https://www.airbnb.com/rooms/1520422469262342401" target="_blank" class="stay-name">Charming Covent Garden with AC</a>
+        <span class="stay-price">$4,237</span>
+      </div>
+      <div class="stay-details">2BR · 3 beds · 1 bath · ★ 4.78 (9)</div>
+      <div class="stay-pp">$1,412/person total · $235/person/night</div>
+      <div class="stay-badges"><span class="badge ac">❄️ AC</span> <span class="badge sh">★ Superhost</span> <span class="badge wash">🧺 Washer</span></div>
+    </div>
+<div class="stay-card">
+      <div class="stay-top">
+        <a href="https://www.airbnb.com/rooms/12896220" target="_blank" class="stay-name">Central, Quirky & Modern Detached Home in Camden</a>
+        <span class="stay-price">$4,321</span>
+      </div>
+      <div class="stay-details">2BR · 4 beds · 2 bath · ★ 4.67 (279)</div>
+      <div class="stay-pp">$1,440/person total · $240/person/night</div>
+      <div class="stay-badges"><span class="badge ac">❄️ AC</span> <span class="badge sh">★ Superhost</span> <span class="badge wash">🧺 Washer</span></div>
+    </div>
+<div class="stay-card">
+      <div class="stay-top">
+        <a href="https://www.airbnb.com/rooms/1040515817176208338" target="_blank" class="stay-name">Elegant 2 Bedroom in South Kensington</a>
+        <span class="stay-price">$4,370</span>
+      </div>
+      <div class="stay-details">2BR · 3 beds · 1 bath · ★ 4.87 (46)</div>
+      <div class="stay-pp">$1,457/person total · $243/person/night</div>
+      <div class="stay-badges"><span class="badge ac">❄️ AC</span> <span class="badge sh">★ Superhost</span> <span class="badge wash">🧺 Washer</span></div>
+    </div>
+<div class="stay-card">
+      <div class="stay-top">
+        <a href="https://www.airbnb.com/rooms/1399436872244541994" target="_blank" class="stay-name">Sublime Chelsea 2Beds</a>
+        <span class="stay-price">$4,647</span>
+      </div>
+      <div class="stay-details">2BR · 4 beds · 2 bath · ★ 5.0 (10)</div>
+      <div class="stay-pp">$1,549/person total · $258/person/night</div>
+      <div class="stay-badges"><span class="badge ac">❄️ AC</span> <span class="badge sh">★ Superhost</span> <span class="badge wash">🧺 Washer</span></div>
+    </div>
+<p class="muted" style="margin:0.8rem 0;">Search yourself: <a href="https://www.airbnb.com/s/London--United-Kingdom/homes?checkin=2026-07-09&checkout=2026-07-15&adults=3&min_beds=3&room_types%5B%5D=Entire+home%2Fapt&amenities%5B%5D=33" target="_blank">Airbnb (Washer)</a> · <a href="https://www.airbnb.com/s/London--United-Kingdom/homes?checkin=2026-07-09&checkout=2026-07-15&adults=3&min_beds=3&room_types%5B%5D=Entire+home%2Fapt&amenities%5B%5D=33&amenities%5B%5D=5" target="_blank">Airbnb (AC+Washer)</a></p>
+<div class="city-header city-scotland">Edinburgh — Jul 15–20 (5 nights)</div>
+<div class="stay-card">
+      <div class="stay-top">
+        <a href="https://www.airbnb.com/rooms/904289761319113845" target="_blank" class="stay-name">Warriston Loft</a>
+        <span class="stay-price">$1,224</span>
+      </div>
+      <div class="stay-details">2BR · 3 beds · 1 bath · ★ 4.97 (33)</div>
+      <div class="stay-pp">$408/person total · $82/person/night</div>
+      <div class="stay-badges"> <span class="badge sh">★ Superhost</span> <span class="badge wash">🧺 Washer</span></div>
+    </div>
+<div class="stay-card">
+      <div class="stay-top">
+        <a href="https://www.airbnb.com/rooms/1357358297024604408" target="_blank" class="stay-name">Apartament 3 Bedrooms</a>
+        <span class="stay-price">$1,268</span>
+      </div>
+      <div class="stay-details">3BR · 3 beds · 2 bath · ★ 4.63 (32)</div>
+      <div class="stay-pp">$423/person total · $85/person/night</div>
+      <div class="stay-badges">  <span class="badge wash">🧺 Washer</span></div>
+    </div>
+<div class="stay-card">
+      <div class="stay-top">
+        <a href="https://www.airbnb.com/rooms/37705686" target="_blank" class="stay-name">Geri & Rado's Place</a>
+        <span class="stay-price">$1,376</span>
+      </div>
+      <div class="stay-details">2BR · 3 beds · 1 bath · ★ 4.79 (135)</div>
+      <div class="stay-pp">$459/person total · $92/person/night</div>
+      <div class="stay-badges">  <span class="badge wash">🧺 Washer</span></div>
+    </div>
+<div class="stay-card">
+      <div class="stay-top">
+        <a href="https://www.airbnb.com/rooms/31108886" target="_blank" class="stay-name">Entire flat in Hillside. 15 min Princess St. (A4)</a>
+        <span class="stay-price">$1,427</span>
+      </div>
+      <div class="stay-details">2BR · 4 beds · 1 bath · ★ 4.51 (451)</div>
+      <div class="stay-pp">$476/person total · $95/person/night</div>
+      <div class="stay-badges">  <span class="badge wash">🧺 Washer</span></div>
+    </div>
+<div class="stay-card">
+      <div class="stay-top">
+        <a href="https://www.airbnb.com/rooms/2214080" target="_blank" class="stay-name">Super 2 bedroom 2 bathroom cityflat</a>
+        <span class="stay-price">$1,517</span>
+      </div>
+      <div class="stay-details">2BR · 3 beds · 2 bath · ★ 4.61 (135)</div>
+      <div class="stay-pp">$506/person total · $101/person/night</div>
+      <div class="stay-badges"> <span class="badge sh">★ Superhost</span> <span class="badge wash">🧺 Washer</span></div>
+    </div>
+<div class="stay-card">
+      <div class="stay-top">
+        <a href="https://www.airbnb.com/rooms/870756984500738220" target="_blank" class="stay-name">Brand new entire 2 bedroom flat, free parking!</a>
+        <span class="stay-price">$1,688</span>
+      </div>
+      <div class="stay-details">2BR · 3 beds · 2 bath · ★ 4.91 (137)</div>
+      <div class="stay-pp">$563/person total · $113/person/night</div>
+      <div class="stay-badges"> <span class="badge sh">★ Superhost</span> <span class="badge wash">🧺 Washer</span></div>
+    </div>
+<div class="stay-card">
+      <div class="stay-top">
+        <a href="https://www.airbnb.com/rooms/972639" target="_blank" class="stay-name">Edinburgh Waterfront Apartment</a>
+        <span class="stay-price">$1,759</span>
+      </div>
+      <div class="stay-details">2BR · 4 beds · 1 bath · ★ 4.86 (92)</div>
+      <div class="stay-pp">$586/person total · $117/person/night</div>
+      <div class="stay-badges">  <span class="badge wash">🧺 Washer</span></div>
+    </div>
+<div class="stay-card">
+      <div class="stay-top">
+        <a href="https://www.airbnb.com/rooms/1467557619538083067" target="_blank" class="stay-name">Thorntree 2 Bedroom Apartment with Sofa Bed - Edin</a>
+        <span class="stay-price">$1,824</span>
+      </div>
+      <div class="stay-details">2BR · 3 beds · 1 bath · ★ 5.0 (6)</div>
+      <div class="stay-pp">$608/person total · $122/person/night</div>
+      <div class="stay-badges"> <span class="badge sh">★ Superhost</span> <span class="badge wash">🧺 Washer</span></div>
+    </div>
+<div class="stay-card">
+      <div class="stay-top">
+        <a href="https://www.airbnb.com/rooms/40082914" target="_blank" class="stay-name">Homely 2 Bed flat next to tram stop on Leith Walk</a>
+        <span class="stay-price">$1,835</span>
+      </div>
+      <div class="stay-details">2BR · 3 beds · 1 bath · ★ 4.64 (186)</div>
+      <div class="stay-pp">$612/person total · $122/person/night</div>
+      <div class="stay-badges">  <span class="badge wash">🧺 Washer</span></div>
+    </div>
+<div class="stay-card">
+      <div class="stay-top">
+        <a href="https://www.airbnb.com/rooms/1212243601920849694" target="_blank" class="stay-name">Ground floor garden flat in Edinburgh with parking</a>
+        <span class="stay-price">$1,898</span>
+      </div>
+      <div class="stay-details">2BR · 3 beds · 1 bath · ★ 4.7 (77)</div>
+      <div class="stay-pp">$633/person total · $127/person/night</div>
+      <div class="stay-badges">  <span class="badge wash">🧺 Washer</span></div>
+    </div>
+<div class="stay-card">
+      <div class="stay-top">
+        <a href="https://www.airbnb.com/rooms/1465018849794263657" target="_blank" class="stay-name">Flat, Arthur Seat view, walking distance to Castle</a>
+        <span class="stay-price">$1,944</span>
+      </div>
+      <div class="stay-details">2BR · 4 beds · 2 bath · ★ 4.91 (23)</div>
+      <div class="stay-pp">$648/person total · $130/person/night</div>
+      <div class="stay-badges"> <span class="badge sh">★ Superhost</span> <span class="badge wash">🧺 Washer</span></div>
+    </div>
+<div class="stay-card">
+      <div class="stay-top">
+        <a href="https://www.airbnb.com/rooms/932411247645118798" target="_blank" class="stay-name">Large Flat in Edinburgh 4/2 with mountain view</a>
+        <span class="stay-price">$1,973</span>
+      </div>
+      <div class="stay-details">2BR · 3 beds · 2 bath · ★ 4.82 (17)</div>
+      <div class="stay-pp">$658/person total · $132/person/night</div>
+      <div class="stay-badges">  <span class="badge wash">🧺 Washer</span></div>
+    </div>
+<div class="stay-card">
+      <div class="stay-top">
+        <a href="https://www.airbnb.com/rooms/925514722906547056" target="_blank" class="stay-name">Edinburgh seaside historic home</a>
+        <span class="stay-price">$1,988</span>
+      </div>
+      <div class="stay-details">2BR · 3 beds · 2 bath · ★ 4.81 (118)</div>
+      <div class="stay-pp">$663/person total · $133/person/night</div>
+      <div class="stay-badges"> <span class="badge sh">★ Superhost</span> <span class="badge wash">🧺 Washer</span></div>
+    </div>
+<div class="stay-card">
+      <div class="stay-top">
+        <a href="https://www.airbnb.com/rooms/973358162315214501" target="_blank" class="stay-name">Central Flat Close to Attractions, Shops, Bus Stop</a>
+        <span class="stay-price">$1,999</span>
+      </div>
+      <div class="stay-details">2BR · 3 beds · 1 bath · ★ 4.59 (46)</div>
+      <div class="stay-pp">$666/person total · $133/person/night</div>
+      <div class="stay-badges"> <span class="badge sh">★ Superhost</span> <span class="badge wash">🧺 Washer</span></div>
+    </div>
+<div class="stay-card">
+      <div class="stay-top">
+        <a href="https://www.airbnb.com/rooms/1166537224928692381" target="_blank" class="stay-name">House with parking, near city centre, sleeps 5</a>
+        <span class="stay-price">$2,019</span>
+      </div>
+      <div class="stay-details">2BR · 3 beds · 1 bath · ★ 4.58 (86)</div>
+      <div class="stay-pp">$673/person total · $135/person/night</div>
+      <div class="stay-badges">  <span class="badge wash">🧺 Washer</span></div>
+    </div>
+<p class="muted" style="margin:0.8rem 0;">Search: <a href="https://www.airbnb.com/s/Edinburgh--United-Kingdom/homes?checkin=2026-07-15&checkout=2026-07-20&adults=3&min_beds=3&room_types%5B%5D=Entire+home%2Fapt&amenities%5B%5D=33" target="_blank">Airbnb Edinburgh</a></p>
+</div>
+<div class="page" id="suggest">
+<div class="section-header">Suggestions Board</div>
+<p class="muted" style="margin-bottom:1rem;">Add ideas, see everyone's suggestions. Live shared list.</p>
+
+<div id="suggestionsList" style="margin-bottom:1.5rem;">
+  <p class="muted" style="text-align:center;padding:1rem;">Loading suggestions...</p>
+</div>
+
+<div style="border-top:2px solid var(--paper-edge);padding-top:1rem;margin-top:0.5rem;">
+<div class="section-header" style="padding-top:0.5rem;">Add a Suggestion</div>
+<form id="suggestForm" onsubmit="return submitSuggestion()" style="display:flex;flex-direction:column;gap:0.8rem;">
+  <div class="form-group">
+    <label class="form-label">What's your idea? *</label>
+    <input type="text" id="sg-idea" class="form-input" placeholder="e.g. Check out Dishoom for dinner" required>
+  </div>
+  <div class="form-group">
+    <label class="form-label">Location / Area</label>
+    <input type="text" id="sg-location" class="form-input" placeholder="e.g. Soho, London or Old Town, Edinburgh">
+  </div>
+  <div class="form-group">
+    <label class="form-label">Who's suggesting?</label>
+    <div class="who-btns">
+      <button type="button" class="who-btn" onclick="setWho(this,'Jordan')" data-who="Jordan">
+        <span style="font-size:1.8rem;">👩🏻</span><br><span class="who-name">Jordan</span>
+      </button>
+      <button type="button" class="who-btn" onclick="setWho(this,'Alexander')" data-who="Alexander">
+        <span style="font-size:1.8rem;">🧔🏻</span><br><span class="who-name">Alexander</span>
+      </button>
+      <button type="button" class="who-btn" onclick="setWho(this,'Harrison')" data-who="Harrison">
+        <span style="font-size:1.8rem;">👨🏻</span><br><span class="who-name">Harrison</span>
+      </button>
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="form-label">Priority</label>
+    <div class="priority-btns">
+      <button type="button" class="pri-btn" onclick="setPri(this,'chill')" data-pri="chill">Chill</button>
+      <button type="button" class="pri-btn active" onclick="setPri(this,'should')" data-pri="should">Should Do</button>
+      <button type="button" class="pri-btn" onclick="setPri(this,'must')" data-pri="must">Must Do!</button>
+    </div>
+  </div>
+  <button type="submit" class="submit-btn" id="submitBtn">Add to List ✈️</button>
+</form>
+</div>
+</div>
+
+<div class="footer">London + Scotland 2026 · built for the crew ✈️</div>
+
+</div><!-- /notebook -->
+
+<script>
+function tab(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav button').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.target.classList.add('active');
+  window.scrollTo({ top: document.querySelector('.nav').offsetTop, behavior: 'smooth' });
+  setTimeout(scan, 100);
+}
+
+function tog(el) {
+  el.closest('.day-page,.area-card').classList.toggle('open');
+}
+
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('vis'); });
+}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+function scan() { document.querySelectorAll('.reveal:not(.vis)').forEach(el => obs.observe(el)); }
+scan();
+
+// Countdown timer
+function updateCountdown() {
+  const trip = new Date('2026-07-09T17:55:00-05:00'); // AA20 departs 5:55 PM CDT
+  const now = new Date();
+  const diff = trip - now;
+  if (diff <= 0) {
+    document.getElementById('cd-days').textContent = '🎉';
+    document.getElementById('cd-hrs').textContent = '✈️';
+    document.getElementById('cd-min').textContent = '🇬🇧';
+    return;
+  }
+  const days = Math.floor(diff / (1000*60*60*24));
+  const hrs = Math.floor((diff % (1000*60*60*24)) / (1000*60*60));
+  const min = Math.floor((diff % (1000*60*60)) / (1000*60));
+  document.getElementById('cd-days').textContent = days;
+  document.getElementById('cd-hrs').textContent = hrs;
+  document.getElementById('cd-min').textContent = min;
+}
+updateCountdown();
+setInterval(updateCountdown, 60000);
+
+// Restaurant filters
+let activeCity = 'all';
+let activeArea = 'all';
+let activeMeal = 'all';
+let activeSearch = '';
+
+function filterCity(city, btn) {
+  activeCity = city;
+  activeArea = 'all';
+  btn.parentElement.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+
+  // Show/hide area row
+  const areaRow = document.getElementById('areaRow');
+  const londonAreas = document.getElementById('londonAreas');
+  const ediAreas = document.getElementById('ediAreas');
+
+  if (city === 'london' || city === 'edinburgh') {
+    areaRow.style.display = 'flex';
+    londonAreas.style.display = city === 'london' ? 'contents' : 'none';
+    ediAreas.style.display = city === 'edinburgh' ? 'contents' : 'none';
+    // Reset area selection
+    areaRow.querySelectorAll('.area-btn').forEach(b => b.classList.remove('active'));
+    areaRow.querySelector('.area-btn').classList.add('active');
+  } else {
+    areaRow.style.display = 'none';
+  }
+  applyFilters();
+}
+
+function filterArea(area, btn) {
+  activeArea = area;
+  document.getElementById('areaRow').querySelectorAll('.area-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  applyFilters();
+}
+
+function filterMeal(meal, btn) {
+  activeMeal = meal;
+  btn.parentElement.querySelectorAll('.meal-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  applyFilters();
+}
+
+function filterSearch(val) {
+  activeSearch = val.toLowerCase();
+  applyFilters();
+}
+
+function applyFilters() {
+  let shown = 0;
+  let total = 0;
+  document.querySelectorAll('#restoList .resto-card').forEach(card => {
+    total++;
+    const city = card.dataset.city;
+    const area = card.dataset.area;
+    const meal = card.dataset.meal;
+    const cityMatch = activeCity === 'all' || city === activeCity;
+    const areaMatch = activeArea === 'all' || area.includes(activeArea);
+    const mealMatch = activeMeal === 'all' || meal === activeMeal;
+    const searchMatch = !activeSearch || card.textContent.toLowerCase().includes(activeSearch);
+    if (cityMatch && areaMatch && mealMatch && searchMatch) {
+      card.classList.remove('hidden');
+      shown++;
+    } else {
+      card.classList.add('hidden');
+    }
+  });
+  document.getElementById('restoCount').textContent = shown + ' of ' + total + ' spots';
+}
+
+// Shared suggestions via jsonblob.com
+const BLOB_URL = '/.netlify/functions/suggestions';
+let selectedPri = 'should';
+let selectedWho = '';
+let currentData = { suggestions: [] };
+
+const AVATARS = {
+  'Jordan': '👩🏻',
+  'Alexander': '🧔🏻',
+  'Harrison': '👨🏻'
+};
+
+function setPri(btn, pri) {
+  document.querySelectorAll('.pri-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  selectedPri = pri;
+}
+
+function setWho(btn, name) {
+  document.querySelectorAll('.who-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  selectedWho = name;
+}
+
+function renderSuggestions() {
+  const list = document.getElementById('suggestionsList');
+  const items = currentData.suggestions || [];
+  if (items.length === 0 || (items.length === 1 && items[0].name === 'Trip Guide')) {
+    list.innerHTML = '<p class="muted" style="text-align:center;padding:2rem;">No suggestions yet!<br>Be the first to add one below.</p>';
+    return;
+  }
+  const priColors = { must: 'var(--terra)', should: 'var(--teal)', chill: 'var(--ink-faint)' };
+  const priLabels = { must: 'Must Do!', should: 'Should Do', chill: 'Chill' };
+  let html = '';
+  items.forEach((s, idx) => {
+    if (!s.idea || s.name === 'Trip Guide') return;
+    const color = priColors[s.priority] || priColors.chill;
+    const label = priLabels[s.priority] || 'Chill';
+    const avatar = AVATARS[s.name] || '\uD83D\uDE00';
+    const loc = s.location ? ' \u00b7 ' + s.location : '';
+    const doneClass = s.done ? ' done' : '';
+    const doneLabel = s.done ? '\u2705 Done' : 'Mark Done';
+    html += '<div class="sg-card' + doneClass + '">' +
+      '<div class="sg-top">' +
+        '<div class="sg-avatar">' + avatar + '</div>' +
+        '<div style="flex:1;">' +
+          '<div class="sg-idea">' + s.idea + '</div>' +
+          '<div class="sg-loc">' + (s.name || '') + loc + '</div>' +
+        '</div>' +
+        '<span class="sg-pri" style="color:' + color + ';">' + label + '</span>' +
+      '</div>' +
+      '<div class="sg-meta">' +
+        '<span class="sg-who">' + (s.time || '') + '</span>' +
+        '<div class="sg-actions">' +
+          '<button class="sg-done-btn" onclick="toggleDone(' + idx + ')">' + doneLabel + '</button>' +
+          '<button class="sg-del-btn" onclick="deleteSuggestion(' + idx + ')">\u2715</button>' +
+        '</div>' +
+      '</div></div>';
+  });
+  list.innerHTML = html;
+}
+
+async function loadSuggestions() {
+  try {
+    const resp = await fetch(BLOB_URL, { headers: { 'Accept': 'application/json' } });
+    currentData = await resp.json();
+    renderSuggestions();
+  } catch(e) {
+    document.getElementById('suggestionsList').innerHTML = '<p class="muted">Could not load suggestions. Check your connection.</p>';
+  }
+}
+
+async function submitSuggestion() {
+  const idea = document.getElementById('sg-idea').value.trim();
+  if (!idea) return false;
+
+  if (!selectedWho) {
+    alert('Tap your face first!');
+    return false;
+  }
+
+  const btn = document.getElementById('submitBtn');
+  btn.textContent = 'Adding...';
+  btn.disabled = true;
+
+  const newSuggestion = {
+    idea: idea,
+    location: document.getElementById('sg-location').value.trim(),
+    name: selectedWho,
+    priority: selectedPri,
+    time: new Date().toLocaleDateString(),
+    done: false
+  };
+
+  // First reload latest data to avoid overwriting
+  try {
+    const getResp = await fetch(BLOB_URL);
+    if (getResp.ok) {
+      currentData = await getResp.json();
+    }
+  } catch(e) {}
+
+  if (!currentData.suggestions) currentData.suggestions = [];
+  currentData.suggestions.push(newSuggestion);
+
+  try {
+    const putResp = await fetch(BLOB_URL, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(currentData)
+    });
+
+    if (putResp.ok) {
+      renderSuggestions();
+      document.getElementById('sg-idea').value = '';
+      document.getElementById('sg-location').value = '';
+      btn.textContent = 'Added! \u2705';
+      // Scroll to see the new suggestion
+      document.getElementById('suggestionsList').scrollIntoView({ behavior: 'smooth' });
+      setTimeout(() => { btn.textContent = 'Add to List \u2708\uFE0F'; btn.disabled = false; }, 2000);
+    } else {
+      throw new Error('Save failed');
+    }
+  } catch(e) {
+    currentData.suggestions.pop();
+    btn.textContent = 'Error - try again';
+    setTimeout(() => { btn.textContent = 'Add to List \u2708\uFE0F'; btn.disabled = false; }, 2000);
+  }
+  return false;
+}
+
+async function toggleDone(idx) {
+  // Reload latest first
+  try {
+    const r = await fetch(BLOB_URL);
+    if (r.ok) currentData = await r.json();
+  } catch(e) {}
+
+  if (currentData.suggestions[idx]) {
+    currentData.suggestions[idx].done = !currentData.suggestions[idx].done;
+    renderSuggestions();
+    try {
+      await fetch(BLOB_URL, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(currentData)
+      });
+    } catch(e) {}
+  }
+}
+
+async function deleteSuggestion(idx) {
+  if (!confirm('Delete this suggestion?')) return;
+  try {
+    const r = await fetch(BLOB_URL);
+    if (r.ok) currentData = await r.json();
+  } catch(e) {}
+
+  if (currentData.suggestions[idx]) {
+    currentData.suggestions.splice(idx, 1);
+    renderSuggestions();
+    try {
+      await fetch(BLOB_URL, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(currentData)
+      });
+    } catch(e) {}
+  }
+}
+
+// Load suggestions when Suggest tab is shown
+const origTab = tab;
+tab = function(id) {
+  origTab(id);
+  if (id === 'suggest') loadSuggestions();
+};
+// Also load on page load if suggest is active
+loadSuggestions();
+</script>
+</body></html>
