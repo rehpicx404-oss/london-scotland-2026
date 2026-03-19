@@ -2714,19 +2714,19 @@ async function submitSuggestion() {
   if (!currentData.suggestions) currentData.suggestions = [];
   currentData.suggestions.push(newSuggestion);
 
+  // Show it immediately (optimistic)
+  renderSuggestions();
+  document.getElementById('sg-idea').value = '';
+  document.getElementById('sg-location').value = '';
+  document.getElementById('suggestionsList').scrollIntoView({ behavior: 'smooth' });
+
   try {
     await saveSuggestions();
-    {
-      renderSuggestions();
-      document.getElementById('sg-idea').value = '';
-      document.getElementById('sg-location').value = '';
-      btn.textContent = 'Added! \u2705';
-      // Scroll to see the new suggestion
-      document.getElementById('suggestionsList').scrollIntoView({ behavior: 'smooth' });
-      setTimeout(() => { btn.textContent = 'Add to List \u2708\uFE0F'; btn.disabled = false; }, 2000);
-    }
+    btn.textContent = 'Added! \u2705';
+    setTimeout(() => { btn.textContent = 'Add to List \u2708\uFE0F'; btn.disabled = false; }, 2000);
   } catch(e) {
     currentData.suggestions.pop();
+    renderSuggestions();
     btn.textContent = 'Error - try again';
     setTimeout(() => { btn.textContent = 'Add to List \u2708\uFE0F'; btn.disabled = false; }, 2000);
   }
