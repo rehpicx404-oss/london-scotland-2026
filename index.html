@@ -854,6 +854,150 @@
   /* Smoother body transitions */
   * { -webkit-tap-highlight-color: transparent; }
 
+
+  /* ====== ROUND 2 POLISH ====== */
+
+  /* Tube line color dots on transport bars */
+  .transport-bar { position: relative; padding-left: 2rem !important; }
+  .transport-bar::before {
+    content: '';
+    position: absolute;
+    left: 1rem; top: 50%; transform: translateY(-50%);
+    width: 8px; height: 8px; border-radius: 50%;
+    background: #9B0058; /* Default: Metropolitan line magenta */
+    box-shadow: 0 0 0 2px var(--paper-dark);
+  }
+  /* London tube colors by context */
+  .day-london .transport-bar::before { background: #0019A8; } /* Piccadilly blue */
+  .day-scotland .transport-bar::before { background: #6B5B4A; display: none; } /* Hide for Scotland */
+  .day-travel .transport-bar::before { background: #E32017; } /* Central line red for travel days */
+
+  /* Cuisine emoji badges on restaurant cards */
+  .resto-card { position: relative; }
+
+  /* Leather texture on cover */
+  .cover::after {
+    content: '' !important;
+    position: absolute !important;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-image: url("data:image/svg+xml,%3Csvg width='200' height='200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E") !important;
+    pointer-events: none;
+    z-index: 1;
+    width: auto !important; height: auto !important;
+    background-color: transparent !important;
+    filter: none !important;
+  }
+  .cover > * { position: relative; z-index: 2; }
+
+  /* Suggest tab notification dot */
+  .nav button[onclick*="suggest"]::before {
+    content: '';
+    position: absolute;
+    top: 8px; right: calc(50% - 22px);
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: var(--terra);
+    opacity: 0.8;
+  }
+
+  /* Route line refinement — thinner, more elegant */
+  .cover-route { letter-spacing: 0.5px; }
+  .route-arrow { font-size: 0.7em; opacity: 0.4; }
+
+  /* Price emphasis tiers on stays */
+  .stay-price { position: relative; }
+
+  /* Booking action urgency - amber left border for items needing action */
+  .booking-card:not(.flight):not(.alert) { border-left: 3px solid var(--gold) !important; }
+
+  /* Smoother card open/close */
+  .day-content, .area-body {
+    transition: max-height 0.55s cubic-bezier(0.4, 0, 0.15, 1) !important;
+  }
+
+  /* Activity rows subtle left accent on hover */
+  .act { border-left: 3px solid transparent; transition: border-color 0.2s ease, background 0.2s ease; }
+  .act:active { border-left-color: var(--paper-edge); background: rgba(0,0,0,0.01); }
+
+  /* Better filter count styling */
+  .filter-count {
+    background: var(--paper-dark);
+    display: inline-block;
+    padding: 0.2rem 0.6rem;
+    border-radius: 3px;
+    font-size: 0.6rem;
+    font-weight: 700;
+    color: var(--ink-faint);
+  }
+
+  /* Explore area cards — subtle colored top border matching city */
+  .area-london { border-top: 3px solid var(--teal) !important; }
+  .area-scotland { border-top: 3px solid var(--sage) !important; }
+
+  /* Suggestion form submit button hover glow */
+  .submit-btn { position: relative; overflow: hidden; }
+  .submit-btn::after {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%; width: 100%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+    transition: left 0.5s ease;
+  }
+  .submit-btn:active::after { left: 100%; }
+
+  /* Day badge subtle shadow for depth */
+  .day-badge { box-shadow: 0 1px 2px rgba(0,0,0,0.06); }
+
+  /* Booking conf code monospace + distinct styling */
+  .booking-conf {
+    font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace !important;
+    letter-spacing: 2px !important;
+    font-size: 0.65rem !important;
+    border: 1px dashed rgba(45,74,62,0.3) !important;
+    background: transparent !important;
+  }
+
+  /* Stays per-person price highlight */
+  .stay-pp { 
+    background: var(--sage-bg); 
+    display: inline-block; 
+    padding: 0.15rem 0.5rem; 
+    border-radius: 3px; 
+    font-size: 0.7rem;
+  }
+
+  /* Cover stats refinement */
+  .cover-stat-num { text-shadow: 0 1px 8px rgba(0,0,0,0.2); }
+
+  /* Explore row labels — more distinct */
+  .area-row-label {
+    display: inline-block;
+    background: rgba(160,82,45,0.08);
+    padding: 0.1rem 0.4rem;
+    border-radius: 2px;
+    margin-bottom: 0.3rem;
+  }
+
+  /* Better who-button selected state */
+  .who-btn.active {
+    box-shadow: 0 0 0 2px var(--teal), inset 0 1px 3px rgba(0,0,0,0.06);
+    transform: scale(1.02);
+  }
+
+  /* Priority buttons more tactile */
+  .pri-btn.active {
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+    transform: scale(0.98);
+  }
+
+  /* Subtle page texture on content pages */
+  .page {
+    background-image: url("data:image/svg+xml,%3Csvg width='200' height='200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='0.75' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.012'/%3E%3C/svg%3E") !important;
+  }
+
+  /* Smooth scroll snap feel between day cards */
+  #plan { scroll-padding-top: 60px; }
+
 </style>
 </head>
 <body>
