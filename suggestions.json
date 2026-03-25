@@ -111,6 +111,14 @@
       "priority": "must",
       "time": "3/24/2026",
       "done": false
+    },
+    {
+      "idea": "Weekday",
+      "location": "Regent St, London",
+      "name": "Harrison",
+      "priority": "must",
+      "time": "3/24/2026",
+      "done": false
     }
   ]
 }
