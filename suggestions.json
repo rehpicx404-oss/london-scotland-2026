@@ -119,6 +119,14 @@
       "priority": "must",
       "time": "3/24/2026",
       "done": false
+    },
+    {
+      "idea": "Clutch Cafe",
+      "location": "Great Portland St, London",
+      "name": "Harrison",
+      "priority": "must",
+      "time": "3/24/2026",
+      "done": false
     }
   ]
 }
