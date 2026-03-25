@@ -23,6 +23,14 @@
       "priority": "must",
       "time": "3/24/2026",
       "done": false
+    },
+    {
+      "idea": "Shopping / Sightseeing",
+      "location": "Marylebone High Street",
+      "name": "Harrison",
+      "priority": "must",
+      "time": "3/24/2026",
+      "done": false
     }
   ]
 }
