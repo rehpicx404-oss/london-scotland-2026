@@ -87,6 +87,14 @@
       "priority": "must",
       "time": "3/24/2026",
       "done": false
+    },
+    {
+      "idea": "Ronning (clothing store)",
+      "location": "Berwick St, London",
+      "name": "Harrison",
+      "priority": "must",
+      "time": "3/24/2026",
+      "done": false
     }
   ]
 }
