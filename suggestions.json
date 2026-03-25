@@ -1,3 +1,12 @@
 {
-  "suggestions": []
+  "suggestions": [
+    {
+      "idea": "Asian food",
+      "location": "Chinatown",
+      "name": "Harrison",
+      "priority": "must",
+      "time": "3/24/2026",
+      "done": false
+    }
+  ]
 }
