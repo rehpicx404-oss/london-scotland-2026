@@ -135,6 +135,14 @@
       "priority": "must",
       "time": "3/24/2026",
       "done": false
+    },
+    {
+      "idea": "Brighton Beach",
+      "location": "Brighton",
+      "name": "Harrison",
+      "priority": "should",
+      "time": "3/24/2026",
+      "done": false
     }
   ]
 }
