@@ -957,6 +957,38 @@
     background: transparent !important;
   }
 
+  /* Confirmed stay card */
+  .stay-confirmed {
+    border: 2px solid var(--sage);
+    background: linear-gradient(135deg, rgba(92,107,74,0.06) 0%, rgba(45,74,62,0.04) 100%);
+    position: relative;
+  }
+  .stay-confirmed-badge {
+    display: inline-block;
+    background: var(--sage);
+    color: var(--paper);
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 0.15rem 0.5rem;
+    border-radius: 3px;
+    margin-bottom: 0.4rem;
+  }
+  .stay-address {
+    font-size: 0.72rem;
+    color: var(--ink-light);
+    margin-top: 0.3rem;
+    line-height: 1.4;
+  }
+  .stay-conf-code {
+    font-size: 0.7rem;
+    color: var(--terra);
+    font-weight: 600;
+    margin-top: 0.2rem;
+    font-family: 'Inter', monospace;
+    letter-spacing: 0.04em;
+  }
   /* Stays per-person price highlight */
   .stay-pp { 
     background: var(--sage-bg); 
@@ -2790,175 +2822,30 @@
 <div class="booking-card reveal"><div class="booking-name"><a href="https://www.aa.com/reservation/view/find-your-trip" target="_blank">Manage Flight Booking</a></div><div class="booking-meta">AA.com · Confirmation: LWBOPY · 3 passengers</div></div>
 </div>
 <div class="page" id="stays">
-<div class="section-header">Where to Stay</div>
-<p class="muted" style="margin-bottom:0.3rem;">Requirements: 3 separate beds · Washer · AC preferred (London) · Entire place</p>
-<p class="muted" style="margin-bottom:1rem;">Real Airbnb listings verified for your exact dates. Prices are totals for the full stay.</p>
+<div class="section-header">Where We're Staying</div>
+<p class="muted" style="margin-bottom:1rem;">Both Airbnbs are booked and confirmed.</p>
 <div class="city-header city-london">London — Jul 9–15 (6 nights)</div>
-<div class="stay-card">
+<div class="stay-card stay-confirmed">
+      <span class="stay-confirmed-badge">Booked</span>
       <div class="stay-top">
-        <a href="https://www.airbnb.com/rooms/1537937424523813717" target="_blank" class="stay-name">Swiss Cottage Retreat | Sleeps 5 | Regents Park</a>
-        <span class="stay-price">$1,955</span>
+        <a href="https://www.airbnb.com/rooms/1378543191937248499" target="_blank" class="stay-name">The Thames Embrace — 3 BR + Garden House in Battersea</a>
       </div>
-      <div class="stay-details">1BR · 3 beds · 1 bath · ★ 4.83 (18)</div>
-      <div class="stay-pp">$652/person total · $109/person/night</div>
-      <div class="stay-badges"><span class="badge ac">❄️ AC</span>  <span class="badge wash">🧺 Washer</span></div>
+      <div class="stay-details">3BR · 4 beds · 2 bath · ★ 4.72 · Superhost</div>
+      <div class="stay-badges"><span class="badge ac">❄️ AC</span> <span class="badge wash">🧺 Washer</span></div>
+      <div class="stay-address">60 Abercrombie Street, Greater London, SW11 2JD</div>
+      <div class="stay-conf-code">Confirmation: HM25YMJF3F</div>
     </div>
-<div class="stay-card">
+<div class="city-header city-scotland" style="margin-top:1.5rem;">Edinburgh — Jul 15–20 (5 nights)</div>
+<div class="stay-card stay-confirmed">
+      <span class="stay-confirmed-badge">Booked</span>
       <div class="stay-top">
-        <a href="https://www.airbnb.com/rooms/938364889428767893" target="_blank" class="stay-name">Magnificent Flat across Harrods</a>
-        <span class="stay-price">$2,578</span>
+        <a href="https://www.airbnb.com/rooms/579038" target="_blank" class="stay-name">5 Wellington Place, Leith</a>
       </div>
-      <div class="stay-details">1BR · 3 beds · 1 bath · ★ 4.51 (55)</div>
-      <div class="stay-pp">$859/person total · $143/person/night</div>
-      <div class="stay-badges"><span class="badge ac">❄️ AC</span>  <span class="badge wash">🧺 Washer</span></div>
+      <div class="stay-details">Edinburgh · EH6 7EQ</div>
+      <div class="stay-badges"><span class="badge wash">🧺 Washer</span></div>
+      <div class="stay-address">5 Wellington Place, Edinburgh, EH6 7EQ</div>
+      <div class="stay-conf-code">Confirmation: HMBM9E3TW5</div>
     </div>
-<div class="stay-card">
-      <div class="stay-top">
-        <a href="https://www.airbnb.com/rooms/1378543191937248499" target="_blank" class="stay-name">The Thames Embrace 3 BR+Garden House in Battersea</a>
-        <span class="stay-price">$3,765</span>
-      </div>
-      <div class="stay-details">3BR · 4 beds · 2 bath · ★ 4.72 (18)</div>
-      <div class="stay-pp">$1,255/person total · $209/person/night</div>
-      <div class="stay-badges"><span class="badge ac">❄️ AC</span> <span class="badge sh">★ Superhost</span> <span class="badge wash">🧺 Washer</span></div>
-    </div>
-<div class="stay-card">
-      <div class="stay-top">
-        <a href="https://www.airbnb.com/rooms/1104874818864083251" target="_blank" class="stay-name">2BD Victoria Gem MewsHouse for 5</a>
-        <span class="stay-price">$4,012</span>
-      </div>
-      <div class="stay-details">2BR · 4 beds · 2 bath · ★ 4.67 (9)</div>
-      <div class="stay-pp">$1,337/person total · $223/person/night</div>
-      <div class="stay-badges"><span class="badge ac">❄️ AC</span>  <span class="badge wash">🧺 Washer</span></div>
-    </div>
-<div class="stay-card">
-      <div class="stay-top">
-        <a href="https://www.airbnb.com/rooms/965816585357643979" target="_blank" class="stay-name">Modern flat with stunning views in Kensington</a>
-        <span class="stay-price">$4,090</span>
-      </div>
-      <div class="stay-details">2BR · 3 beds · 2 bath · ★ 4.88 (115)</div>
-      <div class="stay-pp">$1,363/person total · $227/person/night</div>
-      <div class="stay-badges"><span class="badge ac">❄️ AC</span> <span class="badge sh">★ Superhost</span> <span class="badge wash">🧺 Washer</span></div>
-    </div>
-<div class="stay-card">
-      <div class="stay-top">
-        <a href="https://www.airbnb.com/rooms/1520422469262342401" target="_blank" class="stay-name">Charming Covent Garden with AC</a>
-        <span class="stay-price">$4,237</span>
-      </div>
-      <div class="stay-details">2BR · 3 beds · 1 bath · ★ 4.78 (9)</div>
-      <div class="stay-pp">$1,412/person total · $235/person/night</div>
-      <div class="stay-badges"><span class="badge ac">❄️ AC</span> <span class="badge sh">★ Superhost</span> <span class="badge wash">🧺 Washer</span></div>
-    </div>
-<div class="stay-card">
-      <div class="stay-top">
-        <a href="https://www.airbnb.com/rooms/12896220" target="_blank" class="stay-name">Central, Quirky & Modern Detached Home in Camden</a>
-        <span class="stay-price">$4,321</span>
-      </div>
-      <div class="stay-details">2BR · 4 beds · 2 bath · ★ 4.67 (279)</div>
-      <div class="stay-pp">$1,440/person total · $240/person/night</div>
-      <div class="stay-badges"><span class="badge ac">❄️ AC</span> <span class="badge sh">★ Superhost</span> <span class="badge wash">🧺 Washer</span></div>
-    </div>
-<div class="stay-card">
-      <div class="stay-top">
-        <a href="https://www.airbnb.com/rooms/1040515817176208338" target="_blank" class="stay-name">Elegant 2 Bedroom in South Kensington</a>
-        <span class="stay-price">$4,370</span>
-      </div>
-      <div class="stay-details">2BR · 3 beds · 1 bath · ★ 4.87 (46)</div>
-      <div class="stay-pp">$1,457/person total · $243/person/night</div>
-      <div class="stay-badges"><span class="badge ac">❄️ AC</span> <span class="badge sh">★ Superhost</span> <span class="badge wash">🧺 Washer</span></div>
-    </div>
-<p class="muted" style="margin:0.8rem 0;">Search yourself: <a href="https://www.airbnb.com/s/London--United-Kingdom/homes?checkin=2026-07-09&checkout=2026-07-15&adults=3&min_beds=3&room_types%5B%5D=Entire+home%2Fapt&amenities%5B%5D=33" target="_blank">Airbnb (Washer)</a> · <a href="https://www.airbnb.com/s/London--United-Kingdom/homes?checkin=2026-07-09&checkout=2026-07-15&adults=3&min_beds=3&room_types%5B%5D=Entire+home%2Fapt&amenities%5B%5D=33&amenities%5B%5D=5" target="_blank">Airbnb (AC+Washer)</a></p>
-<div class="city-header city-scotland">Edinburgh — Jul 15–20 (5 nights)</div>
-<div class="stay-card">
-      <div class="stay-top">
-        <a href="https://www.airbnb.com/rooms/904289761319113845" target="_blank" class="stay-name">Warriston Loft</a>
-        <span class="stay-price">$1,224</span>
-      </div>
-      <div class="stay-details">2BR · 3 beds · 1 bath · ★ 4.97 (33)</div>
-      <div class="stay-pp">$408/person total · $82/person/night</div>
-      <div class="stay-badges"> <span class="badge sh">★ Superhost</span> <span class="badge wash">🧺 Washer</span></div>
-    </div>
-<div class="stay-card">
-      <div class="stay-top">
-        <a href="https://www.airbnb.com/rooms/870756984500738220" target="_blank" class="stay-name">Brand new entire 2 bedroom flat, free parking!</a>
-        <span class="stay-price">$1,688</span>
-      </div>
-      <div class="stay-details">2BR · 3 beds · 2 bath · ★ 4.91 (137)</div>
-      <div class="stay-pp">$563/person total · $113/person/night</div>
-      <div class="stay-badges"> <span class="badge sh">★ Superhost</span> <span class="badge wash">🧺 Washer</span></div>
-    </div>
-<div class="stay-card">
-      <div class="stay-top">
-        <a href="https://www.airbnb.com/rooms/972639" target="_blank" class="stay-name">Edinburgh Waterfront Apartment</a>
-        <span class="stay-price">$1,759</span>
-      </div>
-      <div class="stay-details">2BR · 4 beds · 1 bath · ★ 4.86 (92)</div>
-      <div class="stay-pp">$586/person total · $117/person/night</div>
-      <div class="stay-badges">  <span class="badge wash">🧺 Washer</span></div>
-    </div>
-<div class="stay-card">
-      <div class="stay-top">
-        <a href="https://www.airbnb.com/rooms/1467557619538083067" target="_blank" class="stay-name">Thorntree 2 Bedroom Apartment with Sofa Bed - Edin</a>
-        <span class="stay-price">$1,824</span>
-      </div>
-      <div class="stay-details">2BR · 3 beds · 1 bath · ★ 5.0 (6)</div>
-      <div class="stay-pp">$608/person total · $122/person/night</div>
-      <div class="stay-badges"> <span class="badge sh">★ Superhost</span> <span class="badge wash">🧺 Washer</span></div>
-    </div>
-<div class="stay-card">
-      <div class="stay-top">
-        <a href="https://www.airbnb.com/rooms/40082914" target="_blank" class="stay-name">Homely 2 Bed flat next to tram stop on Leith Walk</a>
-        <span class="stay-price">$1,835</span>
-      </div>
-      <div class="stay-details">2BR · 3 beds · 1 bath · ★ 4.64 (186)</div>
-      <div class="stay-pp">$612/person total · $122/person/night</div>
-      <div class="stay-badges">  <span class="badge wash">🧺 Washer</span></div>
-    </div>
-<div class="stay-card">
-      <div class="stay-top">
-        <a href="https://www.airbnb.com/rooms/1212243601920849694" target="_blank" class="stay-name">Ground floor garden flat in Edinburgh with parking</a>
-        <span class="stay-price">$1,898</span>
-      </div>
-      <div class="stay-details">2BR · 3 beds · 1 bath · ★ 4.7 (77)</div>
-      <div class="stay-pp">$633/person total · $127/person/night</div>
-      <div class="stay-badges">  <span class="badge wash">🧺 Washer</span></div>
-    </div>
-<div class="stay-card">
-      <div class="stay-top">
-        <a href="https://www.airbnb.com/rooms/1465018849794263657" target="_blank" class="stay-name">Flat, Arthur Seat view, walking distance to Castle</a>
-        <span class="stay-price">$1,944</span>
-      </div>
-      <div class="stay-details">2BR · 4 beds · 2 bath · ★ 4.91 (23)</div>
-      <div class="stay-pp">$648/person total · $130/person/night</div>
-      <div class="stay-badges"> <span class="badge sh">★ Superhost</span> <span class="badge wash">🧺 Washer</span></div>
-    </div>
-<div class="stay-card">
-      <div class="stay-top">
-        <a href="https://www.airbnb.com/rooms/932411247645118798" target="_blank" class="stay-name">Large Flat in Edinburgh 4/2 with mountain view</a>
-        <span class="stay-price">$1,973</span>
-      </div>
-      <div class="stay-details">2BR · 3 beds · 2 bath · ★ 4.82 (17)</div>
-      <div class="stay-pp">$658/person total · $132/person/night</div>
-      <div class="stay-badges">  <span class="badge wash">🧺 Washer</span></div>
-    </div>
-<div class="stay-card">
-      <div class="stay-top">
-        <a href="https://www.airbnb.com/rooms/925514722906547056" target="_blank" class="stay-name">Edinburgh seaside historic home</a>
-        <span class="stay-price">$1,988</span>
-      </div>
-      <div class="stay-details">2BR · 3 beds · 2 bath · ★ 4.81 (118)</div>
-      <div class="stay-pp">$663/person total · $133/person/night</div>
-      <div class="stay-badges"> <span class="badge sh">★ Superhost</span> <span class="badge wash">🧺 Washer</span></div>
-    </div>
-<div class="stay-card">
-      <div class="stay-top">
-        <a href="https://www.airbnb.com/rooms/973358162315214501" target="_blank" class="stay-name">Central Flat Close to Attractions, Shops, Bus Stop</a>
-        <span class="stay-price">$1,999</span>
-      </div>
-      <div class="stay-details">2BR · 3 beds · 1 bath · ★ 4.59 (46)</div>
-      <div class="stay-pp">$666/person total · $133/person/night</div>
-      <div class="stay-badges"> <span class="badge sh">★ Superhost</span> <span class="badge wash">🧺 Washer</span></div>
-    </div>
-<p class="muted" style="margin:0.8rem 0;">Search: <a href="https://www.airbnb.com/s/Edinburgh--United-Kingdom/homes?checkin=2026-07-15&checkout=2026-07-20&adults=3&min_beds=3&room_types%5B%5D=Entire+home%2Fapt&amenities%5B%5D=33" target="_blank">Airbnb Edinburgh</a></p>
 </div>
 <div class="page" id="suggest">
 <div class="section-header">Suggestions Board</div>
