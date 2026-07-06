@@ -1427,14 +1427,40 @@
     <div class="cd-block"><div class="cd-num" id="cd-min">--</div><div class="cd-label">min</div></div>
   </div>
 
-  <div class="currency-card" style="margin-top:1.2rem;">
-    <div class="currency-title">💷 Quick Currency (£1 ≈ $1.27)</div>
-    <div class="currency-row"><span class="currency-item">☕ Coffee</span><span class="currency-price">~£3.50 / $4.45</span></div>
-    <div class="currency-row"><span class="currency-item">🍺 Pint</span><span class="currency-price">~£6.00 / $7.60</span></div>
-    <div class="currency-row"><span class="currency-item">🚇 Tube ride</span><span class="currency-price">~£2.80 / $3.55</span></div>
-    <div class="currency-row"><span class="currency-item">🍽️ Casual meal</span><span class="currency-price">~£12-18 / $15-23</span></div>
-    <div class="currency-row"><span class="currency-item">🍷 Nice dinner</span><span class="currency-price">~£25-40 / $32-51</span></div>
-    <div class="currency-row"><span class="currency-item">💡 Tip</span><span class="currency-price">Not expected (optional 10%)</span></div>
+  <style>
+  .wx-card{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.13);border-radius:14px;padding:15px 17px;margin-top:1.2rem;animation:coverIn 0.4s ease 1.7s both;}
+  .wx-card .wx-head{font-family:'DM Serif Display',serif;font-size:1.08rem;color:#fff;display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;margin-bottom:1px;}
+  .wx-card .wx-head small{font-size:0.6rem;font-weight:400;opacity:0.5;letter-spacing:0.3px;font-family:inherit;}
+  .wx-card .wx-leg{font-size:0.66rem;font-weight:800;letter-spacing:0.9px;text-transform:uppercase;color:rgba(255,255,255,0.5);margin:13px 0 2px;}
+  .wx-card .wx-sum{font-size:0.72rem;line-height:1.35;color:rgba(255,255,255,0.62);margin-bottom:5px;}
+  .wx-card .wx-row{display:grid;grid-template-columns:3rem 1.5rem 1fr auto;align-items:center;gap:9px;padding:5px 0;border-bottom:1px solid rgba(255,255,255,0.07);}
+  .wx-card .wx-row:last-child{border-bottom:none;}
+  .wx-card .wx-day{font-size:0.78rem;font-weight:700;color:rgba(255,255,255,0.9);}
+  .wx-card .wx-ico{font-size:1.02rem;text-align:center;line-height:1;}
+  .wx-card .wx-t{font-size:0.78rem;color:rgba(255,255,255,0.8);}
+  .wx-card .wx-t b{color:#fff;font-weight:700;}
+  .wx-card .wx-t i{opacity:0.5;font-size:0.66rem;font-style:normal;margin-left:3px;}
+  .wx-card .wx-rain{font-size:0.7rem;opacity:0.85;white-space:nowrap;color:#a9d6ff;}
+  .wx-card .wx-foot{font-size:0.6rem;opacity:0.4;margin-top:10px;line-height:1.35;}
+  </style>
+  <div class="wx-card">
+    <div class="wx-head">🌦️ Weather Forecast <small>early outlook · updated Jul 6</small></div>
+    <div class="wx-leg">🇬🇧 London</div>
+    <div class="wx-sum">Warm and mostly dry. A hot start near 31°C / 87°F, easing a touch midweek. Rain unlikely.</div>
+    <div class="wx-row"><span class="wx-day">Fri 10</span><span class="wx-ico">☁️</span><span class="wx-t"><b>31°</b>/21°C <i>87/71°F</i></span><span class="wx-rain">💧 3%</span></div>
+    <div class="wx-row"><span class="wx-day">Sat 11</span><span class="wx-ico">☁️</span><span class="wx-t"><b>31°</b>/21°C <i>87/70°F</i></span><span class="wx-rain">💧 2%</span></div>
+    <div class="wx-row"><span class="wx-day">Sun 12</span><span class="wx-ico">☁️</span><span class="wx-t"><b>26°</b>/17°C <i>79/63°F</i></span><span class="wx-rain">💧 4%</span></div>
+    <div class="wx-row"><span class="wx-day">Mon 13</span><span class="wx-ico">☁️</span><span class="wx-t"><b>30°</b>/19°C <i>86/67°F</i></span><span class="wx-rain">💧 8%</span></div>
+    <div class="wx-row"><span class="wx-day">Tue 14</span><span class="wx-ico">☁️</span><span class="wx-t"><b>28°</b>/16°C <i>82/60°F</i></span><span class="wx-rain">💧 20%</span></div>
+    <div class="wx-row"><span class="wx-day">Wed 15</span><span class="wx-ico">☁️</span><span class="wx-t"><b>28°</b>/17°C <i>83/62°F</i></span><span class="wx-rain">💧 18%</span></div>
+    <div class="wx-leg">🏴 Edinburgh &amp; Scotland</div>
+    <div class="wx-sum">Cooler and changeable, so pack a layer and a light rain jacket. Sat 18 (the Highlands tour) is the chilliest at ~16°C / 60°F.</div>
+    <div class="wx-row"><span class="wx-day">Thu 16</span><span class="wx-ico">☁️</span><span class="wx-t"><b>25°</b>/15°C <i>76/60°F</i></span><span class="wx-rain">💧 33%</span></div>
+    <div class="wx-row"><span class="wx-day">Fri 17</span><span class="wx-ico">🌫️</span><span class="wx-t"><b>20°</b>/15°C <i>68/59°F</i></span><span class="wx-rain">💧 26%</span></div>
+    <div class="wx-row"><span class="wx-day">Sat 18</span><span class="wx-ico">☁️</span><span class="wx-t"><b>16°</b>/13°C <i>60/56°F</i></span><span class="wx-rain">💧 37%</span></div>
+    <div class="wx-row"><span class="wx-day">Sun 19</span><span class="wx-ico">🌦️</span><span class="wx-t"><b>17°</b>/13°C <i>63/55°F</i></span><span class="wx-rain">💧 37%</span></div>
+    <div class="wx-row"><span class="wx-day">Mon 20</span><span class="wx-ico">☁️</span><span class="wx-t"><b>21°</b>/13°C <i>70/55°F</i></span><span class="wx-rain">💧 51%</span></div>
+    <div class="wx-foot">Forecast via Open-Meteo. This far out the later days can shift, so reconfirm before you pack. High / low shown.</div>
   </div>
 
   <div class="scroll-hint">scroll to begin ↓</div>
