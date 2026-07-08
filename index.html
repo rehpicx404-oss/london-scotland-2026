@@ -1973,4 +1973,5 @@ function sPack(){var s=[];document.querySelectorAll('.pack-item').forEach(functi
 function lPack(){var s=localStorage.getItem('packList');if(!s)return;var d=JSON.parse(s);document.querySelectorAll('.pack-item').forEach(function(i,x){if(d[x])i.classList.add('chkd');else i.classList.remove('chkd')});uPack();}
 function uPack(){var t=document.querySelectorAll('.pack-item').length;var c=document.querySelectorAll('.pack-item.chkd').length;document.getElementById('packP').textContent=c+' of '+t+' packed'+(c===t?' \u2714 Ready to go!':'');}
 </script>
+<script>if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').catch(function(){});}</script>
 </body></html>
